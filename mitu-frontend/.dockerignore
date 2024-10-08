@@ -1,0 +1,6 @@
+node_modules/**
+.idea/**
+dist/**
+README.md
+.eslintc.js
+.gitignore
