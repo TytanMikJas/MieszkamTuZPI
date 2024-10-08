@@ -19,7 +19,7 @@ async function bootstrap() {
     credentials: true,
   });
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Interaktywna Mapa Bierunia API')
+    .setTitle('MieszkamTu API')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, swaggerConfig, {
@@ -33,7 +33,7 @@ async function bootstrap() {
     },
   });
   app.setGlobalPrefix('api');
-  
+
   await app.listen(3000);
 }
 bootstrap();

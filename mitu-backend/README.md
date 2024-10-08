@@ -54,7 +54,7 @@ npx prisma migrate dev --name migration-name
 ## Development TLS certificates
 
 1. install mkcert https://github.com/FiloSottile/mkcert/releases
-2. create directory imb-restapi/secrets
+2. create directory mitu-backend/secrets
 3. run `mkcert -install localhost 127.0.0.1 ::1`
 4. rename files to: `localhost-certificate.pem`, `localhost-key.pem`
 

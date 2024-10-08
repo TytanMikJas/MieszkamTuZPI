@@ -1,5 +1,5 @@
 {
-  "name": "imb-restapi",
+  "name": "mitu-backend",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:local": "npx dotenv-cli -e .env -- prisma",
     "prisma:prod": "npx dotenv-cli -e ../.prisma.env -- prisma",
-    "docker:build": "docker build -t imb-restapi ."
+    "docker:build": "docker build -t mitu-backend ."
   },
   "dependencies": {
     "@golevelup/ts-jest": "^0.4.0",
