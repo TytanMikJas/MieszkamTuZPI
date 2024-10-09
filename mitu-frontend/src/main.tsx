@@ -1,11 +1,13 @@
+import 'moment/locale/pl';
+import 'moment/min/locales';
 import './index.css';
+import React, { Suspense } from 'react';
+
 import { createRoot } from 'react-dom/client';
-import 'react-material-symbols/rounded';
-// TODO: dodać router
-// TODO: dodać sonner
+import { router } from './core/routing/Router';
 import { RouterProvider } from 'react-router-dom';
 
 const root = createRoot(
   document.getElementById('root') as unknown as HTMLElement,
 );
-root.render(<div />);
+root.render(<RouterProvider router={router} />);
