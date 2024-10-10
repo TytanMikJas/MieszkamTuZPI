@@ -1,4 +1,4 @@
-# imb_backend:
+# mitu_backend:
 FROM node:20 AS builder
 
 WORKDIR /app

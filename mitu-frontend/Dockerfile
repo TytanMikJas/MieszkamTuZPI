@@ -1,4 +1,4 @@
-# imb_frontend:
+# mitu_frontend:
 FROM node:20.1-alpine as build-stage
 
 WORKDIR /app

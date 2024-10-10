@@ -1,18 +1,18 @@
 version: '3.8'
 services:
-  imb_postgres:
-    container_name: imb_postgres
+  mitu_postgres:
+    container_name: mitu_postgres
     image: postgres:10.3
     restart: always
     volumes:
-      - imb_postgres:/var/lib/postgresql/data
+      - mitu_postgres:/var/lib/postgresql/data
     ports:
         - '5432:5432'
     env_file:
       - .env
-  imb_backend:
-    image: citified/imb:imb_backend
-    container_name: imb_backend
+  mitu_backend:
+    image: mieszkamtu/mitu:mitu_backend
+    container_name: mitu_backend
     environment:
       - CRON_JOBS=false
     command:
@@ -24,27 +24,34 @@ services:
       - '3000:3000'
     working_dir: /app
     depends_on:
-      - imb_postgres
-      - imb_redis
+      - mitu_postgres
     env_file:
       - .env
-  imb_frontend:
-    image: citified/imb:imb_frontend
-    container_name: imb_frontend
+  mitu_frontend:
+    image: mieszkamtu/mitu:mitu_frontend
+    container_name: mitu_frontend
     ports:
       - '80:80'
     working_dir: /app
     depends_on:
-      - imb_backend
+      - mitu_backend
     env_file:
       - .env
-  imb_smtp4dev:
-    container_name: imb_smtp4dev
+  mitu_cron:
+    image: mieszkamtu/mitu:mitu_cron
+    container_name: mitu_cron
+    environment:
+      - CRON_JOBS=true
+    depends_on:
+      - mitu_postgres
+    env_file:
+      - .env
+  mitu_smtp4dev:
+    container_name: mitu_smtp4dev
     image: rnwood/smtp4dev
     restart: always
     ports:
       - '4000:80'
       - '25:25'
 volumes:
-  imb_postgres:
-  imb_redis:
+  mitu_postgres:
