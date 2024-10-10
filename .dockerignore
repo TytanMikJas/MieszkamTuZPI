@@ -1,0 +1,13 @@
+./mitu-frontend/node_modules/**
+./mitu-frontend/.idea/**
+./mitu-frontend/dist/**
+./mitu-frontend/README.md
+./mitu-frontend/.eslintc.js
+./mitu-frontend/.gitignore
+
+./mitu-backend/node_modules/**
+./mitu-backend/.idea/**
+./mitu-backend/dist/**
+./mitu-backend/README.md
+./mitu-backend/.eslintc.js
+./mitu-backend/.gitignore
