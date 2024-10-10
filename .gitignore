@@ -1,5 +1,7 @@
 imb-restapi/secrets/localhost-certificate.pem
 imb-restapi/secrets/localhost-key.pem
 .idea
-.env
+.env.prod
 .prisma.env
+.idea/*
+mitu-cron/target/*
