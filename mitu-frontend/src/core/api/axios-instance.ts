@@ -21,13 +21,13 @@ axiosInstance.interceptors.response.use(
     ) {
       try {
         const response = await axiosInstance.post('/auth/refreshToken');
-        if(response.status === 201) {
+        if (response.status === 201) {
           return axiosInstance(originalRequest);
         }
       } catch (refreshError) {
         originalRequest._4XXFromRefresh = true;
         if (!originalRequest.url.includes('/auth/me')) {
-          router.navigate(ROUTES.MAP.LOGIN.path());
+          //TODO router.navigate(ROUTES.MAP.LOGIN.path());
         }
         return Promise.reject(error);
       }
@@ -37,5 +37,3 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-window.axios = axiosInstance;

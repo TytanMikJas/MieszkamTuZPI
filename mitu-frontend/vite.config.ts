@@ -19,12 +19,12 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
-      "/uploads": {
-        target: "https://localhost:3000/uploads",
+      '/uploads': {
+        target: 'https://localhost:3000/uploads',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/uploads/, "")
-      }
+        rewrite: (path) => path.replace(/^\/uploads/, ''),
+      },
     },
     host: true,
     cors: {
