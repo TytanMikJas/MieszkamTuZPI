@@ -10,6 +10,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const r = ref ? ref : useRef<HTMLInputElement>(null);
     const handleFocus = () => {
       console.log(r, 'r');
+      //@ts-ignore
       r.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
     return (

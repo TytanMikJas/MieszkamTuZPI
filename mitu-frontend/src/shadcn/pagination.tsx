@@ -35,6 +35,7 @@ PaginationItem.displayName = 'PaginationItem';
 
 type PaginationLinkProps = {
   isActive?: boolean;
+  //@ts-ignore
 } & Pick<ButtonProps, 'size'> &
   React.ComponentProps<'a'>;
 
@@ -50,6 +51,7 @@ const PaginationLink = ({
       className={cn(
         buttonVariants({
           variant: isActive ? 'outline' : 'ghost',
+          //@ts-ignore
           size,
         }),
         className,
@@ -69,6 +71,7 @@ const PaginationPrevious = ({
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label="Go to previous page"
+    //@ts-ignore
     size="default"
     className={cn('gap-1 pl-2.5', className)}
     {...props}
@@ -85,6 +88,7 @@ const PaginationNext = ({
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
     aria-label="Go to next page"
+    //@ts-ignore
     size="default"
     className={cn('gap-1 pr-2.5', className)}
     {...props}

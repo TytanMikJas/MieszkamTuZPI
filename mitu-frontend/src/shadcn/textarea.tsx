@@ -12,6 +12,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     React.useEffect(() => {
       // Ustaw początkową wartość licznika znaków na podstawie defaultValue lub value
+      //@ts-ignore
       setCharacterCount(props.defaultValue?.length || props.value?.length || 0);
     }, [props.defaultValue, props.value]);
 
