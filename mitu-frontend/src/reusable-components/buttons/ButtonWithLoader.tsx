@@ -1,8 +1,10 @@
 import { Button, ButtonProps } from '@/shadcn/button';
 import Loader from '../loaders/Loader';
+import { ReactElement } from 'react';
 
 interface ButtonWithLoaderProps extends ButtonProps {
   isLoading: boolean;
+  children: ReactElement;
 }
 
 function ButtonWithLoader({
