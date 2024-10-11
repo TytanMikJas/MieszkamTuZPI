@@ -1,0 +1,6 @@
+.idea
+.env.prod
+.env.dev
+.prisma.env
+.idea/*
+mitu-cron/target/*
