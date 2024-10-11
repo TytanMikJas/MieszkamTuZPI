@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  mitu_postgres:
+    container_name: mitu_postgres
+    image: postgres:10.3
+    restart: always
+    volumes:
+      - mitu_postgres:/var/lib/postgresql/data
+    ports:
+        - '5432:5432'
+    env_file:
+      - .env.prod
+  mitu_backend:
+    image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_backend:latest
+    container_name: mitu_backend
+    ports:
+      - '3000:3000'
+    working_dir: /app
+    depends_on:
+
+      - mitu_postgres
+    env_file:
+      - .env.prod
+  mitu_frontend:
+    image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_frontend:latest
+    container_name: mitu_frontend
+    ports:
+      - '80:80'
+    working_dir: /app
+    depends_on:
+      - mitu_backend
+    env_file:
+      - .env.prod
+  mitu_cron:
+    image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_cron:latest
+    container_name: mitu_cron
+    depends_on:
+      - mitu_postgres
+    env_file:
+      - .env.prod
+  mitu_smtp4dev:
+    container_name: mitu_smtp4dev
+    image: rnwood/smtp4dev
+    restart: always
+    ports:
+      - '4000:80'
+      - '25:25'
+volumes:
+  mitu_postgres:
