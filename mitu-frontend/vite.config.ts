@@ -7,6 +7,7 @@ import path from 'path';
 export default defineConfig({
   optimizeDeps: {
     esbuildOptions: {
+      // @ts-ignore
       plugins: [fixReactVirtualized],
     },
   },
