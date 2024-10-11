@@ -1,4 +1,4 @@
-import { ErrorType } from "@/types";
+import { ErrorType } from '@/types';
 
 export interface ErrorIncomingDto {
   fieldId: string;
