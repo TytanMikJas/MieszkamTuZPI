@@ -4,3 +4,4 @@
 .prisma.env
 .idea/*
 mitu-cron/target/*
+.vscode
