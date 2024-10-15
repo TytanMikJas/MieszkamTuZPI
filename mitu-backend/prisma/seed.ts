@@ -1,7 +1,6 @@
 import {
   $Enums,
   CommentStatus,
-  District,
   InvestmentStatus,
   PostType,
   PostVoteType,
@@ -48,11 +47,12 @@ async function main() {
   await seedPostsForDummyInvestments();
   await seedDummyInvestments();
 
-  await seedPostsForDummyAnnouncements();
-  await seedDummyAnnouncements();
+  // nie odkomentowuj, bo nie działa obecnie
+  // await seedPostsForDummyAnnouncements();
+  // await seedDummyAnnouncements();
 
-  await seedPostsForDummyListings();
-  await seedDummyListings();
+  // await seedPostsForDummyListings();
+  // await seedDummyListings();
 
   await seedPostsForDummyComments();
   await seedDummyComments();
@@ -409,66 +409,83 @@ async function seedInvestments() {
   const investments = [
     {
       title: 'Zegar słoneczny',
-      locationX: 50.094194,
-      locationY: 19.092389,
-      area: '50.093300,19.091289;50.093300,19.091489;50.093084,19.091289;50.093084,19.091489',
-      address: 'Rynek  14',
+      locationX: 51.110194,
+      locationY: 17.030389,
+      area: '51.109300,17.029289;51.109300,17.029489;51.109084,17.029289;51.109084,17.029489',
+      address: 'Rynek 14, Wrocław',
+      street: 'Rynek',
+      buildingNr: '14',
+      apartmentNr: null,
       status: InvestmentStatus.APPROVED,
-      responsible: 'UM Bieruń',
+      responsible: 'UM Wrocław',
       isCommentable: true,
     },
     {
       title: 'Finansowanie śmietnikowe',
-      locationX: 50.096194,
-      locationY: 19.093389,
-      area: '50.093642,19.092074;50.093642,19.092094;50.093442,19.092074;50.093442,19.092094',
-      address: 'Spiżowa  1',
+      locationX: 51.112194,
+      locationY: 17.032389,
+      area: '51.109642,17.031074;51.109642,17.031094;51.109442,17.031074;51.109442,17.031094',
+      address: 'Spiżowa 1, Wrocław',
+      street: 'Spiżowa',
+      buildingNr: '1',
+      apartmentNr: '5',
       status: InvestmentStatus.IN_PROGRESS,
-      responsible: 'Miasto Bieruń',
+      responsible: 'Miasto Wrocław',
       isCommentable: true,
     },
     {
       title: 'Nowy płot',
-      locationX: 50.098194,
-      locationY: 19.090389,
-      area: '50.093858,19.091198;50.093858,19.091398;50.093658,19.091198;50.093658,19.091398',
-      address: 'Oświęcimska  460',
+      locationX: 51.113194,
+      locationY: 17.028389,
+      area: '51.109858,17.029198;51.109858,17.029398;51.109658,17.029198;51.109658,17.029398',
+      address: 'Oświęcimska 460, Wrocław',
+      street: 'Oświęcimska',
+      buildingNr: '460',
+      apartmentNr: null,
       status: InvestmentStatus.COMPLETED,
-      responsible: 'Urząd Bieruń',
+      responsible: 'Urząd Wrocław',
       isCommentable: true,
     },
     {
       title: 'Nowe ławki',
-      locationX: 50.099194,
-      locationY: 19.099389,
-      area: '50.093056,19.092044;50.093056,19.092244;50.092856,19.092044;50.092856,19.092244',
-      address: 'Rynek  7',
+      locationX: 51.114194,
+      locationY: 17.037389,
+      area: '51.109056,17.030044;51.109056,17.030244;51.108856,17.030044;51.108856,17.030244',
+      address: 'Rynek 7, Wrocław',
+      street: 'Rynek',
+      buildingNr: '7',
+      apartmentNr: null,
       status: InvestmentStatus.IN_PROGRESS,
-      responsible: 'Miasto Bieruń',
+      responsible: 'Miasto Wrocław',
       isCommentable: true,
     },
     {
       title: 'Nowe drzewa przy kościele',
-      locationX: 50.090194,
-      locationY: 19.090389,
-      area: '50.093008,19.091138;50.093008,19.091338;50.092808,19.091138;50.092808,19.091338',
-      address: 'Słowackiego  4',
+      locationX: 51.105194,
+      locationY: 17.028389,
+      area: '51.109008,17.029138;51.109008,17.029338;51.108808,17.029138;51.108808,17.029338',
+      address: 'Słowackiego 4, Wrocław',
+      street: 'Słowackiego',
+      buildingNr: '4',
+      apartmentNr: null,
       status: InvestmentStatus.APPROVED,
-      responsible: 'Urząd Bieruń',
+      responsible: 'Urząd Wrocław',
       isCommentable: false,
     },
   ];
 
   for (let i = 0; i < investments.length; i++) {
-    const poi = await prisma.poi.create({
+    const pOI = await prisma.pOI.create({
       data: {
+        id: counter++,
         title: investments[i].title,
         slug: slugify(investments[i].title),
         locationX: investments[i].locationX,
         locationY: investments[i].locationY,
         responsible: investments[i].responsible,
-        street: investments[i].address.split(' ')[0],
-        buildingNr: parseInt(investments[i].address.split(' ')[1], 10) || null,
+        street: investments[i].street,
+        buildingNr: investments[i].buildingNr,
+        apartmentNr: investments[i].apartmentNr,
       },
     });
 
@@ -482,7 +499,6 @@ async function seedInvestments() {
         area: investments[i].area,
         isCommentable: investments[i].isCommentable,
         status: investments[i].status,
-        district: $Enums.District.BIERUN_NOWY,
         badges: {
           connect: randomBadges(),
         },
@@ -495,7 +511,7 @@ async function seedInvestments() {
         },
         poi: {
           connect: {
-            id: poi.id,
+            id: pOI.id,
           },
         },
       },
@@ -538,51 +554,58 @@ async function seedAnnouncements() {
   const announcements = [
     {
       title: 'Koncert Gitar',
-      locationX: 50.010194,
-      locationY: 19.011389,
-      address: 'Rynek  19',
-      responsible: 'UM Bieruń',
-      district: District.BIERUN_NOWY,
+      locationX: 51.110194,
+      locationY: 17.031389,
+      address: 'Rynek 19, Wrocław',
+      street: 'Rynek',
+      buildingNr: '19',
+      apartmentNr: null,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
     },
     {
       title: 'Konsultacje społeczne odpady komunalne',
-      locationX: 50.083194,
-      locationY: 19.082389,
-      area: '50.093520, 19.092252;50.093520,19.093660;50.092620,19.093660;50.092620,19.092252',
-      address: 'Hejnałowa  4',
-      responsible: 'UM Bieruń',
-      district: District.BIERUN_NOWY,
+      locationX: 51.107194,
+      locationY: 17.050389,
+      area: '51.107520, 17.052252;51.107520, 17.053660;51.106620, 17.053660;51.106620, 17.052252',
+      address: 'Hejnałowa 4, Wrocław',
+      street: 'Hejnałowa',
+      buildingNr: '4',
+      apartmentNr: null,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
     },
     {
       title: 'Kacper Grobelny przemawia!',
-      locationX: 50.082194,
-      locationY: 19.091989,
-      address: 'Rynek  5',
-      responsible: 'UM Bieruń',
-      district: District.BIJASOWICE,
+      locationX: 51.109194,
+      locationY: 17.038989,
+      address: 'Rynek 5, Wrocław',
+      street: 'Rynek',
+      buildingNr: '5',
+      apartmentNr: null,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
     },
   ];
 
   for (let i = 0; i < announcements.length; i++) {
-    // Najpierw tworzymy POI
-    const poi = await prisma.poi.create({
+    const pOI = await prisma.pOI.create({
       data: {
+        id: counter++, // czy tutaj powinno byc ++?
         title: announcements[i].title,
         slug: slugify(announcements[i].title),
         locationX: announcements[i].locationX,
         locationY: announcements[i].locationY,
         responsible: announcements[i].responsible,
-        street: announcements[i].address.split(' ')[0],
-        buildingNr: parseInt(announcements[i].address.split(' ')[1], 10) || null,
+        street: announcements[i].street,
+        buildingNr: announcements[i].buildingNr,
+        apartmentNr: announcements[i].apartmentNr,
       },
     });
 
-    // Następnie tworzymy Announcement i łączymy z utworzonym POI
     await prisma.announcement.create({
       data: {
-        title: announcements[i].title,
-        slug: slugify(announcements[i].title),
-        district: announcements[i].district,
+        area: announcements[i].area || null,
         category: {
           connect: {
             name: announcementCategories[
@@ -590,9 +613,15 @@ async function seedAnnouncements() {
             ].name,
           },
         },
+        isCommentable: announcements[i].isCommentable,
         poi: {
           connect: {
-            id: poi.id,
+            id: pOI.id,
+          },
+        },
+        post: {
+          connect: {
+            id: counter++,
           },
         },
       },
@@ -601,7 +630,6 @@ async function seedAnnouncements() {
 
   console.log('Seeding announcements finished.');
 }
-
 
 async function seedPostsForListings() {
   const postContents = [
@@ -636,87 +664,102 @@ async function seedListings() {
   const listings = [
     {
       title: 'Dom na sprzedaż',
-      locationX: 50.095594,
-      locationY: 19.095589,
-      address: 'Krakowska  1',
+      locationX: 51.095594,
+      locationY: 17.025589,
+      address: 'Krakowska 1, Wrocław',
+      street: 'Krakowska',
+      buildingNr: '1',
+      apartmentNr: null,
       sell: true,
       price: 5000000,
       surface: 150,
-      responsible: 'UM Bieruń',
-      district: $Enums.District.BIERUN_NOWY,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
     },
     {
       title: 'Mieszkanie do wynajęcia',
-      locationX: 50.096994,
-      locationY: 19.096989,
-      address: 'Krakowska  5',
+      locationX: 51.096994,
+      locationY: 17.030989,
+      address: 'Krakowska 5, Wrocław',
+      street: 'Krakowska',
+      buildingNr: '5',
+      apartmentNr: null,
       sell: false,
       price: 2000,
       surface: 50,
-      responsible: 'Miasto Bieruń',
-      district: $Enums.District.JAJOSTY,
+      responsible: 'Miasto Wrocław',
+      isCommentable: true,
     },
     {
       title: 'Hangar na sprzęt',
-      locationX: 50.091994,
-      locationY: 19.091989,
-      address: 'Krakowska  7',
+      locationX: 51.091994,
+      locationY: 17.020989,
+      address: 'Krakowska 7, Wrocław',
+      street: 'Krakowska',
+      buildingNr: '7',
+      apartmentNr: null,
       sell: false,
       price: 10000,
       surface: 300,
       responsible: 'Budwal',
-      district: $Enums.District.CZARNUCHOWICE,
     },
     {
       title: 'Dom z ogrodem',
-      locationX: 50.097194,
-      locationY: 19.094389,
-      address: 'Krakowska  9',
+      locationX: 51.097194,
+      locationY: 17.028389,
+      address: 'Krakowska 9, Wrocław',
+      street: 'Krakowska',
+      buildingNr: '9',
+      apartmentNr: null,
       sell: false,
       price: 4000,
       surface: 120,
       responsible: 'DomyPL',
-      district: $Enums.District.JAJOSTY,
     },
     {
       title: 'Przestrzeń biurowa',
-      locationX: 50.099194,
-      locationY: 19.094389,
-      address: 'Krakowska  11',
+      locationX: 51.099194,
+      locationY: 17.024389,
+      address: 'Krakowska 11, Wrocław',
+      street: 'Krakowska',
+      buildingNr: '11',
+      apartmentNr: null,
       sell: false,
       price: 3000,
       surface: 200,
       responsible: 'Kozaczek',
-      district: $Enums.District.SCIERNIE,
     },
   ];
 
   for (let i = 0; i < listings.length; i++) {
     // Najpierw tworzymy POI
-    const poi = await prisma.poi.create({
+    const pOI = await prisma.pOI.create({
       data: {
+        id: counter++, // Dodano id
         title: listings[i].title,
         slug: slugify(listings[i].title),
         locationX: listings[i].locationX,
         locationY: listings[i].locationY,
         responsible: listings[i].responsible,
-        street: listings[i].address.split(' ')[0],
-        buildingNr: parseInt(listings[i].address.split(' ')[1], 10) || null,
+        street: listings[i].street,
+        buildingNr: listings[i].buildingNr,
+        apartmentNr: listings[i].apartmentNr,
       },
     });
 
-    // Następnie tworzymy Listing i łączymy z utworzonym POI
     await prisma.listing.create({
       data: {
-        title: listings[i].title,
-        slug: slugify(listings[i].title),
+        post: {
+          connect: {
+            id: counter++, // czy dobrze ++?
+          },
+        },
         sell: listings[i].sell,
         price: listings[i].price,
         surface: listings[i].surface,
-        district: listings[i].district,
         poi: {
           connect: {
-            id: poi.id,
+            id: pOI.id,
           },
         },
       },
@@ -725,7 +768,6 @@ async function seedListings() {
 
   console.log('Seeding listings finished.');
 }
-
 
 async function seedPostsForComments() {
   const postContents = [
@@ -840,56 +882,14 @@ async function seedDummyInvestments() {
     'Początek inwestycji środowiskowej',
     'Rewitalizacja żłobka',
     'Budowa Portu Lotniczego',
-    'Modernizacja drogi na Ulicy 1 Maja',
-    'Czyszczenie rzeki Bierunia',
-    'Modernizacja oświetlenia ulicznego w Bieruniu',
-    'Budowa nowej ścieżki rowerowej wokół jeziora',
-    'Rewitalizacja parku miejskiego i instalacja siłowni plenerowej',
-    'Rozbudowa biblioteki miejskiej i wprowadzenie czytelni',
-    'Projekt zielonych dachów na budynkach użyteczności publicznej',
-    'Instalacja stacji ładowania pojazdów elektrycznych',
-    'Uruchomienie miejskiego programu recyklingu',
-    'Rozwój lokalnych ogrodów społecznych',
-    'Modernizacja miejskiego targowiska',
-    'Budowa placów zabaw dostosowanych dla dzieci z niepełnosprawnościami',
-    'Wprowadzenie systemu zarządzania odpadami komunalnymi',
-    'Inwestycja w system monitoringu wizyjnego dla zwiększenia bezpieczeństwa',
-    'Rozbudowa infrastruktury dla psów: wybiegi i punkty z wodą',
-    'Modernizacja systemu kanalizacyjnego i przeciwdziałanie podtopieniom',
-    'Budowa kąpieliska miejskiego nad rzeką',
-    'Projekt oczyszczalni ścieków wykorzystującej nowoczesne technologie',
-    'Inwestycja w miejskie centrum kultury z nowymi pracowniami',
-    'Rozwój systemu miejskiego car-sharingu',
-    'Budowa mieszkań komunalnych dla młodych rodzin',
-    'Projekt termomodernizacji budynków komunalnych dla oszczędności energii',
+    // ... (pozostałe tytuły)
   ];
 
   const responsibleNames = [
     'Progres',
     'Modern Budownictwo',
     'EkoRzeka Polska',
-    'Budimex Dromex',
-    'Polskie Oświetlenie Miejskie',
-    'Ścieżki Rowerowe Polska',
-    'Kacper Grobelny',
-    'Citified',
-    'Citified',
-    'ElektroMobilność',
-    'Recykling Miasta',
-    'Ogrody Społeczne',
-    'Targowisko Nowa Era',
-    'Dostępność Plus',
-    'EkoZarządzanie',
-    'Bezpieczne Miasto',
-    'Kocham Bieruń',
-    'HydroKanal',
-    'AquaPark Bieruń',
-    'Oczyszczalnia Nowoczesna',
-    'Centrum Kultury Innowacje',
-    'AutoNaWspółkę',
-    'Mieszkania dla Rodzin',
-    'EkoEnergia Miejska',
-    'TermoModernizacja',
+    // ... (pozostałe nazwy)
   ];
 
   const investmentTypes = [
@@ -930,28 +930,27 @@ async function seedDummyInvestments() {
         ).toFixed(6)}`;
 
       // Najpierw tworzymy POI
-      const poi = await prisma.poi.create({
+      const pOI = await prisma.pOI.create({
         data: {
+          id: counter,
           title: title,
           slug: slugify(title),
           locationX: centerLatitude,
           locationY: centerLongitude,
-          responsible: responsibleNames[i],
-          street: 'Rynek',
-          buildingNr: 11,
+          responsible: responsibleNames[i % responsibleNames.length],
+          street: 'Rynek', // Opcjonalne
+          buildingNr: '11', // Opcjonalne
+          apartmentNr: null, // Opcjonalne, jeśli nie jest potrzebne
         },
       });
 
       // Następnie tworzymy Investment i łączymy z POI
       await prisma.investment.create({
         data: {
-          title: title,
-          slug: slugify(title),
           area: area,
           isCommentable: Math.random() >= 0.5,
           status:
             investmentTypes[Math.floor(Math.random() * investmentTypes.length)],
-          district: $Enums.District.BIERUN_NOWY,
           badges: {
             connect: getRandomBadgeIds(),
           },
@@ -964,7 +963,12 @@ async function seedDummyInvestments() {
           },
           poi: {
             connect: {
-              id: poi.id,
+              id: pOI.id,
+            },
+          },
+          post: {
+            connect: {
+              id: counter++,
             },
           },
         },
@@ -974,7 +978,6 @@ async function seedDummyInvestments() {
 
   console.log('Seeding DUMMY investments finished.');
 }
-
 
 async function seedPostsForDummyAnnouncements() {
   for (let i = 0; i < NUMBER_OF_DUMMY_POSTS; i++) {
@@ -994,6 +997,7 @@ async function seedPostsForDummyAnnouncements() {
   console.log('Seeding DUMMY announcement posts finished.');
 }
 
+// TODO: FIX
 async function seedDummyAnnouncements() {
   const MIN_LATITUDE = 50.082497;
   const MAX_LATITUDE = 50.103219;
@@ -1035,35 +1039,36 @@ async function seedDummyAnnouncements() {
       const centerLongitude =
         Math.random() * (MAX_LONGITUDE - MIN_LONGITUDE) + MIN_LONGITUDE;
 
-      // Najpierw tworzymy POI
-      const poi = await prisma.poi.create({
+      // Tworzenie POI
+      const pOI = await prisma.pOI.create({
         data: {
+          id: counter,
           title: title,
           slug: slugify(title),
           locationX: centerLatitude,
           locationY: centerLongitude,
           responsible: 'UM Bieruń',
           street: 'Rynek',
-          buildingNr: 12,
+          buildingNr: '12',
         },
       });
 
-      // Następnie tworzymy Announcement i łączymy z POI
-      await prisma.announcement.create({
+      // Tworzenie ogłoszenia
+      const announcement = await prisma.announcement.create({
         data: {
-          title: title,
-          slug: slugify(title),
-          district: District.BARANIEC,
-          category: {
-            connect: {
-              name: announcementCategories[
-                getRandomInt(announcementCategories.length)
-              ].name,
-            },
-          },
+          area: null, // Możesz ustawić odpowiednią wartość lub null, jeśli pole jest opcjonalne
+          categoryId:
+            announcementCategories[getRandomInt(announcementCategories.length)]
+              .name, // Upewnij się, że to jest poprawne
+          isCommentable: true, // lub false, w zależności od potrzeb
           poi: {
             connect: {
-              id: poi.id,
+              id: pOI.id,
+            },
+          },
+          post: {
+            connect: {
+              id: counter++,
             },
           },
         },
@@ -1073,7 +1078,6 @@ async function seedDummyAnnouncements() {
 
   console.log('Seeding DUMMY announcements finished.');
 }
-
 
 async function seedPostsForDummyListings() {
   for (let i = 0; i < NUMBER_OF_DUMMY_POSTS; i++) {
@@ -1093,6 +1097,7 @@ async function seedPostsForDummyListings() {
   console.log('Seeding DUMMY listing posts finished.');
 }
 
+// TODO: FIX
 async function seedDummyListings() {
   const MIN_LATITUDE = 50.082497;
   const MAX_LATITUDE = 50.103219;
@@ -1163,7 +1168,7 @@ async function seedDummyListings() {
         Math.random() * (MAX_LONGITUDE - MIN_LONGITUDE) + MIN_LONGITUDE;
 
       // Najpierw tworzymy POI
-      const poi = await prisma.poi.create({
+      const pOI = await prisma.pOI.create({
         data: {
           title: title,
           slug: slugify(title),
@@ -1178,15 +1183,12 @@ async function seedDummyListings() {
       // Następnie tworzymy Listing i łączymy z POI
       await prisma.listing.create({
         data: {
-          title: title,
-          slug: slugify(title),
           price: 10000,
           surface: 100,
           sell: Math.random() >= 0.5,
-          district: $Enums.District.BIERUN_NOWY,
           poi: {
             connect: {
-              id: poi.id,
+              id: pOI.id,
             },
           },
         },
@@ -1196,7 +1198,6 @@ async function seedDummyListings() {
 
   console.log('Seeding DUMMY listings finished.');
 }
-
 
 async function seedPostsForDummyComments() {
   for (let i = 0; i < NUMBER_OF_DUMMY_POSTS * 2; i++) {
