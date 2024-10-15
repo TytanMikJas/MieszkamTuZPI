@@ -1217,8 +1217,8 @@ async function seedPostsForDummyComments() {
 }
 
 async function seedDummyComments() {
-  // The dummy comments are added only to the well thought out posts. Meaning the first 13 posts.
-  // those are 5 investments, 3 announcements, 5 listings. + 1 because prisma iterates from 1 :DD
+  // The dummy comments are added only to the well thought out posts. Meaning the first 13 posts
+  // those are 5 investments, 3 announcements, 5 listings. + 1 because prisma iterates from 1
   const LOWEST_CUSTOM_POST_NUM = 1;
   const HIGHEST_CUSTOM_POST_NUM = 14;
 
