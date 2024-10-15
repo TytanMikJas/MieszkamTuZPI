@@ -631,6 +631,7 @@ async function seedAnnouncements() {
   console.log('Seeding announcements finished.');
 }
 
+
 async function seedPostsForListings() {
   const postContents = [
     'Szukasz swojego wymarzonego domu w Bieruniu? Oferujemy na sprzedaż przestronny, nowoczesny dom położony w malowniczej okolicy, idealny dla rodziny szukającej spokoju i komfortu. Nieruchomość oferuje duży ogród, garaż na dwa samochody i jest wykończona w wysokim standardzie.',
@@ -768,6 +769,7 @@ async function seedListings() {
 
   console.log('Seeding listings finished.');
 }
+
 
 async function seedPostsForComments() {
   const postContents = [
@@ -979,6 +981,7 @@ async function seedDummyInvestments() {
   console.log('Seeding DUMMY investments finished.');
 }
 
+
 async function seedPostsForDummyAnnouncements() {
   for (let i = 0; i < NUMBER_OF_DUMMY_POSTS; i++) {
     await prisma.post.create({
@@ -1078,6 +1081,7 @@ async function seedDummyAnnouncements() {
 
   console.log('Seeding DUMMY announcements finished.');
 }
+
 
 async function seedPostsForDummyListings() {
   for (let i = 0; i < NUMBER_OF_DUMMY_POSTS; i++) {
@@ -1198,6 +1202,7 @@ async function seedDummyListings() {
 
   console.log('Seeding DUMMY listings finished.');
 }
+
 
 async function seedPostsForDummyComments() {
   for (let i = 0; i < NUMBER_OF_DUMMY_POSTS * 2; i++) {
