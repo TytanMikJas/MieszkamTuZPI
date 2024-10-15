@@ -18,22 +18,6 @@ enum InvestmentStatus {
   REJECTED
 }
 
-enum District {
-  PSIE_POLE
-  FABRYCZNA
-  KRZYKI
-  STARE_MIASTO
-  SRODMIESCIE
-  BISKUPIN
-  KARLOWICE
-  KLECINA
-  GAJ
-  PILCZYCE
-  ZAKRZOW
-  PARTYNICE
-  OLOWEK
-}
-
 enum UserStatus {
   ACTIVE
   EMAIL_NOT_CONFIRMED
@@ -100,9 +84,9 @@ model POI {
   locationX    Float
   locationY    Float
   responsible  String
-  street       String
-  buildingNr   Int
-  apartmentNr  Int
+  street       String?
+  buildingNr   String?
+  apartmentNr  String?
   Investment   Investment[]   @relation(name: "InvestmentPOI")
   Announcement Announcement[] @relation(name: "AnnouncementPOI")
   Listing      Listing[]      @relation(name: "ListingPOI")
@@ -116,7 +100,6 @@ model Investment {
   status               InvestmentStatus
   badges               Badge[]
   investmentCategoryId String
-  district             District
   category             InvestmentCategory @relation(fields: [investmentCategoryId], references: [name])
   post                 Post               @relation(name: "InvestmentPost", fields: [id], references: [id], onDelete: Cascade)
   poi                  POI                @relation(name: "InvestmentPOI", fields: [id], references: [id], onDelete: Cascade, map: "InvestmentPOI_id_fkey")
@@ -128,7 +111,6 @@ model Announcement {
   area          String?
   categoryId    String
   isCommentable Boolean              @default(true)
-  district      District?
   category      AnnouncementCategory @relation(fields: [categoryId], references: [name])
   post          Post                 @relation(name: "AnnouncementPost", fields: [id], references: [id], onDelete: Cascade)
   poi           POI                  @relation(name: "AnnouncementPOI", fields: [id], references: [id], onDelete: Cascade, map: "AnnouncementPOI_id_fkey")
@@ -140,7 +122,6 @@ model Listing {
   sell      Boolean  @default(false)
   price     Float
   surface   Float
-  district  District
   post      Post     @relation(name: "ListingPost", fields: [id], references: [id], onDelete: Cascade)
   poi       POI      @relation(name: "ListingPOI", fields: [id], references: [id], onDelete: Cascade, map: "ListingPOI_id_fkey")
 }
