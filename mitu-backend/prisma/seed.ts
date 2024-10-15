@@ -369,7 +369,7 @@ async function seedPostsForInvestments() {
         data: {
           postType: PostType.INVESTMENT,
           content: content,
-          thumbnail: '/uploads/investment.jpg',
+          thumbnail: `/uploads/investment${index + 1}.jpg`,
           createdBy: {
             connect: {
               id: (index % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
@@ -520,7 +520,7 @@ async function seedPostsForAnnouncements() {
         data: {
           postType: PostType.ANNOUNCEMENT,
           content: content,
-          thumbnail: '/uploads/announcement.jpg',
+          thumbnail: `/uploads/announcement${index + 1}.jpg`,
           createdBy: {
             connect: {
               id: (index % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
@@ -618,7 +618,7 @@ async function seedPostsForListings() {
         data: {
           postType: PostType.LISTING,
           content: content,
-          thumbnail: '/uploads/listing.jpg',
+          thumbnail: `/uploads/listing${index + 1}.jpg`,
           createdBy: {
             connect: {
               id: (index % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
