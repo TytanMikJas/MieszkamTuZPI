@@ -1,6 +1,6 @@
 import moment from 'moment/min/moment-with-locales';
 
-import { DATE_FORMAT } from './constants';
+import { DATE_FORMAT } from 'src/constants';
 
 export const daysFromNow = (date: string) => {
   return moment(date).locale('pl').fromNow();

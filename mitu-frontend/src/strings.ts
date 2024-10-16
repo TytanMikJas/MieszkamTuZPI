@@ -183,6 +183,7 @@ import {
   export const FILE_PATHS_IMAGE = 'IMAGE';
   export const FILE_PATHS_DOC = 'DOC';
   export const FILE_PATHS_TD = 'TD';
+  export const FILE_PATHS_OTHER = "OTHER"
   
   export const COMMENT_STATUS_PENDING = 'PENDING';
   export const COMMENT_STATUS_APPROVED = 'APPROVED';

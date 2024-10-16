@@ -29,7 +29,7 @@ import LoadableImage from '@/reusable-components/misc/lazy-loaded-image/Loadable
 import AnnouncementDto from '@/core/api/announcement/dto/announcement';
 import { LatLng } from 'leaflet';
 import DeletePostIcon from '@/reusable-components/icons/delete-icon/DeletePostIcon';
-import ShareButtons from "@/reusable-components/ShareButtons/ShareButtons";
+import ShareButtons from "@/reusable-components/share-buttons/ShareButtons";
 
 export default function AnnouncementDetails() {
   const {
@@ -111,14 +111,7 @@ export default function AnnouncementDetails() {
             fullName={announcement.responsible}
           />
           <div>
-            <Rating
-              postId={`${announcement.id}`}
-              upvoteCount={announcement.upvoteCount}
-              downvoteCount={announcement.downvoteCount}
-              currentVote={announcement.personalRating}
-              loading={singleAnnouncementRatingLoading}
-              callback={performVoteDetails}
-            />
+            Rating
           </div>
         </div>
       </div>

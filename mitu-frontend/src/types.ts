@@ -26,6 +26,7 @@ import {
   ADMIN_DETAILS_STAGE,
   ADMIN_NONE_STAGE,
   COMMENT_STATUS_REJECTED,
+  FILE_PATHS_OTHER,
 } from './strings';
 
 export type SortingParams = {
@@ -74,6 +75,7 @@ export type FilePaths = {
   [FILE_PATHS_IMAGE]: string;
   [FILE_PATHS_DOC]: string;
   [FILE_PATHS_TD]: string;
+  [FILE_PATHS_OTHER]: string;
 };
 
 export type PostComment = (id: string, content: string, files?: File[]) => void;
