@@ -48,11 +48,11 @@ async function main() {
   await seedDummyInvestments();
 
   // nie odkomentowuj, bo nie działa obecnie
-  // await seedPostsForDummyAnnouncements();
-  // await seedDummyAnnouncements();
+  await seedPostsForDummyAnnouncements();
+  await seedDummyAnnouncements();
 
-  // await seedPostsForDummyListings();
-  // await seedDummyListings();
+  await seedPostsForDummyListings();
+  await seedDummyListings();
 
   await seedPostsForDummyComments();
   await seedDummyComments();
@@ -1000,47 +1000,75 @@ async function seedPostsForDummyAnnouncements() {
   console.log('Seeding DUMMY announcement posts finished.');
 }
 
-// TODO: FIX
 async function seedDummyAnnouncements() {
-  const MIN_LATITUDE = 50.082497;
-  const MAX_LATITUDE = 50.103219;
-  const MIN_LONGITUDE = 19.071075;
-  const MAX_LONGITUDE = 19.102676;
+  const MIN_LATITUDE = 51.09;
+  const MAX_LATITUDE = 51.13;
+  const MIN_LONGITUDE = 16.98;
+  const MAX_LONGITUDE = 17.04;
+  const OFFSET = 0.00045;
 
   const announcementTitles = [
-    'Zapowiedź nowego etapu inwestycyjnego w Bieruniu',
-    'Uroczyste otwarcie zmodernizowanego żłobka',
-    'Oficjalne rozpoczęcie budowy Portu Lotniczego w naszym mieście',
-    'Ukończenie modernizacji drogi na Ulicy 1 Maja',
-    'Akcja społeczna czyszczenia rzeki Bierunia - zapraszamy do udziału!',
-    'Zakończenie projektu modernizacji oświetlenia ulicznego',
-    'Nowa ścieżka rowerowa wokół jeziora już otwarta!',
-    'Otwarcie odnowionego parku miejskiego i nowej siłowni plenerowej',
-    'Rozbudowa biblioteki miejskiej - zapraszamy do nowej czytelni',
-    'Realizacja projektu zielonych dachów - krok w stronę ekologii',
-    'Nowe stacje ładowania pojazdów elektrycznych już dostępne',
-    'Start miejskiego programu recyklingu - dołącz do nas!',
-    'Rozwój ogrodów społecznych - zapraszamy mieszkańców do współpracy',
-    'Modernizacja targowiska miejskiego zakończona sukcesem',
-    'Nowe place zabaw dla dzieci z niepełnosprawnościami już otwarte',
-    'Implementacja nowego systemu zarządzania odpadami komunalnymi',
-    'Inwestujemy w bezpieczeństwo - nowy system monitoringu wizyjnego',
-    'Infrastruktura dla psów - nowe wybiegi i punkty z wodą',
-    'Modernizacja systemu kanalizacyjnego - zapobiegamy podtopieniom',
-    'Zapraszamy na otwarcie kąpieliska miejskiego nad rzeką',
-    'Projekt oczyszczalni ścieków z nowoczesnymi technologiami zakończony',
-    'Miejskie centrum kultury otwiera nowe pracownie - sprawdź ofertę',
-    'Rozwój miejskiego car-sharingu - ekologiczna alternatywa dla mieszkańców',
-    'Nowe mieszkania komunalne dla młodych rodzin - start programu',
-    'Projekt termomodernizacji budynków komunalnych - inwestujemy w przyszłość',
+    'Otwarcie nowego żłobka na Krzykach',
+    'Modernizacja mostu Grunwaldzkiego',
+    'Rozbudowa kampusu Politechniki Wrocławskiej',
+    'Utworzenie nowych ścieżek rowerowych na Nadodrzu',
+    'Rewitalizacja parku Szczytnickiego',
+    'Nowe ławki i oświetlenie na Wyspie Słodowej',
+    'Modernizacja hali stulecia',
+    'Otwarcie centrum naukowego na Placu Solnym',
+    'Remont drogi na ulicy Świdnickiej',
+    'Budowa nowego skateparku na Gaju',
+    'Zakończenie renowacji Teatru Muzycznego Capitol',
+    'Nowa galeria sztuki w centrum miasta',
+    'Poszerzenie strefy czystego transportu',
+    'Rozbudowa sieci tramwajowej na Ołtaszynie',
+    'Otwarcie centrum kultury na Księżu Małym',
+    'Nowe parkingi rowerowe w okolicy rynku',
+    'Zielone dachy na budynkach miejskich',
+    'Nowe place zabaw dla dzieci z niepełnosprawnościami',
+    'Inwestycje w ekologiczne oświetlenie uliczne',
+    'Modernizacja systemu kanalizacyjnego na Oporowie',
+    'Nowe tereny rekreacyjne nad Odrą',
+    'Zakończenie budowy akademika na ul. Grunwaldzkiej',
+    'Projekt zielonej energii w miejskich budynkach',
+    'Nowe stanowiska ładowania pojazdów elektrycznych',
+    'Program dofinansowania instalacji fotowoltaicznych dla mieszkańców',
   ];
 
+  const responsibleNames = [
+    'UM Wrocław',
+    'Budimex',
+    'Eko Energia Wrocław',
+    'Miejskie Przedsiębiorstwo Wodociągów i Kanalizacji',
+    'Zarząd Zieleni Miejskiej',
+  ];
+
+  const allCategories = await prisma.announcementCategory.findMany();
+  const allCategoryNames = allCategories.map((category) => ({
+    name: category.name,
+  }));
+
   await Promise.all(
-    announcementTitles.map(async (title) => {
+    announcementTitles.map(async (title, i) => {
       const centerLatitude =
         Math.random() * (MAX_LATITUDE - MIN_LATITUDE) + MIN_LATITUDE;
       const centerLongitude =
         Math.random() * (MAX_LONGITUDE - MIN_LONGITUDE) + MIN_LONGITUDE;
+
+      // Tworzenie obszaru ogłoszenia
+      const area =
+        `${(centerLatitude + OFFSET).toFixed(6)},${(
+          centerLongitude - OFFSET
+        ).toFixed(6)};` +
+        `${(centerLatitude + OFFSET).toFixed(6)},${(
+          centerLongitude + OFFSET
+        ).toFixed(6)};` +
+        `${(centerLatitude - OFFSET).toFixed(6)},${(
+          centerLongitude + OFFSET
+        ).toFixed(6)};` +
+        `${(centerLatitude - OFFSET).toFixed(6)},${(
+          centerLongitude - OFFSET
+        ).toFixed(6)}`;
 
       // Tworzenie POI
       const pOI = await prisma.pOI.create({
@@ -1050,20 +1078,26 @@ async function seedDummyAnnouncements() {
           slug: slugify(title),
           locationX: centerLatitude,
           locationY: centerLongitude,
-          responsible: 'UM Bieruń',
+          responsible: responsibleNames[i % responsibleNames.length],
           street: 'Rynek',
-          buildingNr: '12',
+          buildingNr: '11',
         },
       });
+
+      // Pobranie losowej kategorii AnnouncementCategory
+      const randomCategory =
+        allCategoryNames[getRandomInt(allCategoryNames.length)];
 
       // Tworzenie ogłoszenia
       const announcement = await prisma.announcement.create({
         data: {
-          area: null, // Możesz ustawić odpowiednią wartość lub null, jeśli pole jest opcjonalne
-          categoryId:
-            announcementCategories[getRandomInt(announcementCategories.length)]
-              .name, // Upewnij się, że to jest poprawne
-          isCommentable: true, // lub false, w zależności od potrzeb
+          area: area,
+          isCommentable: Math.random() >= 0.5,
+          category: {
+            connect: {
+              name: randomCategory.name,
+            },
+          },
           poi: {
             connect: {
               id: pOI.id,
@@ -1076,6 +1110,8 @@ async function seedDummyAnnouncements() {
           },
         },
       });
+
+      console.log(`Ogłoszenie ${announcement.id} zostało utworzone.`);
     }),
   );
 
@@ -1101,67 +1137,67 @@ async function seedPostsForDummyListings() {
   console.log('Seeding DUMMY listing posts finished.');
 }
 
-// TODO: FIX
 async function seedDummyListings() {
-  const MIN_LATITUDE = 50.082497;
-  const MAX_LATITUDE = 50.103219;
-  const MIN_LONGITUDE = 19.071075;
-  const MAX_LONGITUDE = 19.102676;
+  // Zakres współrzędnych dla Wrocławia
+  const MIN_LATITUDE = 51.09;
+  const MAX_LATITUDE = 51.13;
+  const MIN_LONGITUDE = 16.98;
+  const MAX_LONGITUDE = 17.04;
 
   const responsibleNames = [
-    'Progres',
-    'Modern Budownictwo',
-    'EkoRzeka Polska',
-    'Budimex Dromex',
-    'Polskie Oświetlenie Miejskie',
-    'Ścieżki Rowerowe Polska',
-    'Kacper Grobelny',
-    'Citified',
-    'Citified',
-    'ElektroMobilność',
-    'Recykling Miasta',
-    'Ogrody Społeczne',
-    'Targowisko Nowa Era',
-    'Dostępność Plus',
-    'EkoZarządzanie',
-    'Bezpieczne Miasto',
-    'Kocham Bieruń',
-    'HydroKanal',
-    'AquaPark Bieruń',
-    'Oczyszczalnia Nowoczesna',
-    'Centrum Kultury Innowacje',
-    'AutoNaWspółkę',
-    'Mieszkania dla Rodzin',
-    'EkoEnergia Miejska',
-    'TermoModernizacja',
+    'UM Wrocław',
+    'Budimex',
+    'Zarząd Zieleni Miejskiej',
+    'EkoEnergia Wrocław',
+    'Wrocławskie Oświetlenie Miejskie',
+    'MPWiK Wrocław',
+    'Tramwaje Wrocławskie',
+    'EkoInwestycje Dolnośląskie',
+    'Modernizacje Wrocławskie',
+    'ElektroMobilność Wrocław',
+    'Wrocławski Recykling',
+    'Zarząd Dróg i Utrzymania Miasta',
+    'Targowisko Wrocław',
+    'Kultura Wrocław',
+    'EkoZarządzanie Wrocław',
+    'Bezpieczny Wrocław',
+    'HydroEnergia Wrocław',
+    'Wrocławski Park Wodny',
+    'Oczyszczalnia Ścieków Wrocław',
+    'Centrum Nauki Wrocław',
+    'Wrocław na Współkę',
+    'Mieszkania Wrocław',
+    'Zielona Energia Wrocław',
+    'TermoModernizacja Wrocław',
+    'Architektura Wrocław',
   ];
 
   const listingTitles = [
-    'Niezwykła okazja inwestycyjna: działka pod rozwój w centrum Bierunia',
+    'Niezwykła okazja inwestycyjna: działka pod rozwój w centrum Wrocławia',
     'Żłobek po kompleksowej modernizacji na sprzedaż - idealny dla prowadzenia działalności edukacyjnej',
-    'Sprzedam teren pod budowę Portu Lotniczego - unikalna inwestycja w naszym mieście',
-    'Na sprzedaż: grunt wzdłuż zmodernizowanej drogi na Ulicy 1 Maja - wysoki potencjał komercyjny',
-    'Dołącz do akcji społecznej: kup grunt nad rzeką Bierunia i przyczyn się do jej ochrony',
-    'Lokal handlowy w centrum z nowoczesnym oświetleniem LED na sprzedaż',
-    'Działka rekreacyjna w okolicy nowej ścieżki rowerowej - idealna na weekendowy wypoczynek',
-    'Otwarcie sprzedaży apartamentów w odnowionym parku miejskim z dostępem do siłowni plenerowej',
-    'Rozbudowana biblioteka miejska na sprzedaż - z czytelnią i przestrzenią na warsztaty',
-    'Inwestycja w zielone dachy: sprzedam budynek biurowy z ekologicznym dachem',
+    'Sprzedam teren pod inwestycję niedaleko Rynku - wysoki potencjał komercyjny',
+    'Działka na sprzedaż w okolicy mostu Grunwaldzkiego - doskonała lokalizacja',
+    'Zainwestuj w nieruchomość nad Odrą - działka rekreacyjna na sprzedaż',
+    'Lokal handlowy w centrum z nowoczesnym oświetleniem LED - idealny na sklep lub biuro',
+    'Teren pod budowę osiedla mieszkaniowego na Krzykach - dobra komunikacja',
+    'Sprzedam obiekt sportowy z siłownią i basenem w okolicy hali stulecia',
+    'Nowoczesne biuro na sprzedaż w odrestaurowanym budynku - blisko centrum',
+    'Budynek komercyjny z zielonym dachem na sprzedaż - energooszczędne rozwiązania',
     'Parking z nowymi stacjami ładowania EV - na sprzedaż lub wynajem',
-    'Współpraca: teren pod miejski program recyklingu - poszukiwani inwestorzy',
-    'Działki pod rozwój ogrodów społecznych - zapraszamy do inwestycji',
-    'Zmodernizowane targowisko miejskie do przejęcia - szansa na rozwój własnej działalności',
-    'Plac zabaw dla dzieci z niepełnosprawnościami - poszukiwany operator',
-    'Sprzedam nieruchomość z nowoczesnym systemem zarządzania odpadami',
-    'Budynek z zaawansowanym systemem monitoringu wizyjnego do wynajęcia - zwiększ bezpieczeństwo swojego biznesu',
-    'Teren z infrastrukturą dla psów - nowe wybiegi i punkty z wodą na sprzedaż',
-    'Inwestycja: grunt pod modernizację systemu kanalizacyjnego - zapobiegajmy podtopieniom razem',
-    'Kąpielisko miejskie nad rzeką - szukamy operatora do zarządzania',
-    'Nowoczesna oczyszczalnia ścieków do przejęcia - technologia na sprzedaż',
-    'Lokale w miejskim centrum kultury na wynajem - stwórz przestrzeń kreatywną dla swojej działalności',
-    'Wynajem miejsc parkingowych dla systemu miejskiego car-sharingu - zainwestuj w ekologiczną alternatywę',
-    'Mieszkania komunalne dla młodych rodzin - zainwestuj w przyszłość nowych pokoleń',
-    'Projekt budynku z termomodernizacją - na sprzedaż: zainwestuj w energooszczędne rozwiązania',
+    'Współpraca: grunt pod projekt recyklingowy - poszukiwani inwestorzy',
+    'Działki pod ogrody społeczne - inwestycja w rozwój miejskich terenów zielonych',
+    'Targowisko miejskie do przejęcia - duży potencjał na rozwój działalności',
+    'Plac zabaw dla dzieci w nowej dzielnicy - szukamy operatora',
+    'Sprzedam nieruchomość z systemem zarządzania odpadami - idealna lokalizacja',
+    'Budynek biurowy z nowoczesnym systemem monitoringu na wynajem',
+    'Teren na sprzedaż z infrastrukturą dla psów - wybieg i punkty z wodą',
+    'Grunt do modernizacji systemu kanalizacyjnego - zabezpiecz przyszłe inwestycje',
+    'Kąpielisko miejskie nad rzeką - poszukiwany nowy operator',
+    'Nowoczesna oczyszczalnia ścieków na sprzedaż - inwestycja w ekologię',
+    'Lokale w centrum kultury na wynajem - przestrzeń kreatywna dla biznesu',
+    'Wynajem miejsc parkingowych dla systemu miejskiego car-sharingu - inwestycja w przyszłość',
+    'Mieszkania komunalne w centrum - zainwestuj w nowe pokolenia Wrocławian',
+    'Projekt budynku z termomodernizacją - energooszczędne rozwiązania na sprzedaż',
   ];
 
   await Promise.all(
@@ -1171,24 +1207,25 @@ async function seedDummyListings() {
       const centerLongitude =
         Math.random() * (MAX_LONGITUDE - MIN_LONGITUDE) + MIN_LONGITUDE;
 
-      // Najpierw tworzymy POI
+      // Tworzenie POI
       const pOI = await prisma.pOI.create({
         data: {
           title: title,
           slug: slugify(title),
           locationX: centerLatitude,
           locationY: centerLongitude,
-          responsible: responsibleNames[i],
+          responsible: responsibleNames[i % responsibleNames.length],
           street: 'Rynek',
-          buildingNr: 15,
+          buildingNr: '15',
+          apartmentNr: null,
         },
       });
 
-      // Następnie tworzymy Listing i łączymy z POI
+      // Tworzenie Listing i łączenie z POI
       await prisma.listing.create({
         data: {
-          price: 10000,
-          surface: 100,
+          price: Math.floor(Math.random() * 900000) + 100000, // Generowanie losowej ceny
+          surface: Math.floor(Math.random() * 200) + 50, // Losowa powierzchnia od 50 do 250
           sell: Math.random() >= 0.5,
           poi: {
             connect: {
