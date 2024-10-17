@@ -969,11 +969,11 @@ async function seedDummyInvestments() {
   ];
 
   const allBadges = await prisma.badge.findMany();
-  const allBadgeIds = allBadges.map((badge) => ({ name: badge.name }));
+  const allBadgeIds = allBadges.map((badge) => ({ name: badge.name })); // Use the unique field from your schema
 
   const getRandomBadgeIds = () => {
     const shuffled = [...allBadgeIds].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, Math.floor(Math.random() * 4) + 1);
+    return shuffled.slice(0, Math.floor(Math.random() * 4) + 1); // Return badge names
   };
 
   await Promise.all(
@@ -997,22 +997,22 @@ async function seedDummyInvestments() {
           centerLongitude - OFFSET
         ).toFixed(6)}`;
 
-      // Najpierw tworzymy POI
+      // Create POI
       const pOI = await prisma.pOI.create({
         data: {
-          id: counter,
+          id: counter++, // Increment counter
           title: title,
           slug: slugify(title),
           locationX: centerLatitude,
           locationY: centerLongitude,
           responsible: responsibleNames[i % responsibleNames.length],
-          street: 'Rynek', // Opcjonalne
-          buildingNr: '11', // Opcjonalne
-          apartmentNr: null, // Opcjonalne, jeśli nie jest potrzebne
+          street: 'Rynek', // Optional
+          buildingNr: '11', // Optional
+          apartmentNr: null, // Optional
         },
       });
 
-      // Następnie tworzymy Investment i łączymy z POI
+      // Create Investment and connect to POI
       await prisma.investment.create({
         data: {
           area: area,
@@ -1020,7 +1020,7 @@ async function seedDummyInvestments() {
           status:
             investmentTypes[Math.floor(Math.random() * investmentTypes.length)],
           badges: {
-            connect: getRandomBadgeIds(),
+            connect: getRandomBadgeIds(), // This should now work correctly
           },
           category: {
             connect: {
@@ -1036,7 +1036,7 @@ async function seedDummyInvestments() {
           },
           post: {
             connect: {
-              id: counter++,
+              id: counter++, // Increment counter
             },
           },
         },
