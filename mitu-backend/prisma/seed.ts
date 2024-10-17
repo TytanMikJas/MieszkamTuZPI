@@ -20,12 +20,12 @@ const ID_OFFSET = 10_000;
 let counter = 1;
 
 async function main() {
-  // await seedUsers();
+  await seedUsers();
 
-  // await seedBadges();
+  await seedBadges();
 
-  // await seedInvestmentCategories();
-  // await seedAnnouncementCategories();
+  await seedInvestmentCategories();
+  await seedAnnouncementCategories();
 
   // Here we seed CUSTOM, posts and investments, announcements, listings
   await seedPostsForInvestments();
@@ -475,11 +475,9 @@ async function seedInvestments() {
   ];
 
   for (let i = 0; i < investments.length; i++) {
-    counter++;
-
     const pOI = await prisma.pOI.create({
       data: {
-        id: counter, // czy tutaj powinno byc ++?
+        id: counter++,
         title: investments[i].title,
         slug: slugify(investments[i].title),
         locationX: investments[i].locationX,
@@ -495,7 +493,7 @@ async function seedInvestments() {
       data: {
         post: {
           connect: {
-            id: counter,
+            id: counter++,
           },
         },
         area: investments[i].area,
