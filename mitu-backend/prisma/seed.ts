@@ -20,12 +20,12 @@ const ID_OFFSET = 10_000;
 let counter = 1;
 
 async function main() {
-  await seedUsers();
+  // await seedUsers();
 
-  await seedBadges();
+  // await seedBadges();
 
-  await seedInvestmentCategories();
-  await seedAnnouncementCategories();
+  // await seedInvestmentCategories();
+  // await seedAnnouncementCategories();
 
   // Here we seed CUSTOM, posts and investments, announcements, listings
   await seedPostsForInvestments();
@@ -317,7 +317,7 @@ async function seedUsers() {
         id: 9 + ID_OFFSET,
         firstName: 'Mariusz',
         lastName: 'Pudzian',
-        email: 'officialbierunmp@gmail.com',
+        email: 'officialwroclawmp@gmail.com',
         password: hashedPassword,
         role: UserRole.OFFICIAL,
         status: UserStatus.ACTIVE,
@@ -326,7 +326,7 @@ async function seedUsers() {
         id: 10 + ID_OFFSET,
         firstName: 'Bartłomiej',
         lastName: 'Pięta',
-        email: 'officialbierunbp@gmail.com',
+        email: 'officialwroclawbp@gmail.com',
         password: hashedPassword,
         role: UserRole.OFFICIAL,
         status: UserStatus.ACTIVE,
@@ -335,7 +335,7 @@ async function seedUsers() {
         id: 11 + ID_OFFSET,
         firstName: 'Kornelia',
         lastName: 'Wojciechowska',
-        email: 'officialbierunkw@gmail.com',
+        email: 'officialwroclawkw@gmail.com',
         password: hashedPassword,
         role: UserRole.OFFICIAL,
         status: UserStatus.DELETED,
@@ -344,7 +344,7 @@ async function seedUsers() {
         id: 12 + ID_OFFSET,
         firstName: 'Mateusz',
         lastName: 'Gondek',
-        email: 'officialbierunmg@gmail.com',
+        email: 'officialwroclawmg@gmail.com',
         password: hashedPassword,
         role: UserRole.OFFICIAL,
         status: UserStatus.EMAIL_NOT_CONFIRMED,
@@ -475,9 +475,11 @@ async function seedInvestments() {
   ];
 
   for (let i = 0; i < investments.length; i++) {
+    counter++;
+
     const pOI = await prisma.pOI.create({
       data: {
-        id: counter++,
+        id: counter, // czy tutaj powinno byc ++?
         title: investments[i].title,
         slug: slugify(investments[i].title),
         locationX: investments[i].locationX,
@@ -493,7 +495,7 @@ async function seedInvestments() {
       data: {
         post: {
           connect: {
-            id: counter++,
+            id: counter,
           },
         },
         area: investments[i].area,
@@ -591,7 +593,7 @@ async function seedAnnouncements() {
   for (let i = 0; i < announcements.length; i++) {
     const pOI = await prisma.pOI.create({
       data: {
-        id: counter++, // czy tutaj powinno byc ++?
+        id: counter, // czy tutaj powinno byc ++?
         title: announcements[i].title,
         slug: slugify(announcements[i].title),
         locationX: announcements[i].locationX,
@@ -634,11 +636,11 @@ async function seedAnnouncements() {
 
 async function seedPostsForListings() {
   const postContents = [
-    'Szukasz swojego wymarzonego domu w Bieruniu? Oferujemy na sprzedaż przestronny, nowoczesny dom położony w malowniczej okolicy, idealny dla rodziny szukającej spokoju i komfortu. Nieruchomość oferuje duży ogród, garaż na dwa samochody i jest wykończona w wysokim standardzie.',
-    'Pilnie potrzebujesz mieszkania w Bieruniu? Mamy dla Ciebie świetną ofertę! Wynajem: komfortowe, w pełni wyposażone mieszkanie na ulicy Krakowskiej 5 dostępne od zaraz. Doskonała lokalizacja, blisko do centrum miasta oraz licznych punktów usługowych i handlowych.',
+    'Szukasz swojego wymarzonego domu we Wrocławiu? Oferujemy na sprzedaż przestronny, nowoczesny dom położony w malowniczej okolicy, idealny dla rodziny szukającej spokoju i komfortu. Nieruchomość oferuje duży ogród, garaż na dwa samochody i jest wykończona w wysokim standardzie.',
+    'Pilnie potrzebujesz mieszkania we Wrocławiu? Mamy dla Ciebie świetną ofertę! Wynajem: komfortowe, w pełni wyposażone mieszkanie na ulicy Krakowskiej 5 dostępne od zaraz. Doskonała lokalizacja, blisko do centrum miasta oraz licznych punktów usługowych i handlowych.',
     'Posiadasz firmę i potrzebujesz miejsca na przechowywanie sprzętu? Mamy dla Ciebie rozwiązanie! Do wynajęcia przestronny hangar na sprzęt, idealny dla firm. Hangar zlokalizowany jest w dogodnej lokalizacji, zapewniając łatwy dostęp i wysoki poziom bezpieczeństwa.',
     'Marzysz o domu z ogrodem, ale nie jesteś gotowy na zakup? Oferujemy na wynajem urokliwy dom z przestronnym ogrodem, idealny dla rodziny. Dom znajduje się w cichej, bezpiecznej okolicy, oferując komfort i prywatność, a jednocześnie bliskość do centrum miasta i infrastruktury.',
-    'Rozwijasz startup i szukasz miejsca na swoje biuro? Mamy coś specjalnie dla Ciebie! Przestrzeń biurowa w centrum Bierunia, idealna dla młodych firm i startupów. Nowoczesne biuro w prestiżowej lokalizacji zapewni odpowiednie warunki do pracy i rozwoju Twojego biznesu.',
+    'Rozwijasz startup i szukasz miejsca na swoje biuro? Mamy coś specjalnie dla Ciebie! Przestrzeń biurowa w centrum Wrocławia, idealna dla młodych firm i startupów. Nowoczesne biuro w prestiżowej lokalizacji zapewni odpowiednie warunki do pracy i rozwoju Twojego biznesu.',
   ];
 
   await Promise.all(
@@ -733,10 +735,9 @@ async function seedListings() {
   ];
 
   for (let i = 0; i < listings.length; i++) {
-    // Najpierw tworzymy POI
     const pOI = await prisma.pOI.create({
       data: {
-        id: counter++, // Dodano id
+        id: counter++, // czy tutaj powinno byc ++?
         title: listings[i].title,
         slug: slugify(listings[i].title),
         locationX: listings[i].locationX,
@@ -752,7 +753,7 @@ async function seedListings() {
       data: {
         post: {
           connect: {
-            id: counter++, // czy dobrze ++?
+            id: counter++,
           },
         },
         sell: listings[i].sell,
@@ -780,7 +781,7 @@ async function seedPostsForComments() {
     'Bardzo się cieszę, że nasze miasto inwestuje w takie projekty. To krok w stronę promowania zrównoważonego rozwoju.',
     'Mam nadzieję, że projekt będzie uwzględniał dostępność dla osób z niepełnosprawnościami.',
     'Czy przewidziane są jakieś utrudnienia w ruchu miejskim w związku z budową zegara? Dobrze byłoby wiedzieć z wyprzedzeniem.',
-    'To świetnie, że coś takiego powstaje w Bieruniu. Zegar słoneczny na pewno przyciągnie więcej turystów do naszego miasta.',
+    'To świetnie, że coś takiego powstaje we Wrocławiu. Zegar słoneczny na pewno przyciągnie więcej turystów do naszego miasta.',
   ];
 
   await Promise.all(
@@ -881,17 +882,59 @@ async function seedDummyInvestments() {
   const OFFSET = 0.00045;
 
   const investmentTitles = [
-    'Początek inwestycji środowiskowej',
+    'Początek DUMMY inwestycji',
     'Rewitalizacja żłobka',
     'Budowa Portu Lotniczego',
-    // ... (pozostałe tytuły)
+    'Modernizacja drogi na Ulicy 1 Maja',
+    'Czyszczenie rzeki',
+    'Modernizacja oświetlenia ulicznego',
+    'Budowa nowej ścieżki rowerowej wokół jeziora',
+    'Rewitalizacja parku miejskiego i instalacja siłowni plenerowej',
+    'Rozbudowa biblioteki miejskiej i wprowadzenie czytelni',
+    'Projekt zielonych dachów na budynkach użyteczności publicznej',
+    'Instalacja stacji ładowania pojazdów elektrycznych',
+    'Uruchomienie miejskiego programu recyklingu',
+    'Rozwój lokalnych ogrodów społecznych',
+    'Modernizacja miejskiego targowiska',
+    'Budowa placów zabaw dostosowanych dla dzieci z niepełnosprawnościami',
+    'Wprowadzenie systemu zarządzania odpadami komunalnymi',
+    'Inwestycja w system monitoringu wizyjnego dla zwiększenia bezpieczeństwa',
+    'Rozbudowa infrastruktury dla psów: wybiegi i punkty z wodą',
+    'Modernizacja systemu kanalizacyjnego i przeciwdziałanie podtopieniom',
+    'Budowa kąpieliska miejskiego nad rzeką',
+    'Projekt oczyszczalni ścieków wykorzystującej nowoczesne technologie',
+    'Inwestycja w miejskie centrum kultury z nowymi pracowniami',
+    'Rozwój systemu miejskiego car-sharingu',
+    'Budowa mieszkań komunalnych dla młodych rodzin',
+    'Projekt termomodernizacji budynków komunalnych dla oszczędności energii',
   ];
 
   const responsibleNames = [
     'Progres',
     'Modern Budownictwo',
     'EkoRzeka Polska',
-    // ... (pozostałe nazwy)
+    'Budimex Dromex',
+    'Polskie Oświetlenie Miejskie',
+    'Ścieżki Rowerowe Polska',
+    'Kacper Grobelny',
+    'Citified',
+    'Citified',
+    'ElektroMobilność',
+    'Recykling Miasta',
+    'Ogrody Społeczne',
+    'Targowisko Nowa Era',
+    'Dostępność Plus',
+    'EkoZarządzanie',
+    'Bezpieczne Miasto',
+    'Kocham Wrocław',
+    'HydroKanal',
+    'AquaPark Wrocław',
+    'Oczyszczalnia Nowoczesna',
+    'Centrum Kultury Innowacje',
+    'AutoNaWspółkę',
+    'Mieszkania dla Rodzin',
+    'EkoEnergia Miejska',
+    'TermoModernizacja',
   ];
 
   const investmentTypes = [
@@ -1138,7 +1181,6 @@ async function seedPostsForDummyListings() {
 }
 
 async function seedDummyListings() {
-  // Zakres współrzędnych dla Wrocławia
   const MIN_LATITUDE = 51.09;
   const MAX_LATITUDE = 51.13;
   const MIN_LONGITUDE = 16.98;
@@ -1207,9 +1249,9 @@ async function seedDummyListings() {
       const centerLongitude =
         Math.random() * (MAX_LONGITUDE - MIN_LONGITUDE) + MIN_LONGITUDE;
 
-      // Tworzenie POI
       const pOI = await prisma.pOI.create({
         data: {
+          id: counter,
           title: title,
           slug: slugify(title),
           locationX: centerLatitude,
@@ -1221,15 +1263,19 @@ async function seedDummyListings() {
         },
       });
 
-      // Tworzenie Listing i łączenie z POI
       await prisma.listing.create({
         data: {
-          price: Math.floor(Math.random() * 900000) + 100000, // Generowanie losowej ceny
-          surface: Math.floor(Math.random() * 200) + 50, // Losowa powierzchnia od 50 do 250
+          price: Math.floor(Math.random() * 900000) + 100000,
+          surface: Math.floor(Math.random() * 200) + 50,
           sell: Math.random() >= 0.5,
           poi: {
             connect: {
               id: pOI.id,
+            },
+          },
+          post: {
+            connect: {
+              id: counter,
             },
           },
         },
