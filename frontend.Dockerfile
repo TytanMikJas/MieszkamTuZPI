@@ -2,7 +2,7 @@
     FROM node:20.1-alpine as build-stage
     COPY .env.prod .
     RUN mkdir front
-    COPY ./mitu-frontend/package*.json /front
+    COPY ./mitu-frontend/package*.json /front/
     WORKDIR /front
     RUN npm install
     COPY ./mitu-frontend .
