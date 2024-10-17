@@ -969,11 +969,14 @@ async function seedDummyInvestments() {
   ];
 
   const allBadges = await prisma.badge.findMany();
-  const allBadgeIds = allBadges.map((badge) => ({ name: badge.name })); // Use the unique field from your schema
+  // Map badge names instead of IDs
+  const allBadgeNames = allBadges.map((badge) => ({ name: badge.name }));
 
-  const getRandomBadgeIds = () => {
-    const shuffled = [...allBadgeIds].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, Math.floor(Math.random() * 4) + 1); // Return badge names
+  const getRandomBadgeNames = () => {
+    const shuffled = [...allBadgeNames].sort(() => 0.5 - Math.random());
+    return shuffled
+      .slice(0, Math.floor(Math.random() * 4) + 1)
+      .map((badge) => ({ name: badge.name })); // Return random badge names
   };
 
   await Promise.all(
@@ -1020,7 +1023,7 @@ async function seedDummyInvestments() {
           status:
             investmentTypes[Math.floor(Math.random() * investmentTypes.length)],
           badges: {
-            connect: getRandomBadgeIds(), // This should now work correctly
+            connect: getRandomBadgeNames(), // Connect using badge names
           },
           category: {
             connect: {
@@ -1036,7 +1039,7 @@ async function seedDummyInvestments() {
           },
           post: {
             connect: {
-              id: counter++, // Increment counter
+              id: counter - 1, // Connect to the last created Post
             },
           },
         },
