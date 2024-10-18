@@ -12,7 +12,7 @@ import { hash } from 'bcrypt';
 import { slugify } from '../src/utils/string-utils';
 
 const prisma = new PrismaClient();
-const NUMBER_OF_DUMMY_POSTS = 25;
+const NUMBER_OF_DUMMY_POSTS = 15;
 const NUMBER_OF_USERS = 13;
 const ID_OFFSET = 10_000;
 let counter = 1;
@@ -40,17 +40,16 @@ async function main() {
   await seedPostsForComments();
   await seedComments();
 
-  // Here we seed DUMMY posts and investments, announcements, listings - random data
+  // Here we seed DUMMY posts and investments, announcements, listings - random data - not working now
 
-  await seedPostsForDummyInvestments();
-  await seedDummyInvestments();
+  // await seedPostsForDummyInvestments();
+  // await seedDummyInvestments();
 
-  // nie odkomentowuj, bo nie działa obecnie
-  await seedPostsForDummyAnnouncements();
-  await seedDummyAnnouncements();
+  // await seedPostsForDummyAnnouncements();
+  // await seedDummyAnnouncements();
 
-  await seedPostsForDummyListings();
-  await seedDummyListings();
+  // await seedPostsForDummyListings();
+  // await seedDummyListings();
 
   await seedPostsForDummyComments();
   await seedDummyComments();
@@ -381,6 +380,16 @@ async function seedPostsForInvestments() {
     'Zamierzenie wymiany ogrodzenia wokół lokalnego parku na bardziej trwałe i estetycznie dopasowane do otoczenia, co ma na celu zwiększenie bezpieczeństwa i poprawę wizerunku miejsca.',
     'Projekt montażu nowych, bezpiecznych ławek na placach zabaw oraz stworzenie dodatkowych miejsc odpoczynku dla rodziców i opiekunów, co ma na celu podniesienie komfortu oraz zachęcenie do spędzania wolnego czasu na świeżym powietrzu.',
     'Inicjatywa sadzenia nowych drzew wzdłuż ulic miejskich i w parkach, mająca na celu poprawę jakości powietrza, estetyki miasta oraz stworzenie lepszych warunków życia dla mieszkańców i małej fauny.',
+    'Projekt modernizacji Parku Szczytnickiego, obejmujący odnowienie alejek, budowę nowych miejsc odpoczynku oraz poprawę infrastruktury rekreacyjnej, mający na celu uczynienie parku bardziej przyjaznym dla mieszkańców i turystów.',
+    'Budowa nowej ścieżki rowerowej na Oporowie, mająca na celu poprawę bezpieczeństwa i komfortu rowerzystów, a także zwiększenie dostępności tej dzielnicy dla miłośników aktywnego wypoczynku.',
+    'Inicjatywa budowy fontanny w Parku Zachodnim, mająca na celu stworzenie nowej atrakcji wodnej, która przyciągnie mieszkańców i turystów, jednocześnie upiększając przestrzeń zieloną w tej części miasta.',
+    'Projekt odnowienia placu zabaw na Biskupinie, obejmujący modernizację istniejących urządzeń, dodanie nowych elementów zabawowych oraz poprawę bezpieczeństwa, co ma na celu zwiększenie atrakcyjności tego miejsca dla rodzin z dziećmi.',
+    'Renowacja Mostu Zwierzynieckiego, mająca na celu przywrócenie jego dawnej świetności oraz zwiększenie bezpieczeństwa pieszych i rowerzystów, a także wzmocnienie struktury mostu na potrzeby przyszłego ruchu.',
+    'Budowa boiska wielofunkcyjnego na Krzykach, mająca na celu zapewnienie mieszkańcom dostępu do nowoczesnej infrastruktury sportowej, sprzyjającej aktywności fizycznej oraz organizacji wydarzeń sportowych w tej części miasta.',
+    'Rozbudowa infrastruktury rekreacyjnej na Gaju, obejmująca budowę nowych ścieżek spacerowych, siłowni plenerowej oraz miejsc piknikowych, co ma na celu zwiększenie możliwości spędzania czasu na świeżym powietrzu i promowanie zdrowego stylu życia.',
+    'Modernizacja skweru przy Placu Grunwaldzkim, mająca na celu poprawę estetyki oraz funkcjonalności tej przestrzeni publicznej, poprzez dodanie nowych ławek, oświetlenia i zieleni, co przyczyni się do zwiększenia komfortu użytkowników.',
+    'Budowa tężni solankowej na Sępolnie, mająca na celu stworzenie miejsca sprzyjającego zdrowiu i wypoczynkowi, które będzie dostępne dla mieszkańców i odwiedzających, oferując naturalną inhalację solankową w miejskim otoczeniu.',
+    'Projekt budowy nowej sceny plenerowej w Parku Południowym, mający na celu stworzenie miejsca do organizacji koncertów, spektakli i innych wydarzeń kulturalnych, które wzbogacą ofertę kulturalną miasta oraz urozmaicą życie lokalnej społeczności.',
   ];
 
   await Promise.all(
@@ -470,6 +479,136 @@ async function seedInvestments() {
       responsible: 'Urząd Wrocław',
       isCommentable: false,
     },
+    {
+      title: 'Modernizacja Parku Szczytnickiego',
+      locationX: 51.110694,
+      locationY: 17.077389,
+      area: '51.110194,17.076889;51.110194,17.077989;51.109594,17.076889;51.109594,17.077989',
+      address: 'Szczytnicka 10, Wrocław',
+      street: 'Szczytnicka',
+      buildingNr: '10',
+      apartmentNr: null,
+      status: InvestmentStatus.APPROVED,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Nowa ścieżka rowerowa na Oporowie',
+      locationX: 51.095194,
+      locationY: 16.991389,
+      area: '51.095500,16.990500;51.095500,16.992500;51.094800,16.990500;51.094800,16.992500',
+      address: 'Grabiszyńska 400, Wrocław',
+      street: 'Grabiszyńska',
+      buildingNr: '400',
+      apartmentNr: null,
+      status: InvestmentStatus.IN_PROGRESS,
+      responsible: 'Miasto Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Budowa fontanny w Parku Zachodnim',
+      locationX: 51.126194,
+      locationY: 16.986389,
+      area: '51.125600,16.985900;51.125600,16.986800;51.124900,16.985900;51.124900,16.986800',
+      address: 'Na Ostatnim Groszu 60, Wrocław',
+      street: 'Na Ostatnim Groszu',
+      buildingNr: '60',
+      apartmentNr: null,
+      status: InvestmentStatus.COMPLETED,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Odnowienie placu zabaw na Biskupinie',
+      locationX: 51.104294,
+      locationY: 17.095789,
+      area: '51.104600,17.095300;51.104600,17.096200;51.103900,17.095300;51.103900,17.096200',
+      address: 'Dembowskiego 25, Wrocław',
+      street: 'Dembowskiego',
+      buildingNr: '25',
+      apartmentNr: null,
+      status: InvestmentStatus.IN_PROGRESS,
+      responsible: 'Urząd Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Renowacja Mostu Zwierzynieckiego',
+      locationX: 51.108894,
+      locationY: 17.068789,
+      area: '51.109200,17.068300;51.109200,17.069300;51.108500,17.068300;51.108500,17.069300',
+      address: 'Zwierzyniecka 1, Wrocław',
+      street: 'Zwierzyniecka',
+      buildingNr: '1',
+      apartmentNr: null,
+      status: InvestmentStatus.APPROVED,
+      responsible: 'UM Wrocław',
+      isCommentable: false,
+    },
+    {
+      title: 'Budowa boiska wielofunkcyjnego na Krzykach',
+      locationX: 51.085294,
+      locationY: 17.024489,
+      area: '51.085600,17.024000;51.085600,17.025000;51.084900,17.024000;51.084900,17.025000',
+      address: 'Powstańców Śląskich 140, Wrocław',
+      street: 'Powstańców Śląskich',
+      buildingNr: '140',
+      apartmentNr: null,
+      status: InvestmentStatus.IN_PROGRESS,
+      responsible: 'Miasto Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Rozbudowa infrastruktury rekreacyjnej na Gaju',
+      locationX: 51.075394,
+      locationY: 17.048989,
+      area: '51.075800,17.048500;51.075800,17.049500;51.075100,17.048500;51.075100,17.049500',
+      address: 'Armii Krajowej 90, Wrocław',
+      street: 'Armii Krajowej',
+      buildingNr: '90',
+      apartmentNr: null,
+      status: InvestmentStatus.COMPLETED,
+      responsible: 'Urząd Wrocław',
+      isCommentable: false,
+    },
+    {
+      title: 'Modernizacja skweru przy Placu Grunwaldzkim',
+      locationX: 51.108094,
+      locationY: 17.066789,
+      area: '51.108400,17.066300;51.108400,17.067300;51.107700,17.066300;51.107700,17.067300',
+      address: 'Plac Grunwaldzki 2, Wrocław',
+      street: 'Plac Grunwaldzki',
+      buildingNr: '2',
+      apartmentNr: null,
+      status: InvestmentStatus.APPROVED,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Budowa tężni solankowej na Sępolnie',
+      locationX: 51.098794,
+      locationY: 17.095589,
+      area: '51.099200,17.095100;51.099200,17.096000;51.098500,17.095100;51.098500,17.096000',
+      address: 'Bacciarellego 45, Wrocław',
+      street: 'Bacciarellego',
+      buildingNr: '45',
+      apartmentNr: null,
+      status: InvestmentStatus.IN_PROGRESS,
+      responsible: 'Miasto Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Nowa scena plenerowa w Parku Południowym',
+      locationX: 51.084694,
+      locationY: 17.022189,
+      area: '51.085000,17.021700;51.085000,17.022700;51.084300,17.021700;51.084300,17.022700',
+      address: 'Parkowa 8, Wrocław',
+      street: 'Parkowa',
+      buildingNr: '8',
+      apartmentNr: null,
+      status: InvestmentStatus.APPROVED,
+      responsible: 'UM Wrocław',
+      isCommentable: false,
+    },
   ];
 
   for (let i = 0; i < investments.length; i++) {
@@ -527,6 +666,16 @@ async function seedPostsForAnnouncements() {
     'Zapraszamy na niepowtarzalne wydarzenie muzyczne w naszym mieście - Koncert 1000 Gitar! To wyjątkowa okazja, by doświadczyć magii muzyki granej na żywo przez tysiąc gitarzystów z różnych zakątków kraju. Koncert odbędzie się na głównym placu miasta, będąc doskonałą okazją do spędzenia czasu w rodzinnej atmosferze.',
     'Mieszkańcy miasta! Zapraszamy na konsultacje społeczne dotyczące przyszłości naszego rynku. To wyjątkowa szansa, by podzielić się swoimi pomysłami i sugestiami na temat rozwoju centrum naszej społeczności. Spotkanie odbędzie się w ratuszu miejskim, a każdy głos ma znaczenie w kształtowaniu przestrzeni wspólnej.',
     'Nie przegap nadchodzącej publicznej przemowy Kacpra Grobelnego, znanego działacza społecznego i inspirującego mówcy. Kacper podzieli się swoimi przemyśleniami na temat zaangażowania obywatelskiego i jego wpływu na lokalne społeczności. Wydarzenie to zapewni cenne spostrzeżenia i może stać się punktem zwrotnym w naszym podejściu do wspólnych działań i inicjatyw.',
+    'Zapraszamy na Festiwal Światła, który odbędzie się w sercu naszego miasta. To wyjątkowe wydarzenie pełne instalacji świetlnych, projekcji oraz pokazów laserowych, które ożywią nocne niebo i miejską przestrzeń. Nie przegap tej niezwykłej okazji, by doświadczyć magii światła na żywo!',
+    'Wrocławskie Dni Książki zapraszają wszystkich miłośników literatury na spotkania autorskie, warsztaty pisarskie oraz targi książki, które odbędą się w miejskiej bibliotece. To doskonała okazja, by wzbogacić swoją domową bibliotekę oraz poznać ciekawych twórców literatury.',
+    'Ogłaszamy otwarte warsztaty malarskie w Parku Szczytnickim. Przyjdź i rozwijaj swoje umiejętności artystyczne pod okiem doświadczonych instruktorów. Wszystkie niezbędne materiały będą dostępne na miejscu, a udział w warsztatach jest bezpłatny!',
+    'Zapraszamy na wystawę plenerową „Historia Wrocławia w Fotografii”. Przenieś się w czasie i zobacz, jak zmieniało się nasze miasto na przestrzeni lat. Wystawa będzie dostępna na Placu Wolności przez cały tydzień, wstęp wolny.',
+    'Zapraszamy wszystkich mieszkańców na Maraton Fitness, który odbędzie się w Hali Stulecia. Przyjdź i wypróbuj różne formy aktywności fizycznej, od jogi po intensywne treningi kardio. Wydarzenie jest otwarte dla wszystkich, niezależnie od poziomu zaawansowania.',
+    'Wrocławskie Dni Teatru! Czekają na Was spektakle plenerowe, warsztaty aktorskie oraz spotkania z twórcami sceny teatralnej. Wydarzenie odbędzie się na Wyspie Słodowej, zapewniając niesamowitą atmosferę i kontakt ze sztuką na świeżym powietrzu.',
+    'Zachęcamy do udziału w miejskim biegu na orientację „Poznaj Wrocław”. Sprawdź swoje umiejętności nawigacyjne, odkrywając przy tym mniej znane zakątki miasta. Bieg rozpocznie się na Placu Grunwaldzkim i będzie podzielony na kilka kategorii wiekowych.',
+    'Przyjdź na wielki jarmark świąteczny na Placu Solnym! Znajdziesz tu rękodzieło, przysmaki lokalnych wytwórców, a także atrakcje dla dzieci, takie jak karuzela i świąteczna kolejka. Rozpocznij przygotowania do świąt w wyjątkowej atmosferze.',
+    'Ogłaszamy wielką akcję sprzątania Wrocławia. Dołącz do nas, aby wspólnie zadbać o czystość naszych ulic, parków i skwerów. Każdy uczestnik otrzyma worki na śmieci oraz rękawice, a dla najbardziej zaangażowanych przewidziano nagrody.',
+    'Zapraszamy na plenerowy pokaz filmowy „Kino pod chmurką”, który odbędzie się w Parku Południowym. Przygotowaliśmy wygodne leżaki oraz zestaw klasycznych filmów, które umilą Wam letnie wieczory. Seanse będą odbywać się co weekend aż do końca sierpnia.',
   ];
 
   await Promise.all(
@@ -585,12 +734,122 @@ async function seedAnnouncements() {
       responsible: 'UM Wrocław',
       isCommentable: true,
     },
+    {
+      title: 'Festiwal Światła',
+      locationX: 51.1081,
+      locationY: 17.0332,
+      address: 'Plac Dominikański, Wrocław',
+      street: 'Plac Dominikański',
+      buildingNr: null,
+      apartmentNr: null,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Wrocławskie Dni Książki',
+      locationX: 51.1094,
+      locationY: 17.0408,
+      address: 'Biblioteka Miejska, Rynek 58, Wrocław',
+      street: 'Rynek',
+      buildingNr: '58',
+      apartmentNr: null,
+      responsible: 'Biblioteka Miejska Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Warsztaty malarskie',
+      locationX: 51.1105,
+      locationY: 17.0753,
+      address: 'Park Szczytnicki, Wrocław',
+      street: 'Park Szczytnicki',
+      buildingNr: null,
+      apartmentNr: null,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Wystawa fotografii',
+      locationX: 51.1076,
+      locationY: 17.0272,
+      address: 'Plac Wolności, Wrocław',
+      street: 'Plac Wolności',
+      buildingNr: null,
+      apartmentNr: null,
+      responsible: 'Centrum Historii Zajezdnia',
+      isCommentable: true,
+    },
+    {
+      title: 'Maraton Fitness',
+      locationX: 51.1049,
+      locationY: 17.0787,
+      address: 'Hala Stulecia, Wrocław',
+      street: 'Hala Stulecia',
+      buildingNr: null,
+      apartmentNr: null,
+      responsible: 'Akademia Fitness Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Wrocławskie Dni Teatru',
+      locationX: 51.1152,
+      locationY: 17.0329,
+      address: 'Wyspa Słodowa, Wrocław',
+      street: 'Wyspa Słodowa',
+      buildingNr: null,
+      apartmentNr: null,
+      responsible: 'Teatr Współczesny Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Bieg na orientację',
+      locationX: 51.1053,
+      locationY: 17.0617,
+      address: 'Plac Grunwaldzki, Wrocław',
+      street: 'Plac Grunwaldzki',
+      buildingNr: null,
+      apartmentNr: null,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Jarmark Świąteczny',
+      locationX: 51.1104,
+      locationY: 17.0325,
+      address: 'Plac Solny, Wrocław',
+      street: 'Plac Solny',
+      buildingNr: null,
+      apartmentNr: null,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Akcja sprzątania miasta',
+      locationX: 51.1077,
+      locationY: 17.0303,
+      address: 'Wrocław - różne lokalizacje',
+      street: null,
+      buildingNr: null,
+      apartmentNr: null,
+      responsible: 'Fundacja Ekologiczna Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Kino pod chmurką',
+      locationX: 51.0951,
+      locationY: 17.0297,
+      address: 'Park Południowy, Wrocław',
+      street: 'Park Południowy',
+      buildingNr: null,
+      apartmentNr: null,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
   ];
 
   for (let i = 0; i < announcements.length; i++) {
     const pOI = await prisma.pOI.create({
       data: {
-        id: counter, // czy tutaj powinno byc ++?
+        id: counter,
         title: announcements[i].title,
         slug: slugify(announcements[i].title),
         locationX: announcements[i].locationX,
@@ -638,6 +897,16 @@ async function seedPostsForListings() {
     'Posiadasz firmę i potrzebujesz miejsca na przechowywanie sprzętu? Mamy dla Ciebie rozwiązanie! Do wynajęcia przestronny hangar na sprzęt, idealny dla firm. Hangar zlokalizowany jest w dogodnej lokalizacji, zapewniając łatwy dostęp i wysoki poziom bezpieczeństwa.',
     'Marzysz o domu z ogrodem, ale nie jesteś gotowy na zakup? Oferujemy na wynajem urokliwy dom z przestronnym ogrodem, idealny dla rodziny. Dom znajduje się w cichej, bezpiecznej okolicy, oferując komfort i prywatność, a jednocześnie bliskość do centrum miasta i infrastruktury.',
     'Rozwijasz startup i szukasz miejsca na swoje biuro? Mamy coś specjalnie dla Ciebie! Przestrzeń biurowa w centrum Wrocławia, idealna dla młodych firm i startupów. Nowoczesne biuro w prestiżowej lokalizacji zapewni odpowiednie warunki do pracy i rozwoju Twojego biznesu.',
+    'Szukasz przestronnego mieszkania w sercu Wrocławia? Oferujemy na sprzedaż nowoczesne mieszkanie z balkonem i widokiem na Odrę, idealne dla osób ceniących sobie bliskość centrum miasta oraz wygodę codziennego życia. Nieruchomość wyposażona jest w wysokiej jakości materiały i dostępna od zaraz.',
+    'Znalazłeś wymarzone miejsce dla swojej rodziny! Na sprzedaż oferujemy nowy, energooszczędny dom w przyjaznej okolicy, z dużym ogrodem oraz placem zabaw dla dzieci. Idealne dla osób szukających spokoju oraz rodzinnej atmosfery, a jednocześnie blisko do miejskich udogodnień.',
+    'Chcesz zainwestować w nieruchomość? Mamy dla Ciebie doskonałą ofertę! Przestronny lokal użytkowy w ruchliwej części Wrocławia, z dużymi witrynami i możliwością adaptacji na różne cele. To idealne miejsce na rozwój Twojego biznesu, dostępne od zaraz.',
+    'Szukasz przytulnego mieszkania na wynajem? Oferujemy na sprzedaż piękne, dwupokojowe mieszkanie na Osiedlu Biskupa Jordana, z balkonem i miejscem parkingowym. Cicha okolica, blisko do komunikacji miejskiej oraz punktów usługowych. To doskonała oferta dla pary lub singla!',
+    'Planujesz otworzyć swój sklep? Mamy dla Ciebie idealną lokalizację! Na sprzedaż lokal handlowy w nowo powstałym kompleksie w centrum Wrocławia, z dużym natężeniem ruchu pieszych. To świetna okazja do rozwoju Twojego biznesu w dynamicznie rozwijającej się okolicy.',
+    'Marzysz o działce budowlanej? Oferujemy na sprzedaż atrakcyjną działkę o powierzchni 1000 m² w spokojnej okolicy, idealną na budowę wymarzonego domu. Działka posiada dostęp do wszystkich mediów i jest położona w otoczeniu zieleni, co zapewnia komfortowe warunki do życia.',
+    'Rozwijasz firmę i potrzebujesz nowej siedziby? Na sprzedaż oferujemy nowoczesny biurowiec w strategicznej lokalizacji Wrocławia. Budynek spełnia najwyższe standardy ekologiczne, z przestronnymi pomieszczeniami i dużym parkingiem. Idealne miejsce dla Twojego biznesu!',
+    'Chcesz mieszkać w malowniczej okolicy? Mamy dla Ciebie na sprzedaż dom w pobliżu Wrocławia, otoczony lasami i rzekami. Nieruchomość z dużym ogrodem, idealna dla osób ceniących spokój i bliskość natury. To doskonałe miejsce na relaks po pracy.',
+    'Szukasz nowoczesnej kawalerki w Wrocławiu? Oferujemy na sprzedaż stylową kawalerkę w nowym budownictwie, z aneksem kuchennym i miejscem postojowym. Świetna lokalizacja blisko centrum oraz komunikacji miejskiej sprawia, że to idealna propozycja dla singli lub par.',
+    'Inwestujesz w nieruchomości? Na sprzedaż oferujemy lokal gastronomiczny w popularnej części Wrocławia, z dużym potencjałem rozwoju. Lokal spełnia wszystkie wymogi sanitarno-epidemiologiczne, gotowy do natychmiastowego prowadzenia działalności. Świetna okazja na rozwój swojego biznesu!',
   ];
 
   await Promise.all(
@@ -728,6 +997,146 @@ async function seedListings() {
       price: 3000,
       surface: 200,
       responsible: 'Kozaczek',
+    },
+    {
+      title: 'Mieszkanie z widokiem na Odrę',
+      locationX: 51.109594,
+      locationY: 17.033589,
+      address: 'Odrzańska 15, Wrocław',
+      street: 'Odrzańska',
+      buildingNr: '15',
+      apartmentNr: null,
+      sell: true,
+      price: 550000,
+      surface: 65,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Energooszczędny dom z ogrodem',
+      locationX: 51.097594,
+      locationY: 17.045589,
+      address: 'Lechitów 1, Wrocław',
+      street: 'Lechitów',
+      buildingNr: '1',
+      apartmentNr: null,
+      sell: true,
+      price: 750000,
+      surface: 120,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Lokal użytkowy w centrum',
+      locationX: 51.100994,
+      locationY: 17.034989,
+      address: 'Główna 2, Wrocław',
+      street: 'Główna',
+      buildingNr: '2',
+      apartmentNr: null,
+      sell: true,
+      price: 300000,
+      surface: 80,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Dwupokojowe mieszkanie na Osiedlu Biskupa Jordana',
+      locationX: 51.102194,
+      locationY: 17.036389,
+      address: 'Biskupa Jordana 3, Wrocław',
+      street: 'Biskupa Jordana',
+      buildingNr: '3',
+      apartmentNr: null,
+      sell: true,
+      price: 400000,
+      surface: 50,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Lokal handlowy w kompleksie',
+      locationX: 51.099194,
+      locationY: 17.040389,
+      address: 'Nowa 1, Wrocław',
+      street: 'Nowa',
+      buildingNr: '1',
+      apartmentNr: null,
+      sell: true,
+      price: 600000,
+      surface: 100,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Działka budowlana',
+      locationX: 51.093194,
+      locationY: 17.026589,
+      address: 'Polna 1, Wrocław',
+      street: 'Polna',
+      buildingNr: '1',
+      apartmentNr: null,
+      sell: true,
+      price: 200000,
+      surface: 1000,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Nowoczesny biurowiec',
+      locationX: 51.090194,
+      locationY: 17.020389,
+      address: 'Biura 1, Wrocław',
+      street: 'Biura',
+      buildingNr: '1',
+      apartmentNr: null,
+      sell: true,
+      price: 2500000,
+      surface: 800,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Dom w malowniczej okolicy',
+      locationX: 51.086194,
+      locationY: 17.010389,
+      address: 'Leśna 10, Wrocław',
+      street: 'Leśna',
+      buildingNr: '10',
+      apartmentNr: null,
+      sell: true,
+      price: 900000,
+      surface: 150,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Stylowa kawalerka w nowym budownictwie',
+      locationX: 51.109194,
+      locationY: 17.041389,
+      address: 'Kawalerska 1, Wrocław',
+      street: 'Kawalerska',
+      buildingNr: '1',
+      apartmentNr: null,
+      sell: true,
+      price: 350000,
+      surface: 38,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
+    },
+    {
+      title: 'Lokal gastronomiczny w popularnej części miasta',
+      locationX: 51.092194,
+      locationY: 17.038389,
+      address: 'Gastronomiczna 5, Wrocław',
+      street: 'Gastronomiczna',
+      buildingNr: '5',
+      apartmentNr: null,
+      sell: true,
+      price: 450000,
+      surface: 120,
+      responsible: 'UM Wrocław',
+      isCommentable: true,
     },
   ];
 
@@ -957,14 +1366,13 @@ async function seedDummyInvestments() {
   ];
 
   const allBadges = await prisma.badge.findMany();
-  // Map badge names instead of IDs
   const allBadgeNames = allBadges.map((badge) => ({ name: badge.name }));
 
   const getRandomBadgeNames = () => {
     const shuffled = [...allBadgeNames].sort(() => 0.5 - Math.random());
     return shuffled
       .slice(0, Math.floor(Math.random() * 4) + 1)
-      .map((badge) => ({ name: badge.name })); // Return random badge names
+      .map((badge) => ({ name: badge.name }));
   };
 
   await Promise.all(
@@ -988,22 +1396,20 @@ async function seedDummyInvestments() {
           centerLongitude - OFFSET
         ).toFixed(6)}`;
 
-      // Create POI
       const pOI = await prisma.pOI.create({
         data: {
-          id: counter++, // Increment counter
+          id: counter,
           title: title,
           slug: slugify(title),
           locationX: centerLatitude,
           locationY: centerLongitude,
           responsible: responsibleNames[i % responsibleNames.length],
-          street: 'Rynek', // Optional
-          buildingNr: '11', // Optional
-          apartmentNr: null, // Optional
+          street: 'Rynek',
+          buildingNr: '11',
+          apartmentNr: null,
         },
       });
 
-      // Create Investment and connect to POI
       await prisma.investment.create({
         data: {
           area: area,
@@ -1011,7 +1417,7 @@ async function seedDummyInvestments() {
           status:
             investmentTypes[Math.floor(Math.random() * investmentTypes.length)],
           badges: {
-            connect: getRandomBadgeNames(), // Connect using badge names
+            connect: getRandomBadgeNames(),
           },
           category: {
             connect: {
@@ -1027,7 +1433,7 @@ async function seedDummyInvestments() {
           },
           post: {
             connect: {
-              id: counter - 1, // Connect to the last created Post
+              id: counter++,
             },
           },
         },
@@ -1162,13 +1568,14 @@ async function seedDummyAnnouncements() {
           },
           post: {
             connect: {
-              id: counter++,
+              id: counter,
             },
           },
         },
       });
 
       console.log(`Ogłoszenie ${announcement.id} zostało utworzone.`);
+      counter++;
     }),
   );
 
@@ -1320,10 +1727,10 @@ async function seedPostsForDummyComments() {
 }
 
 async function seedDummyComments() {
-  // The dummy comments are added only to the well thought out posts. Meaning the first 13 posts
-  // those are 5 investments, 3 announcements, 5 listings. + 1 because prisma iterates from 1
+  // The dummy comments are added only to the well thought out posts. Meaning the first 44 posts
+  // those are 15 investments, 13 announcements, 15 listings. + 1 because prisma iterates from 1
   const LOWEST_CUSTOM_POST_NUM = 1;
-  const HIGHEST_CUSTOM_POST_NUM = 14;
+  const HIGHEST_CUSTOM_POST_NUM = 44;
 
   const commentsIds = Array.from({ length: NUMBER_OF_DUMMY_POSTS * 2 }, () =>
     Math.floor(
@@ -1352,7 +1759,7 @@ async function seedDummyComments() {
     }),
   );
 
-  console.log('Seeding DUMMY announcements finished.');
+  console.log('Seeding DUMMY comments finished.');
 }
 
 async function seedPostVotes() {
