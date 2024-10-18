@@ -1140,10 +1140,9 @@ async function seedListings() {
   ];
 
   for (let i = 0; i < listings.length; i++) {
-    // Tworzenie rekordu POI
     const pOI = await prisma.pOI.create({
       data: {
-        id: counter++, // Można zostawić inkrementację, jeśli każdy POI ma unikalny identyfikator
+        id: counter,
         title: listings[i].title,
         slug: slugify(listings[i].title),
         locationX: listings[i].locationX,
@@ -1155,24 +1154,12 @@ async function seedListings() {
       },
     });
 
-    // Pobranie istniejącego rekordu Post na podstawie indeksu oferty
-    const post = await prisma.post.findFirst({
-      where: {
-        content: listings[i].title,
-      },
-    });
-
-    if (!post) {
-      console.error(`Post for listing "${listings[i].title}" not found.`);
-      continue;
-    }
-
     // Tworzenie rekordu Listing
     await prisma.listing.create({
       data: {
         post: {
           connect: {
-            id: post.id,
+            id: counter++,
           },
         },
         sell: listings[i].sell,
