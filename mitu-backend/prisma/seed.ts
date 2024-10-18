@@ -1,5 +1,4 @@
 import {
-  $Enums,
   CommentStatus,
   InvestmentStatus,
   PostType,
@@ -11,7 +10,6 @@ import {
 
 import { hash } from 'bcrypt';
 import { slugify } from '../src/utils/string-utils';
-import { connect } from 'node:http2';
 
 const prisma = new PrismaClient();
 const NUMBER_OF_DUMMY_POSTS = 25;
@@ -354,6 +352,28 @@ async function seedUsers() {
   console.log('Seeding Users finished.');
 }
 
+function randomBadges(): { name: string }[] {
+  //get a random amount of items from badges
+  const badgeIds = badges.map((b) => b.name);
+  const randomlyChosen = [
+    ...new Set(
+      badgeIds
+        .sort(() => 0.5 - Math.random())
+        .slice(0, Math.floor(Math.random() * badgeIds.length)),
+    ),
+  ];
+
+  const _R = randomlyChosen.map((e) => ({
+    name: e,
+  }));
+  console.log(_R);
+  return _R;
+}
+
+function getRandomInt(max: number) {
+  return Math.floor(Math.random() * max);
+}
+
 async function seedPostsForInvestments() {
   const postContents = [
     'Projekt dotyczący instalacji nowoczesnego zegara słonecznego w centrum miasta, mającego na celu połączenie tradycji z nowoczesną technologią oraz stworzenie przestrzeni edukacyjnej dla mieszkańców i turystów.',
@@ -381,28 +401,6 @@ async function seedPostsForInvestments() {
   );
 
   console.log('Seeding posts for investments finished.');
-}
-
-function randomBadges(): { name: string }[] {
-  //get a random amount of items from badges
-  const badgeIds = badges.map((b) => b.name);
-  const randomlyChosen = [
-    ...new Set(
-      badgeIds
-        .sort(() => 0.5 - Math.random())
-        .slice(0, Math.floor(Math.random() * badgeIds.length)),
-    ),
-  ];
-
-  const _R = randomlyChosen.map((e) => ({
-    name: e,
-  }));
-  console.log(_R);
-  return _R;
-}
-
-function getRandomInt(max: number) {
-  return Math.floor(Math.random() * max);
 }
 
 async function seedInvestments() {
@@ -477,7 +475,7 @@ async function seedInvestments() {
   for (let i = 0; i < investments.length; i++) {
     const pOI = await prisma.pOI.create({
       data: {
-        id: counter++,
+        id: counter,
         title: investments[i].title,
         slug: slugify(investments[i].title),
         locationX: investments[i].locationX,
@@ -489,24 +487,12 @@ async function seedInvestments() {
       },
     });
 
-    // Pobranie istniejącego rekordu Post na podstawie indeksu inwestycji
-    const post = await prisma.post.findFirst({
-      where: {
-        content: investments[i].title,
-      },
-    });
-
-    if (!post) {
-      console.error(`Post for investment "${investments[i].title}" not found.`);
-      continue;
-    }
-
     // Tworzenie rekordu Investment
     await prisma.investment.create({
       data: {
         post: {
           connect: {
-            id: post.id,
+            id: counter++,
           },
         },
         area: investments[i].area,
