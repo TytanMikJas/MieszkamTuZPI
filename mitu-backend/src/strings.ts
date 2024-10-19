@@ -106,6 +106,7 @@ export const SUCCESS_DELETE_LISTING = 'Pomyślnie usunięto nieruchomość';
 export const SUCCESS_POST_RATING = 'Ocena opublikowana pomyślnie';
 
 //AUTH
+export const ERROR_INVALID_PASSWORD = 'Nieprawidłowe hasło';
 export const USER_LOGIN_ALREADY_EXISTS =
   'Użytkownik o takim loginie już istnieje';
 export const ERROR_EMAIL_NOT_CONFIRMED =

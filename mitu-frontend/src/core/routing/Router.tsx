@@ -15,14 +15,14 @@ export const ROUTES = {
       path: () => `/${MAP}/${LANDING_PAGE}`,
       allowed: [Role.ANONYMOUS, Role.USER, Role.ADMIN, Role.OFFICIAL],
     },
-  },
-  LOGIN: {
-    path: () => `/${MAP}/${LOGIN}`,
-    allowed: [Role.ANONYMOUS],
-  },
-  REGISTER: {
-    path: () => `/${MAP}/${REGISTER}`,
-    allowed: [Role.ANONYMOUS],
+    LOGIN: {
+      path: () => `/${MAP}/${LOGIN}`,
+      allowed: [Role.ANONYMOUS],
+    },
+    REGISTER: {
+      path: () => `/${MAP}/${REGISTER}`,
+      allowed: [Role.ANONYMOUS],
+    },
   },
   ADMIN: {
     path: () => `/${ADMIN}`,
