@@ -11,6 +11,8 @@ import { AttachmentModule } from './modules/attachment/attachment.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { STATIC_ROOT_PATH } from './constants';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { ConfigModule } from '@nestjs/config';
     FilehandlerModule,
     AttachmentModule,
     PrismaModule,
+    UserModule,
+    AuthModule,
   ],
   providers: [
     Reflector,
