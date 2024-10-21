@@ -101,6 +101,6 @@ export class ULDKService {
   async getCoordinatesByAddress(
     address: string,
   ): Promise<ParcelCoordinatesInternalOutputDto> {
-    return await getCoordsByAddresss(`Polska, Bieruń, ${address}`);
+    return await getCoordsByAddresss(`Polska, Wrocław, ${address}`);
   }
 }

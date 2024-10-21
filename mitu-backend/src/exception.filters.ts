@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ExceptionOutputDto } from './dto/exception.output';
-import { Prisma } from '@prisma/client/';
+import { Prisma } from '@prisma/client';
 import { isArray } from 'class-validator';
 import { ERROR_INTERNAL_SERVER_ERROR } from './strings';
 

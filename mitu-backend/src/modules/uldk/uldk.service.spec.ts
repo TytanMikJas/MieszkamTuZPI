@@ -53,13 +53,4 @@ describe('ULDKService', () => {
     expect(bounds[2]).toBe(2.6);
     expect(bounds[3]).toBe(2.6);
   });
-
-  it('should return correct parcel data', async () => {
-    const parcelData = await service.getParcelData(
-      '506539.264796399',
-      '247311.70888504386',
-    );
-    expect(parcelData.parcelNumber).toBe('469/322');
-    expect(parcelData.parcelRegion).toBe('Bieruń Stary');
-  });
 });

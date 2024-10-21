@@ -1,0 +1,12 @@
+import { Transform } from 'class-transformer';
+<<<<<<< HEAD
+/**
+ * Transformer, which transforms a string of Prisma ID into a number.
+ * @returns
+ */
+=======
+
+>>>>>>> 7f54bd9 (c1)
+export default function TransformPrismaID() {
+  return Transform(({ value }) => Number(value));
+}

@@ -25,11 +25,8 @@ async function main() {
   await seedInvestmentCategories();
   await seedAnnouncementCategories();
 
-  // Here we seed CUSTOM, posts and investments, announcements, listings
   await seedPostsForInvestments();
   await seedInvestments();
-
-  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   await seedPostsForAnnouncements();
   await seedAnnouncements();
@@ -40,25 +37,12 @@ async function main() {
   await seedPostsForComments();
   await seedComments();
 
-  // Here we seed DUMMY posts and investments, announcements, listings - random data - not working now
-
-  // await seedPostsForDummyInvestments();
-  // await seedDummyInvestments();
-
-  // await seedPostsForDummyAnnouncements();
-  // await seedDummyAnnouncements();
-
-  // await seedPostsForDummyListings();
-  // await seedDummyListings();
-
   await seedPostsForDummyComments();
   await seedDummyComments();
 
   await seedPostVotes();
 
   await seedBlankNewsletters();
-
-  // TODO: here you can add seedBadges function
 }
 
 const badges = [
@@ -365,7 +349,6 @@ function randomBadges(): { name: string }[] {
   const _R = randomlyChosen.map((e) => ({
     name: e,
   }));
-  console.log(_R);
   return _R;
 }
 
@@ -392,22 +375,21 @@ async function seedPostsForInvestments() {
     'Projekt budowy nowej sceny plenerowej w Parku Południowym, mający na celu stworzenie miejsca do organizacji koncertów, spektakli i innych wydarzeń kulturalnych, które wzbogacą ofertę kulturalną miasta oraz urozmaicą życie lokalnej społeczności.',
   ];
 
-  await Promise.all(
-    postContents.map(async (content, index) => {
-      await prisma.post.create({
-        data: {
-          postType: PostType.INVESTMENT,
-          content: content,
-          thumbnail: `/uploads/investment${index + 1}.jpg`,
-          createdBy: {
-            connect: {
-              id: (index % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
-            },
+  for (let i = 0; i < postContents.length; i++) {
+    const content = postContents[i];
+    await prisma.post.create({
+      data: {
+        postType: PostType.INVESTMENT,
+        content: content,
+        thumbnail: `investment${i + 1}.jpg`,
+        createdBy: {
+          connect: {
+            id: (i % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
           },
         },
-      });
-    }),
-  );
+      },
+    });
+  }
 
   console.log('Seeding posts for investments finished.');
 }
@@ -678,22 +660,21 @@ async function seedPostsForAnnouncements() {
     'Zapraszamy na plenerowy pokaz filmowy „Kino pod chmurką”, który odbędzie się w Parku Południowym. Przygotowaliśmy wygodne leżaki oraz zestaw klasycznych filmów, które umilą Wam letnie wieczory. Seanse będą odbywać się co weekend aż do końca sierpnia.',
   ];
 
-  await Promise.all(
-    postContents.map(async (content, index) => {
-      await prisma.post.create({
-        data: {
-          postType: PostType.ANNOUNCEMENT,
-          content: content,
-          thumbnail: `/uploads/announcement${index + 1}.jpg`,
-          createdBy: {
-            connect: {
-              id: (index % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
-            },
+  for (let index = 0; index < postContents.length; index++) {
+    const content = postContents[index];
+    await prisma.post.create({
+      data: {
+        postType: PostType.ANNOUNCEMENT,
+        content: content,
+        thumbnail: `announcement${index + 1}.jpg`,
+        createdBy: {
+          connect: {
+            id: (index % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
           },
         },
-      });
-    }),
-  );
+      },
+    });
+  }
 
   console.log('Seeding posts for announcements finished.');
 }
@@ -908,22 +889,21 @@ async function seedPostsForListings() {
     'Inwestujesz w nieruchomości? Na sprzedaż oferujemy lokal gastronomiczny w popularnej części Wrocławia, z dużym potencjałem rozwoju. Lokal spełnia wszystkie wymogi sanitarno-epidemiologiczne, gotowy do natychmiastowego prowadzenia działalności. Świetna okazja na rozwój swojego biznesu!',
   ];
 
-  await Promise.all(
-    postContents.map(async (content, index) => {
-      await prisma.post.create({
-        data: {
-          postType: PostType.LISTING,
-          content: content,
-          thumbnail: `/uploads/listing${index + 1}.jpg`,
-          createdBy: {
-            connect: {
-              id: (index % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
-            },
+  for (let index = 0; index < postContents.length; index++) {
+    const content = postContents[index];
+    await prisma.post.create({
+      data: {
+        postType: PostType.LISTING,
+        content: content,
+        thumbnail: `listing${index + 1}.jpg`,
+        createdBy: {
+          connect: {
+            id: (index % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
           },
         },
-      });
-    }),
-  );
+      },
+    });
+  }
 
   console.log('Seeding posts for listings finished.');
 }

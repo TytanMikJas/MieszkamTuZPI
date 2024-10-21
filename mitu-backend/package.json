@@ -13,6 +13,7 @@
     "start:prod": "npm run env:prod node dist/src/main",
     "start:dev": "npm run env:dev npm start run dev",
     "lint": "eslint \"{src,apps,libs,test,prisma}/**/*.ts\"",
+    "lint-fix": "eslint --fix \"{src,apps,libs,test,prisma}/**/*.ts\"",
     "lint:format": "prettier  --log-level warn --write \"./**/*.{js,ts,md,prisma}\" ",
     "test": "echo \"Passed: no test specified\" && exit 0",
     "seed:dev": "npm run env:dev ts-node prisma/seed.ts",

@@ -1,0 +1,22 @@
+import { Transform } from 'class-transformer';
+import { validate as validateLocationTuple } from './validate-location-tuple.transformer';
+
+function validate(value: string) {
+  const locationChain = value.split(';');
+  locationChain.forEach((locationTuple) => {
+    validateLocationTuple(locationTuple);
+  });
+  return value;
+}
+<<<<<<< HEAD
+/**
+ * Validator, which validates a string of geo location chain. Location chain is a string of
+ * location tuples separated by semicolon ex. 56.123, 56.678; 56.163, 56.679; 56.123, 56.678
+ * @returns
+ */
+=======
+
+>>>>>>> 7f54bd9 (c1)
+export function ValidateLocationChain() {
+  return Transform(({ value }) => validate(value));
+}

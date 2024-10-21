@@ -4,7 +4,6 @@ export type LocationTuple = `${Longitude},${Latitude}`;
 export type LocationChain =
   `${LocationTuple};${LocationTuple};${LocationTuple};${LocationTuple}`;
 
-// images or tds or docs / filename ; - .. - ; ...
 export type FileExcludeString = string;
 export const FileExcludeRegExp = /^(?:\w+\/[\w. ]+;)*\w+\/[\w. -_]+$/i;
 export const FileExtensionRegExp = /(\.[\w\d_-]+)$/i;

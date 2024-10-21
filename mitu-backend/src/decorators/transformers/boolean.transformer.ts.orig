@@ -1,0 +1,14 @@
+import { Transform } from 'class-transformer';
+<<<<<<< HEAD
+/**
+ * Transformer which transforms string 'true' or 'false' into a boolean.
+ * @returns
+ */
+=======
+
+>>>>>>> 7f54bd9 (c1)
+export default function TransformBoolean() {
+  return Transform(({ value }) => {
+    return value.toLowerCase() === 'true';
+  });
+}

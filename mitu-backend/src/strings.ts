@@ -145,19 +145,12 @@ export const ERROR_INVALID_LOCATION_TUPLE = 'Niepoprawna lokalizacja';
 export const ROLES_KEY = 'roles';
 export const CLEAR_CACHE_KEY = 'clear-cache';
 
-export const POLISH_CHARS = {
-  ą: 'a',
-  ć: 'c',
-  ę: 'e',
-  ł: 'l',
-  ń: 'n',
-  ó: 'o',
-  ś: 's',
-  ź: 'z',
-  ż: 'z',
-};
-
-export const ERROR_ADDRESS_TOO_LONG = 'Adres jest zbyt długi';
-export const ERROR_ADDRESS_TOO_SHORT = 'Adres jest zbyt krótki';
 export const RESEND_CONFIRMATION_EMAIL_USER_NOT_FOUND_MESSAGE =
   'Nastąpił nieoczekiwany błąd. Spróbuj zarejestrować się ponownie';
+
+export const ERROR_STREET_TOO_LONG = 'Nazwa ulicy jest zbyt długa';
+export const ERROR_STREET_TOO_SHORT = 'Nazwa ulicy jest zbyt krótka';
+export const ERROR_BUILDING_NR_TOO_LONG = 'Numer budynku jest zbyt długi';
+export const ERROR_BUILDING_NR_TOO_SHORT = 'Numer budynku jest zbyt krótki';
+export const ERROR_APARTMENT_NR_TOO_LONG = 'Numer mieszkania jest zbyt długi';
+export const ERROR_APARTMENT_NR_TOO_SHORT = 'Numer mieszkania jest zbyt krótki';

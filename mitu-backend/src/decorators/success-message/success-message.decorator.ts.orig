@@ -1,0 +1,12 @@
+import { SetMetadata } from '@nestjs/common';
+<<<<<<< HEAD
+/**
+ * Shortcut for setting nest response metadata key 'success-message' with a value of the message argument
+ * @param message - message to be set as success message
+ * @returns
+ */
+=======
+
+>>>>>>> 7f54bd9 (c1)
+export const SuccessMessage = (message: string) =>
+  SetMetadata('success-message', message);

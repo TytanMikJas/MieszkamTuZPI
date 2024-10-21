@@ -13,6 +13,10 @@ import { STATIC_ROOT_PATH } from './constants';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { AnnouncementModule } from './modules/announcement/announcement.module';
+import { PostModule } from './modules/post/post.module';
+import { PoiModule } from './modules/poi/poi.module';
+import { InvestmentModule } from './modules/investment/investment.module';
 
 @Module({
   imports: [
@@ -30,6 +34,10 @@ import { AuthModule } from './modules/auth/auth.module';
     PrismaModule,
     UserModule,
     AuthModule,
+    AnnouncementModule,
+    InvestmentModule,
+    PostModule,
+    PoiModule,
   ],
   providers: [
     Reflector,
