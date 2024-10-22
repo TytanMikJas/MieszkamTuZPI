@@ -36,11 +36,31 @@ import { RolesGuard } from 'src/modules/auth/strategies/roles.guard';
 import CategoryDto from 'src/modules/announcement/dto/category-dto';
 import { PostAttributesInterceptor } from 'src/modules/post/interceptors/postAttributes.interceptor';
 
+/**
+ * Controller for Announcement
+ * @export
+ * @class AnnouncementController
+ * @param {AnnouncementService} announcementService
+ * @method create
+ * @method getAll
+ * @method getOne
+ * @method getOneBySlug
+ * @method update
+ * @method delete
+ * @method getCategories
+ **/
 @ApiTags('announcement')
 @Controller('announcement')
 export class AnnouncementController {
   constructor(private readonly announcementService: AnnouncementService) {}
 
+  /**
+   * Create announcement
+   * @param {CreateAnnouncementInputDto} body
+   * @param {PostFilesGrouped} files
+   * @param {UserInternalDto} user
+   * @returns {Promise<AnnouncementDto>}
+   */
   @Post()
   @Roles($Enums.UserRole.OFFICIAL)
   @UseGuards(JWTAuthGuard, RolesGuard)
@@ -55,12 +75,22 @@ export class AnnouncementController {
     return this.announcementService.create(body, files, user.id);
   }
 
+  /**
+   * Get all announcements
+   * @param {GenericFilter} filter
+   * @returns {Promise<AnnouncementDto[]>}
+   * */
   @Get()
   @UseInterceptors(PostListAttributesInterceptor)
   async getAll(@Query() filter: GenericFilter): Promise<AnnouncementDto[]> {
     return await this.announcementService.getAll(filter);
   }
 
+  /**
+   * Get one announcement
+   * @param {PRISMA_ID} id
+   * @returns {Promise<AnnouncementDto>}
+   * */
   @Get('/one/:id')
   @UseInterceptors(PostAttributesInterceptor)
   async getOne(
@@ -69,12 +99,24 @@ export class AnnouncementController {
     return this.announcementService.getOne(id);
   }
 
+  /**
+   * Get one announcement by slug
+   * @param {string} slug
+   * @returns {Promise<AnnouncementDto>}
+   * */
   @Get('/slug/:slug')
   @UseInterceptors(PostAttributesInterceptor)
   async getOneBySlug(@Param('slug') slug: string): Promise<AnnouncementDto> {
     return this.announcementService.getOneBySlug(slug);
   }
 
+  /**
+   * Update announcement
+   * @param {PRISMA_ID} id
+   * @param {UpdateAnnouncementInputDto} body
+   * @param {PostFilesGrouped} files
+   * @returns {Promise<{ slug: string; prevSlug: string }>}
+   * */
   @Patch('/one/:id')
   @Roles($Enums.UserRole.OFFICIAL)
   @UseGuards(JWTAuthGuard, RolesGuard)
@@ -88,6 +130,11 @@ export class AnnouncementController {
     return this.announcementService.update(id, body, files);
   }
 
+  /**
+   * Delete announcement
+   * @param {PRISMA_ID} id
+   * @returns {Promise<{ prevSlug: string }>}
+   * */
   @Delete('/one/:id')
   @Roles($Enums.UserRole.OFFICIAL)
   @UseGuards(JWTAuthGuard, RolesGuard)
@@ -97,6 +144,10 @@ export class AnnouncementController {
     return this.announcementService.delete(id);
   }
 
+  /**
+   * Get announcement categories
+   * @returns {Promise<CategoryDto[]>}
+   **/
   @Get('categories')
   getCategories(): Promise<CategoryDto[]> {
     return this.announcementService.getCategories();

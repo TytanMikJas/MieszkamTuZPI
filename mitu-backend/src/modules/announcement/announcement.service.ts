@@ -21,6 +21,25 @@ import { PoiService } from '../poi/poi.service';
 import { slugify } from 'src/utils/string-utils';
 import AnnouncementExcludePoiDto from './dto/create-announcement-dto.internal';
 
+/**
+ * Service for Announcement
+ * @export
+ * @class AnnouncementService
+ * @param {AnnouncementRepository} announcementRepository
+ * @param {FilehandlerService} filehandlerService
+ * @param {PostService} postService
+ * @param {PoiService} poiService
+ * @method create
+ * @method getAll
+ * @method getOne
+ * @method getOneBySlug
+ * @method update
+ * @method delete
+ * @method getCategories
+ * @method getPoiParameters
+ * @method getAnnouncementParameters
+ * @method getCategories
+ * */
 @Injectable()
 export class AnnouncementService {
   constructor(
@@ -30,6 +49,11 @@ export class AnnouncementService {
     private readonly poiService: PoiService,
   ) {}
 
+  /**
+   * Get POI parameters
+   * @param {CreateAnnouncementInputDto}
+   * @returns {AnnouncementExcludePoiDto}
+   */
   getPoiParameters(
     announcement: CreateAnnouncementInputDto | UpdateAnnouncementInputDto,
   ) {
@@ -45,6 +69,11 @@ export class AnnouncementService {
     };
   }
 
+  /**
+   * Get announcement parameters
+   * @param {CreateAnnouncementInputDto}
+   * @returns {AnnouncementExcludePoiDto}
+   * */
   getAnnouncementParameters(
     announcement: CreateAnnouncementInputDto,
   ): AnnouncementExcludePoiDto {
@@ -55,6 +84,13 @@ export class AnnouncementService {
     };
   }
 
+  /**
+   * Create announcement
+   * @param {CreateAnnouncementInputDto} body
+   * @param {PostFilesGrouped} files
+   * @param {number} userId
+   * @returns {Promise<AnnouncementDto>}
+   */
   async create(
     body: CreateAnnouncementInputDto,
     files: PostFilesGrouped,
@@ -111,6 +147,11 @@ export class AnnouncementService {
     return { ...announcement };
   }
 
+  /**
+   * Get all announcements
+   * @param {GenericFilter} filter
+   * @returns {Promise<AnnouncementDto[]>}
+   * */
   async getAll(filter: GenericFilter): Promise<AnnouncementDto[]> {
     if (!filter.orderBy) {
       return this.announcementRepository.getAll(filter);
@@ -126,6 +167,11 @@ export class AnnouncementService {
     }
   }
 
+  /**
+   * Get one announcement
+   * @param {PRISMA_ID} id
+   * @returns {Promise<AnnouncementDto>}
+   * */
   async getOne(id: PRISMA_ID): Promise<AnnouncementDto> {
     const _a = await this.announcementRepository.getOne(id);
 
@@ -134,6 +180,11 @@ export class AnnouncementService {
     return _a;
   }
 
+  /**
+   * Get one announcement by slug
+   * @param {string} slug
+   * @returns {Promise<AnnouncementDto>}
+   * */
   async getOneBySlug(slug: string): Promise<AnnouncementDto> {
     const _p = await this.poiService.getOneBySlug(slug);
 
@@ -146,6 +197,13 @@ export class AnnouncementService {
     return _i;
   }
 
+  /**
+   * Update announcement
+   * @param {PRISMA_ID} id
+   * @param {UpdateAnnouncementInputDto} body
+   * @param {PostFilesGrouped} files
+   * @returns {Promise<{ slug: string; prevSlug: string }>}
+   * */
   async update(
     id: PRISMA_ID,
     body: UpdateAnnouncementInputDto,
@@ -201,6 +259,11 @@ export class AnnouncementService {
     };
   }
 
+  /**
+   * Delete announcement
+   * @param {PRISMA_ID} id
+   * @returns {Promise<{ prevSlug: string }>}
+   * */
   async delete(id: PRISMA_ID): Promise<{ prevSlug: string }> {
     const _a = await this.announcementRepository.getOne(id);
 
@@ -212,6 +275,10 @@ export class AnnouncementService {
     return { prevSlug: _a.slug };
   }
 
+  /**
+   * Get categories
+   * @returns {Promise<CategoryDto[]>}
+   * */
   getCategories(): Promise<CategoryDto[]> {
     return this.announcementRepository.getCategories();
   }

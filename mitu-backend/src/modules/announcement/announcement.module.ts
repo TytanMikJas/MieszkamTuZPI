@@ -7,6 +7,18 @@ import { AttachmentModule } from 'src/modules/attachment/attachment.module';
 import AnnouncementRepository from 'src/modules/announcement/announcement.repository';
 import { PoiModule } from 'src/modules/poi/poi.module';
 
+/**
+ * Module for Announcement
+ * @export
+ * @class AnnouncementModule
+ * @param {FilehandlerModule} filehandlerModule
+ * @param {PostModule} postModule
+ * @param {AttachmentModule} attachmentModule
+ * @param {PoiModule} poiModule
+ * @method AnnouncementController
+ * @method AnnouncementService
+ * @method AnnouncementRepository
+ */
 @Module({
   imports: [FilehandlerModule, PostModule, AttachmentModule, PoiModule],
   controllers: [AnnouncementController],
