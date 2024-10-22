@@ -6,6 +6,7 @@ import {
   PrismaClient,
   UserRole,
   UserStatus,
+  FileType,
 } from '@prisma/client';
 
 import { hash } from 'bcrypt';
@@ -387,6 +388,15 @@ async function seedPostsForInvestments() {
             id: (i % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
           },
         },
+        attachments: {
+          create: [
+            {
+              fileName: `investment${i + 1}.jpg`,
+              fileType: FileType.IMAGE,
+              postType: PostType.INVESTMENT,
+            },
+          ],
+        },
       },
     });
   }
@@ -672,6 +682,15 @@ async function seedPostsForAnnouncements() {
             id: (index % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
           },
         },
+        attachments: {
+          create: [
+            {
+              fileName: `investment${index + 1}.jpg`,
+              fileType: FileType.IMAGE,
+              postType: PostType.ANNOUNCEMENT,
+            },
+          ],
+        },
       },
     });
   }
@@ -900,6 +919,15 @@ async function seedPostsForListings() {
           connect: {
             id: (index % 4) + 9 + ID_OFFSET, // only user 9 -12 are officials
           },
+        },
+        attachments: {
+          create: [
+            {
+              fileName: `investment${index + 1}.jpg`,
+              fileType: FileType.IMAGE,
+              postType: PostType.LISTING,
+            },
+          ],
         },
       },
     });
