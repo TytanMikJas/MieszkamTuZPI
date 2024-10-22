@@ -14,6 +14,11 @@ import InvestmentCreatePage from '@/pages/map/map-with-sidepanels/investment/Inv
 import InvestmentEditPage from '@/pages/map/map-with-sidepanels/investment/InvestmentEditPage';
 import InvestmentsPage from '@/pages/map/map-with-sidepanels/investments/InvestmentsPage';
 import InvestmentDetails from '@/reusable-components/post-details/investment-details/InvestmentDetails';
+import ListingCreatePage from '@/pages/map/map-with-sidepanels/listing/ListingCreatePage';
+import ListingEditPage from '@/pages/map/map-with-sidepanels/listing/ListingEditPage';
+import ListingsPage from '@/pages/map/map-with-sidepanels/listings/ListingsPage';
+import ListingDetails from '@/reusable-components/post-details/listing-details/ListingDetails';
+import { LandingPage } from '@/reusable-components/landing-page/LandingPage';
 
 export const MAP = 'mapa';
 export const LANDING_PAGE = 'start';
@@ -25,15 +30,15 @@ export const INVESTMENTS = 'inwestycje';
 export const INVESTMENT_CREATE = 'kreator-inwestycji';
 export const INVESTMENT_EDIT = 'edycja-inwestycji';
 
-export const ANNOUNCEMENT = 'ogloszenie';
-export const ANNOUNCEMENTS = 'ogloszenia';
-export const ANNOUNCEMENT_CREATE = 'kreator-ogloszenia';
-export const ANNOUNCEMENT_EDIT = 'edycja-ogloszenia';
-
 export const LISTING = 'nieruchomosc';
 export const LISTINGS = 'nieruchomosci';
 export const LISTING_CREATE = 'kreator-nieruchomosci';
 export const LISTING_EDIT = 'edycja-nieruchomosci';
+
+export const ANNOUNCEMENT = 'ogloszenie';
+export const ANNOUNCEMENTS = 'ogloszenia';
+export const ANNOUNCEMENT_CREATE = 'kreator-ogloszenia';
+export const ANNOUNCEMENT_EDIT = 'edycja-ogloszenia';
 
 export const BAF_CALCULATOR = 'kalkulator-baf';
 export const BAF_CALCULATOR_SIMPLE = 'kalkulator-baf-prosty';
@@ -90,28 +95,6 @@ export const ROUTES = {
         allowed: [Role.OFFICIAL],
       },
     },
-    ANNOUNCEMENT: {
-      path: () => `/${MAP}/${ANNOUNCEMENT}`,
-      BY_NAME: {
-        path: (slug: string) => `/${MAP}/${ANNOUNCEMENT}/${slug}`,
-        allowed: [Role.ANONYMOUS, Role.USER, Role.ADMIN, Role.OFFICIAL],
-      },
-    },
-    ANNOUNCEMENTS: {
-      path: () => `/${MAP}/${ANNOUNCEMENTS}`,
-      allowed: [Role.ANONYMOUS, Role.USER, Role.ADMIN, Role.OFFICIAL],
-    },
-    ANNOUNCEMENT_CREATE: {
-      path: () => `/${MAP}/${ANNOUNCEMENT_CREATE}`,
-      allowed: [Role.OFFICIAL],
-    },
-    ANNOUNCEMENT_EDIT: {
-      path: () => `/${MAP}/${ANNOUNCEMENT_EDIT}`,
-      BY_NAME: {
-        path: (slug: string) => `/${MAP}/${ANNOUNCEMENT_EDIT}/${slug}`,
-        allowed: [Role.OFFICIAL],
-      },
-    },
     LISTING: {
       path: () => `/${MAP}/${LISTING}`,
       BY_NAME: {
@@ -131,6 +114,28 @@ export const ROUTES = {
       path: () => `/${MAP}/${LISTING_EDIT}`,
       BY_NAME: {
         path: (slug: string) => `/${MAP}/${LISTING_EDIT}/${slug}`,
+        allowed: [Role.OFFICIAL],
+      },
+    },
+    ANNOUNCEMENT: {
+      path: () => `/${MAP}/${ANNOUNCEMENT}`,
+      BY_NAME: {
+        path: (slug: string) => `/${MAP}/${ANNOUNCEMENT}/${slug}`,
+        allowed: [Role.ANONYMOUS, Role.USER, Role.ADMIN, Role.OFFICIAL],
+      },
+    },
+    ANNOUNCEMENTS: {
+      path: () => `/${MAP}/${ANNOUNCEMENTS}`,
+      allowed: [Role.ANONYMOUS, Role.USER, Role.ADMIN, Role.OFFICIAL],
+    },
+    ANNOUNCEMENT_CREATE: {
+      path: () => `/${MAP}/${ANNOUNCEMENT_CREATE}`,
+      allowed: [Role.OFFICIAL],
+    },
+    ANNOUNCEMENT_EDIT: {
+      path: () => `/${MAP}/${ANNOUNCEMENT_EDIT}`,
+      BY_NAME: {
+        path: (slug: string) => `/${MAP}/${ANNOUNCEMENT_EDIT}/${slug}`,
         allowed: [Role.OFFICIAL],
       },
     },
@@ -183,7 +188,7 @@ export const router = createBrowserRouter([
                 path: ROUTES.MAP.LANDING_PAGE.path(),
                 element: (
                   <NamedRoute
-                    outlets={[{ name: 'left', content: <div>LANDING</div> }]}
+                    outlets={[{ name: 'left', content: <LandingPage /> }]}
                   />
                 ),
               },
@@ -241,6 +246,43 @@ export const router = createBrowserRouter([
                     outlets={[
                       { name: 'left', content: <InvestmentEditPage /> },
                     ]}
+                  />
+                ),
+              },
+              {
+                path: ROUTES.MAP.LISTING.BY_NAME.path(':name'),
+                element: (
+                  <NamedRoute
+                    outlets={[
+                      {
+                        name: 'left',
+                        content: <ListingDetails />,
+                      },
+                    ]}
+                  />
+                ),
+              },
+              {
+                path: ROUTES.MAP.LISTINGS.path(),
+                element: (
+                  <NamedRoute
+                    outlets={[{ name: 'left', content: <ListingsPage /> }]}
+                  />
+                ),
+              },
+              {
+                path: ROUTES.MAP.LISTING_CREATE.path(),
+                element: (
+                  <NamedRoute
+                    outlets={[{ name: 'left', content: <ListingCreatePage /> }]}
+                  />
+                ),
+              },
+              {
+                path: ROUTES.MAP.LISTING_EDIT.BY_NAME.path(':name'),
+                element: (
+                  <NamedRoute
+                    outlets={[{ name: 'left', content: <ListingEditPage /> }]}
                   />
                 ),
               },

@@ -17,6 +17,7 @@ import { AnnouncementModule } from './modules/announcement/announcement.module';
 import { PostModule } from './modules/post/post.module';
 import { PoiModule } from './modules/poi/poi.module';
 import { InvestmentModule } from './modules/investment/investment.module';
+import { ListingModule } from './modules/listing/listing.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { InvestmentModule } from './modules/investment/investment.module';
     AuthModule,
     AnnouncementModule,
     InvestmentModule,
+    ListingModule,
     PostModule,
     PoiModule,
   ],
