@@ -184,3 +184,5 @@ export const SELL_FALSE = 'Wynajem';
 
 export const HECTARE_SHORTENING = 'ha';
 export const SQUARE_METERS_SHORTENING = 'm²';
+
+export const LOCATION_NOT_SPECIFIED = 'Lokalizacja nieokreślona';

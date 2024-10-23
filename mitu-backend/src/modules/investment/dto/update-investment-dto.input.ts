@@ -5,9 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { InvestmentStatus } from '@prisma/client';
 import {
   ERROR_APARTMENT_NR_TOO_LONG,
-  ERROR_APARTMENT_NR_TOO_SHORT,
   ERROR_BUILDING_NR_TOO_LONG,
-  ERROR_BUILDING_NR_TOO_SHORT,
   ERROR_INVESTMENT_CONTENT_TOO_LONG,
   ERROR_INVESTMENT_CONTENT_TOO_SHORT,
   ERROR_INVESTMENT_RESPONSIBLE_TOO_LONG,
@@ -15,7 +13,6 @@ import {
   ERROR_INVESTMENT_TITLE_TOO_LONG,
   ERROR_INVESTMENT_TITLE_TOO_SHORT,
   ERROR_STREET_TOO_LONG,
-  ERROR_STREET_TOO_SHORT,
 } from 'src/strings';
 import { ValidateLocationChain } from 'src/decorators/transformers/validate-location-chain.transformer';
 import {
@@ -26,10 +23,7 @@ import {
   MAX_LENGTH_INVESTMENT_TITLE,
   MAX_LENGTH_STREET,
   MIN_LENGHT_INVESTMENT_RESPONSIBLE,
-  MIN_LENGTH_APARTMENT_NR,
-  MIN_LENGTH_BUILDING_NR,
   MIN_LENGTH_INVESTMENT_TITLE,
-  MIN_LENGTH_STREET,
 } from 'src/max-lengths';
 import TransformPrismaID from 'src/decorators/transformers/prismaid.transformer';
 import BadgeTransform from 'src/decorators/transformers/badge.transformer';
@@ -110,26 +104,17 @@ class UpdateInvestmentDto {
   @MaxLength(MAX_LENGTH_STREET, {
     message: ERROR_STREET_TOO_LONG,
   })
-  @MinLength(MIN_LENGTH_STREET, {
-    message: ERROR_STREET_TOO_SHORT,
-  })
   street: string;
 
   @IsOptional()
   @MaxLength(MAX_LENGTH_BUILDING_NR, {
     message: ERROR_BUILDING_NR_TOO_LONG,
   })
-  @MinLength(MIN_LENGTH_BUILDING_NR, {
-    message: ERROR_BUILDING_NR_TOO_SHORT,
-  })
   buildingNr: string;
 
   @IsOptional()
   @MaxLength(MAX_LENGTH_APARTMENT_NR, {
     message: ERROR_APARTMENT_NR_TOO_LONG,
-  })
-  @MinLength(MIN_LENGTH_APARTMENT_NR, {
-    message: ERROR_APARTMENT_NR_TOO_SHORT,
   })
   apartmentNr: string;
 

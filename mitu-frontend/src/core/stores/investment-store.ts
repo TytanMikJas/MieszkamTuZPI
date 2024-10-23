@@ -262,10 +262,11 @@ export const useInvestmentStore = create<
       if (investment.locationY)
         formData.append('locationY', investment.locationY.toString());
       if (investment.area) formData.append('area', investment.area);
-      if (investment.street) formData.append('street', investment.street);
-      if (investment.buildingNr)
+      if (investment.street || investment.street === '')
+        formData.append('street', investment.street);
+      if (investment.buildingNr || investment.buildingNr === '')
         formData.append('buildingNr', investment.buildingNr);
-      if (investment.apartmentNr)
+      if (investment.apartmentNr || investment.apartmentNr === '')
         formData.append('apartmentNr', investment.apartmentNr);
       if (investment.responsible)
         formData.append('responsible', investment.responsible);

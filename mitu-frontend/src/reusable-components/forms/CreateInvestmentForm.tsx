@@ -1,6 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Select,
@@ -25,14 +24,6 @@ import MultipleFilesUploader from './MultipleFilesUploader';
 import { Textarea } from '../../shadcn/textarea';
 import IconButton from '../IconButton';
 import { Preview, PreviewImage, PreviewFallback } from '../../shadcn/preview';
-import {
-  MAX_LENGHT_INVESTMENT_RESPONSIBLE,
-  MAX_LENGTH_INVESTMENT_CONTENT,
-  MAX_LENGTH_INVESTMENT_TITLE,
-  MIN_LENGHT_INVESTMENT_RESPONSIBLE,
-  MIN_LENGTH_INVESTMENT_CONTENT,
-  MIN_LENGTH_INVESTMENT_TITLE,
-} from '@/max-lengths';
 import { useInvestmentStore } from '@/core/stores/investment-store';
 import {
   FILE_IMAGE_NAME,
@@ -79,62 +70,7 @@ import InvestmentInputPatchDto from '@/core/api/investment/dto/investment-patch.
 import { useUiStore } from '@/core/stores/ui-store';
 import InvestmentDto from '@/core/api/investment/dto/investment';
 import PanelLoader from '../loaders/PanelLoader';
-
-const investmentFormSchema = z.object({
-  title: z
-    .string()
-    .min(MIN_LENGTH_INVESTMENT_TITLE, { message: 'Tytuł jest wymagany' })
-    .max(MAX_LENGTH_INVESTMENT_TITLE, {
-      message: 'Tytuł nie może być dłuższy niż 100 znaków.',
-    }),
-  description: z
-    .string()
-    .min(MIN_LENGTH_INVESTMENT_CONTENT, { message: 'Opis jest wymagany' })
-    .max(MAX_LENGTH_INVESTMENT_CONTENT, {
-      message: 'Opis nie może być dłuższy niż 1000 znaków.',
-    }),
-  category: z.string().min(1, { message: 'Kategoria jest wymagana' }).max(50, {
-    message: 'Nazwa kategorii nie może być dłuższa niż 50 znaków.',
-  }),
-  responsible: z
-    .string()
-    .min(MIN_LENGHT_INVESTMENT_RESPONSIBLE, {
-      message: 'Odpowiedzialny jest wymagany',
-    })
-    .max(MAX_LENGHT_INVESTMENT_RESPONSIBLE, {
-      message: 'Odpowiedzialny nie może być dłuższy niż 50 znaków.',
-    }),
-  isCommentable: z.string(),
-  status: z
-    .string()
-    .min(1, { message: 'Status jest wymagany' })
-    .max(20, { message: 'Status nie może być dłuższy niż 20 znaków.' }),
-  street: z
-    .string()
-    .min(3, { message: 'Ulica jest wymagana' })
-    .max(100, { message: 'Nie może być dłuższa niż 100 znaków.' }),
-  buildingNr: z
-    .string()
-    .min(1, { message: 'Numer domu jest wymagany' })
-    .max(10, { message: 'Nie może być dłuższy niż 10 znaków.' }),
-  apartmentNr: z
-    .string()
-    .max(10, {
-      message: 'Nie może być dłuższy niż 10 znaków.',
-    })
-    .optional(),
-  thumbnail: z.any(),
-  badges: z
-    .array(
-      z.object({
-        value: z.string(),
-      }),
-    )
-    .optional(),
-  model: z.any().optional(),
-});
-
-type InvestmentFormData = z.infer<typeof investmentFormSchema>;
+import { InvestmentFormData, investmentFormSchema } from './form-schemas';
 
 export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
   const {
@@ -145,7 +81,15 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
     clearSingleInvestment,
     patchInvestment,
     setResetList,
+    badges,
+    categories,
+    statuses,
+    fetchAvailableBadges,
+    fetchAvailableCategories,
   } = useInvestmentStore();
+  const { setRightbarStage } = useUiStore();
+
+  const [preview, setPreview] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [selectedBadges, setSelectedBadges] = useState<BadgeInputDto[]>([]);
   const [uploadedModel, setUploadedModel] = useState<FileBadge[]>([]);
@@ -155,7 +99,6 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
   );
   const [initialSingleInvestment, setInitialSingleInvestment] =
     useState<InvestmentDto>();
-
   const [initialUploadedModel, setInitialUploadedModel] = useState<FileBadge[]>(
     [],
   );
@@ -166,99 +109,56 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
     FileBadge[]
   >([]);
 
-  const {
-    badges,
-    categories,
-    statuses,
-    fetchAvailableBadges,
-    fetchAvailableCategories,
-  } = useInvestmentStore();
+  const form = useForm<InvestmentFormData>({
+    resolver: zodResolver(investmentFormSchema),
+    mode: 'onChange', // może być też onSubmit
+  });
 
-  const { setRightbarStage } = useUiStore();
-  const [slug, setSlug] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const watchStreet = form.watch('street');
+  const watchBuildingNr = form.watch('buildingNr');
+  const itemizedBadges: BadgeInputDto[] = badges.map((badge) => ({
+    value: badge.name,
+    label: badge.name,
+  }));
 
   useEffect(() => {
+    fetchAvailableBadges();
+    fetchAvailableCategories();
     setRightbarStage(RIGHTBAR_STAGE_AREA);
-  }, []);
 
-  useEffect(() => {
     return () => {
       clearSingleInvestment();
     };
   }, []);
 
   useEffect(() => {
-    const slug = window.location.pathname.split('/').pop();
-    if (edit && slug) {
-      setSlug(slug);
+    const slugFromUrl = window.location.pathname.split('/').pop();
+    if (edit && slugFromUrl) {
+      setSingleInvestment(slugFromUrl, () => {});
     }
-  }, []);
+    if (!edit) {
+      form.reset();
+      setUploadedFiles([]);
+      setUploadedModel([]);
+      setUploadedThumbnail([]);
+      clearSingleInvestment();
+      setSelectedBadges([]);
+    }
+  }, [edit]);
 
   useEffect(() => {
-    fetchAvailableBadges();
-    fetchAvailableCategories();
-    if (edit && slug) {
-      setSingleInvestment(slug);
+    if ((watchStreet ?? '').length < 3) {
+      form.setValue('buildingNr', '');
+      form.setValue('apartmentNr', '');
     }
-  }, []);
+  }, [watchStreet, form]);
 
   useEffect(() => {
-    if (edit && slug) {
-      setSingleInvestment(slug);
+    if ((watchBuildingNr ?? '').length < 3) {
+      form.setValue('apartmentNr', '');
     }
-  }, [slug]);
-
-  function validateImage(
-    event: ChangeEvent<HTMLInputElement>,
-    onChange: (event: any) => void,
-  ) {
-    const dataTransfer = new DataTransfer();
-    if (event.target && event.target.files?.length == 0) return;
-    let guard = false;
-    Array.from(event.target.files!).forEach((image) => {
-      const [error, fileType] = validateFile(image, [FILE_IMAGE_NAME]);
-
-      if (error) {
-        emitError(error);
-        guard = true;
-        return;
-      }
-
-      dataTransfer.items.add(image);
-      if (edit) setUploadedThumbnail([]);
-    });
-
-    if (guard) return;
-
-    const files = dataTransfer.files;
-    const displayUrl = URL.createObjectURL(event.target.files![0]);
-    onChange(files);
-    setPreview(displayUrl);
-  }
-
-  function validateModel(
-    event: ChangeEvent<HTMLInputElement>,
-    onChange: (event: any) => void,
-  ) {
-    if (event.target && event.target.files?.length == 0) return;
-
-    let guard = false;
-    Array.from(event.target.files!).forEach((model) => {
-      const [error, fileType] = validateFile(model, [FILE_TD_NAME]);
-
-      if (error) {
-        emitError(error);
-        guard = true;
-        return;
-      }
-    });
-
-    if (guard) return;
-
-    const files = event.target.files;
-    onChange(files);
-    if (edit) setUploadedModel([]);
-  }
+  }, [watchBuildingNr, form]);
 
   useEffect(() => {
     if (singleInvestment && edit) {
@@ -332,25 +232,57 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
     };
   }, [singleInvestment]);
 
-  useEffect(() => {
-    if (!edit) {
-      form.reset();
-      setUploadedFiles([]);
-      setUploadedModel([]);
-      setUploadedThumbnail([]);
-      clearSingleInvestment();
-      setSelectedBadges([]);
-    }
-  }, [edit]);
+  function validateImage(
+    event: ChangeEvent<HTMLInputElement>,
+    onChange: (event: any) => void,
+  ) {
+    const dataTransfer = new DataTransfer();
+    if (event.target && event.target.files?.length == 0) return;
+    let guard = false;
+    Array.from(event.target.files!).forEach((image) => {
+      const [error, fileType] = validateFile(image, [FILE_IMAGE_NAME]);
 
-  const [preview, setPreview] = useState('');
+      if (error) {
+        emitError(error);
+        guard = true;
+        return;
+      }
 
-  const form = useForm<InvestmentFormData>({
-    resolver: zodResolver(investmentFormSchema),
-    mode: 'onChange', // może być też onSubmit
-  });
+      dataTransfer.items.add(image);
+      if (edit) setUploadedThumbnail([]);
+    });
 
-  const navigate = useNavigate();
+    if (guard) return;
+
+    const files = dataTransfer.files;
+    const displayUrl = URL.createObjectURL(event.target.files![0]);
+    onChange(files);
+    setPreview(displayUrl);
+  }
+
+  function validateModel(
+    event: ChangeEvent<HTMLInputElement>,
+    onChange: (event: any) => void,
+  ) {
+    if (event.target && event.target.files?.length == 0) return;
+
+    let guard = false;
+    Array.from(event.target.files!).forEach((model) => {
+      const [error, fileType] = validateFile(model, [FILE_TD_NAME]);
+
+      if (error) {
+        emitError(error);
+        guard = true;
+        return;
+      }
+    });
+
+    if (guard) return;
+
+    const files = event.target.files;
+    onChange(files);
+    if (edit) setUploadedModel([]);
+  }
 
   const onSubmit: SubmitHandler<InvestmentFormData> = (data) => {
     if (!data.thumbnail) {
@@ -415,6 +347,8 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
       locationY: 17.033536,
       area: '51.109300,17.029289;51.109300,17.029489;51.109084,17.029289;51.109084,17.029489',
     };
+
+    dto.badges = selectedBadges.map((badge) => badge.value).join(',');
 
     if (!initialSingleInvestment) return;
 
@@ -521,7 +455,6 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
       emitError(error);
       return;
     }
-
     if (
       Object.keys(dto).length === 0 &&
       files.length === 0 &&
@@ -536,11 +469,6 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
       navigate(ROUTES.MAP.INVESTMENT.BY_NAME.path(slug));
     });
   };
-
-  const itemizedBadges: BadgeInputDto[] = badges.map((badge) => ({
-    value: badge.name,
-    label: badge.name,
-  }));
 
   const handleDeselectAttachment = (fileName: string) => {
     setUploadedAttachments((prev) =>
@@ -725,7 +653,10 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
                   <FormItem>
                     <FormLabel>Numer domu</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        disabled={(watchStreet ?? '').length < 3}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -738,7 +669,10 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
                   <FormItem>
                     <FormLabel>Numer mieszkania</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        disabled={(watchBuildingNr ?? '').length < 1}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

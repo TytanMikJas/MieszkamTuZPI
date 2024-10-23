@@ -30,9 +30,6 @@ export const MAX_LENGHT_LISTING_RESPONSIBLE = 256;
 export const MIN_LENGHT_LISTING_RESPONSIBLE = 3;
 //
 
-export const MAX_LENGTH_ADDRESS = 256;
-export const MIN_LENGTH_ADDRESS = 3;
-
 export const MAX_LENGTH_STREET = 64;
 export const MIN_LENGTH_STREET = 3;
 export const MAX_LENGTH_BUILDING_NR = 8;

@@ -1,6 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm, SubmitHandler, useFieldArray } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Select,
@@ -26,13 +25,6 @@ import { Textarea } from '../../shadcn/textarea';
 import IconButton from '../IconButton';
 import { Preview, PreviewImage, PreviewFallback } from '../../shadcn/preview';
 import {
-  MAX_LENGTH_LISTING_CONTENT,
-  MAX_LENGTH_LISTING_TITLE,
-  MIN_LENGTH_LISTING_CONTENT,
-  MIN_LENGTH_LISTING_TITLE,
-} from '@/max-lengths';
-import {
-  DOUBLE_WHITESPACE,
   FILE_IMAGE_NAME,
   FILE_TD_NAME,
   RIGHTBAR_STAGE_AREA,
@@ -62,7 +54,6 @@ import { FileBadge } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/core/routing/Router';
 import { emitError } from '@/toast-actions';
-
 import AttachmentDto from '@/core/api/common/attachment/AttachmentDto';
 import AttachmentBadge from './AttachmentBadge';
 import { LatLng } from 'leaflet';
@@ -72,45 +63,7 @@ import { useListingStore } from '@/core/stores/listing-store';
 import ListingDto from '@/core/api/listing/dto/listing';
 import ListingInputDto from '@/core/api/listing/dto/listing.input';
 import ListingInputPatchDto from '@/core/api/listing/dto/listing-patch.input';
-
-const listingFormSchema = z.object({
-  title: z
-    .string()
-    .min(MIN_LENGTH_LISTING_TITLE, { message: 'Tytuł jest wymagany' })
-    .max(MAX_LENGTH_LISTING_TITLE, {
-      message: 'Tytuł nie może być dłuższy niż 100 znaków.',
-    }),
-  description: z
-    .string()
-    .min(MIN_LENGTH_LISTING_CONTENT, { message: 'Opis jest wymagany' })
-    .max(MAX_LENGTH_LISTING_CONTENT, {
-      message: 'Opis nie może być dłuższy niż 1000 znaków.',
-    }),
-  responsible: z
-    .string()
-    .min(3, { message: 'Odpowiedzialny jest wymagany' })
-    .max(50, { message: 'Odpowiedzialny nie może być dłuższy niż 50 znaków.' }),
-  street: z
-    .string()
-    .min(3, { message: 'Ulica jest wymagana' })
-    .max(100, { message: 'Nie może być dłuższa niż 100 znaków.' }),
-  buildingNr: z
-    .string()
-    .min(1, { message: 'Numer domu jest wymagany' })
-    .max(10, { message: 'Nie może być dłuższy niż 10 znaków.' }),
-  apartmentNr: z
-    .string()
-    .max(10, {
-      message: 'Nie może być dłuższy niż 10 znaków.',
-    })
-    .optional(),
-  thumbnail: z.any(),
-  price: z.string(),
-  surface: z.string(),
-  sell: z.string(),
-});
-
-type ListingFormData = z.infer<typeof listingFormSchema>;
+import { ListingFormData, listingFormSchema } from './form-schemas';
 
 export default function CreateListingForm({ edit }: { edit?: boolean }) {
   const {
@@ -122,12 +75,10 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
     patchListing,
     setResetList,
   } = useListingStore();
-  // const { getParsedLocation, setLocation, resetEditStoreState } =
-  //   useMapEditStore();
   const { setRightbarStage } = useUiStore();
+
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [uploadedThumbnail, setUploadedThumbnail] = useState<FileBadge[]>([]);
-  const [slug, setSlug] = useState<string | null>(null);
   const [uploadedAttachments, setUploadedAttachments] = useState<FileBadge[]>(
     [],
   );
@@ -139,74 +90,50 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
   const [initialUploadedAttachments, setInitialUploadedAttachments] = useState<
     FileBadge[]
   >([]);
-
-  const handleResetEditor = () => {
-    // TODO
-  };
-
-  useEffect(() => {
-    setRightbarStage(RIGHTBAR_STAGE_AREA);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      // TODO
-      clearSingleListing();
-    };
-  }, []);
-
-  useEffect(() => {
-    const slug = window.location.pathname.split('/').pop();
-    if (edit && slug) {
-      setSlug(slug);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (edit && slug) {
-      setSingleListing(slug);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (edit && slug) {
-      setSingleListing(slug);
-    }
-  }, [slug]);
-
-  function validateImage(
-    event: ChangeEvent<HTMLInputElement>,
-    onChange: (event: any) => void,
-  ) {
-    const dataTransfer = new DataTransfer();
-    if (event.target && event.target.files?.length == 0) return;
-
-    let guard = false;
-    Array.from(event.target.files!).forEach((image) => {
-      const [error, fileType] = validateFile(image, [FILE_IMAGE_NAME]);
-
-      if (error) {
-        emitError(error);
-        guard = true;
-        return;
-      }
-
-      dataTransfer.items.add(image);
-      if (edit) setUploadedThumbnail([]);
-    });
-
-    if (guard) return;
-
-    const files = dataTransfer.files;
-    const displayUrl = URL.createObjectURL(event.target.files![0]);
-    onChange(files);
-    setPreview(displayUrl);
-  }
+  const [preview, setPreview] = useState('');
 
   const form = useForm<ListingFormData>({
     resolver: zodResolver(listingFormSchema),
     mode: 'onChange',
   });
+
+  const navigate = useNavigate();
+  const watchStreet = form.watch('street');
+  const watchBuildingNr = form.watch('buildingNr');
+
+  useEffect(() => {
+    setRightbarStage(RIGHTBAR_STAGE_AREA);
+
+    return () => {
+      clearSingleListing();
+    };
+  }, []);
+
+  useEffect(() => {
+    const slugFromUrl = window.location.pathname.split('/').pop();
+    if (edit && slugFromUrl) {
+      setSingleListing(slugFromUrl);
+    }
+    if (!edit) {
+      form.reset();
+      setUploadedFiles([]);
+      setUploadedThumbnail([]);
+      clearSingleListing();
+    }
+  }, [edit]);
+
+  useEffect(() => {
+    if ((watchStreet ?? '').length < 3) {
+      form.setValue('buildingNr', '');
+      form.setValue('apartmentNr', '');
+    }
+  }, [watchStreet, form]);
+
+  useEffect(() => {
+    if ((watchBuildingNr ?? '').length < 3) {
+      form.setValue('apartmentNr', '');
+    }
+  }, [watchBuildingNr, form]);
 
   useEffect(() => {
     if (singleListing && edit) {
@@ -223,8 +150,6 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
       form.setValue('street', singleListing.street);
       form.setValue('buildingNr', singleListing.buildingNr);
       form.setValue('apartmentNr', singleListing.apartmentNr);
-
-      // setLocation(new LatLng(singleListing.locationX, singleListing.locationY));
 
       const attachment_thumbnail = singleListing.attachments.find(
         (attachment: AttachmentDto) =>
@@ -260,29 +185,38 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
     };
   }, [singleListing]);
 
-  useEffect(() => {
-    if (!edit) {
-      form.reset();
-      setUploadedFiles([]);
-      setUploadedThumbnail([]);
-      clearSingleListing();
-      handleResetEditor();
-    }
-  }, [edit]);
+  function validateImage(
+    event: ChangeEvent<HTMLInputElement>,
+    onChange: (event: any) => void,
+  ) {
+    const dataTransfer = new DataTransfer();
+    if (event.target && event.target.files?.length == 0) return;
 
-  const [preview, setPreview] = useState('');
+    let guard = false;
+    Array.from(event.target.files!).forEach((image) => {
+      const [error, fileType] = validateFile(image, [FILE_IMAGE_NAME]);
 
-  const navigate = useNavigate();
+      if (error) {
+        emitError(error);
+        guard = true;
+        return;
+      }
+
+      dataTransfer.items.add(image);
+      if (edit) setUploadedThumbnail([]);
+    });
+
+    if (guard) return;
+
+    const files = dataTransfer.files;
+    const displayUrl = URL.createObjectURL(event.target.files![0]);
+    onChange(files);
+    setPreview(displayUrl);
+  }
 
   const onSubmit: SubmitHandler<ListingFormData> = (data) => {
     if (!data.thumbnail) {
       emitError('Miniatura jest wymagana');
-      return;
-    }
-
-    // const location = getParsedLocation(); // TODO
-
-    if (!location) {
       return;
     }
 
@@ -294,8 +228,8 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
       apartmentNr: data.apartmentNr,
       responsible: data.responsible,
       sell: data.sell === FORM_IS_SELLABLE_TRUE ? true : false,
-      locationX: 51.110383, // TODO
-      locationY: 17.033536, // TODO
+      locationX: 51.110383,
+      locationY: 17.033536,
       thumbnail: data.thumbnail[0].name,
       price: +data.price,
       surface: +data.surface,
@@ -318,12 +252,6 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
   };
 
   const onEdit: SubmitHandler<ListingFormData> = (data) => {
-    // const location = getParsedLocation(); // TODO
-
-    // if (!location) {
-    //   return;
-    // }
-
     const dto: ListingInputPatchDto = {
       title: data.title,
       content: data.description,
@@ -332,8 +260,8 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
       apartmentNr: data.apartmentNr,
       responsible: data.responsible,
       sell: data.sell === FORM_IS_SELLABLE_TRUE ? true : false,
-      locationX: 51.110383, // TODO
-      locationY: 17.033536, // TODO
+      locationX: 51.110383,
+      locationY: 17.033536,
       price: +data.price,
       surface: +data.surface,
     };
@@ -600,9 +528,12 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
                 name="buildingNr"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Numer domu *</FormLabel>
+                    <FormLabel>Numer domu</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        disabled={(watchStreet ?? '').length < 3}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -615,7 +546,10 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
                   <FormItem>
                     <FormLabel>Numer mieszkania</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        disabled={(watchBuildingNr ?? '').length < 1}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -29,7 +29,7 @@ import { FILES_URL } from '@/constants';
 import { useListingStore } from '@/core/stores/listing-store';
 import ListingDto from '@/core/api/listing/dto/listing';
 import Price from '../price/Price';
-import { transformSurface } from '@/utils/string-utils';
+import { buildAddress, transformSurface } from '@/utils/string-utils';
 import ImageBackgroundContainer from '../investment-details/image-background/ImageBackgroundContainer';
 import DeletePostIcon from '@/reusable-components/icons/delete-icon/DeletePostIcon';
 // TODO import share buttons in later sprint
@@ -136,7 +136,14 @@ export default function ListingDetails() {
             text={transformSurface(listing?.surface)}
             icon="straighten"
           />
-          <IconLabel text={listing.address} icon="location_on" />
+          <IconLabel
+            text={buildAddress(
+              listing.street,
+              listing.buildingNr,
+              listing.apartmentNr,
+            )}
+            icon="location_on"
+          />
         </div>
         <Separator className="my-4" />
         <div className="text-justify">{listing.content}</div>

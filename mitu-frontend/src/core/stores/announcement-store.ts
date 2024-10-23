@@ -269,13 +269,12 @@ export const useAnnouncementStore = create<
     if (announcement.locationY)
       formData.append('locationY', announcement.locationY.toString());
     if (announcement.area) formData.append('area', announcement.area);
-
-    if (announcement.street) formData.append('street', announcement.street);
-    if (announcement.buildingNr)
+    if (announcement.street || announcement.street === '')
+      formData.append('street', announcement.street);
+    if (announcement.buildingNr || announcement.buildingNr === '')
       formData.append('buildingNr', announcement.buildingNr);
-    if (announcement.apartmentNr)
+    if (announcement.apartmentNr || announcement.apartmentNr === '')
       formData.append('apartmentNr', announcement.apartmentNr);
-
     if (announcement.isCommentable !== undefined)
       formData.append('isCommentable', announcement.isCommentable.toString());
     if (announcement.categoryName)

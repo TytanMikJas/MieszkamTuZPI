@@ -10,6 +10,7 @@ import {
   INVESTMENT_STATUS_NAME_IN_PROGRESS,
   INVESTMENT_STATUS_NAME_PENDING,
   INVESTMENT_STATUS_NAME_REJECTED,
+  LOCATION_NOT_SPECIFIED,
   SQUARE_METERS_SHORTENING,
 } from '@/strings';
 
@@ -44,7 +45,7 @@ export function buildAddress(
   apartmentNr?: string,
 ): string {
   if (!street && !buildingNr && !apartmentNr) {
-    return '';
+    return LOCATION_NOT_SPECIFIED;
   }
   if (street && !buildingNr && !apartmentNr) {
     return street;
@@ -55,5 +56,5 @@ export function buildAddress(
   if (street && buildingNr && apartmentNr) {
     return `${street} ${buildingNr}/${apartmentNr}`;
   }
-  return '';
+  return LOCATION_NOT_SPECIFIED;
 }

@@ -1,6 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Select,
@@ -25,15 +24,6 @@ import { Textarea } from '@/shadcn/textarea';
 import IconButton from '@/reusable-components/IconButton';
 import { Preview, PreviewImage, PreviewFallback } from '@/shadcn/preview';
 import {
-  MAX_LENGHT_ANNOUNCEMENT_RESPONSIBLE,
-  MAX_LENGTH_ANNOUNCEMENT_CONTENT,
-  MAX_LENGTH_ANNOUNCEMENT_TITLE,
-  MIN_LENGHT_ANNOUNCEMENT_RESPONSIBLE,
-  MIN_LENGTH_ANNOUNCEMENT_CONTENT,
-  MIN_LENGTH_ANNOUNCEMENT_TITLE,
-} from '@/max-lengths';
-import {
-  DOUBLE_WHITESPACE,
   FILE_IMAGE_NAME,
   FILE_TD_NAME,
   ANNOUNCEMENT_CREATOR_DESCRIPTION_PLACEHOLDER,
@@ -70,51 +60,7 @@ import AnnouncementInputPatchDto from '@/core/api/announcement/dto/announcement-
 import AnnouncementDto from '@/core/api/announcement/dto/announcement';
 import MultipleFilesUploader from './MultipleFilesUploader';
 import AttachmentBadge from './AttachmentBadge';
-
-const announcementFormSchema = z.object({
-  title: z
-    .string()
-    .min(MIN_LENGTH_ANNOUNCEMENT_TITLE, { message: 'Tytuł jest wymagany' })
-    .max(MAX_LENGTH_ANNOUNCEMENT_TITLE, {
-      message: 'Tytuł nie może być dłuższy niż 100 znaków.',
-    }),
-  description: z
-    .string()
-    .min(MIN_LENGTH_ANNOUNCEMENT_CONTENT, { message: 'Opis jest wymagany' })
-    .max(MAX_LENGTH_ANNOUNCEMENT_CONTENT, {
-      message: 'Opis nie może być dłuższy niż 1000 znaków.',
-    }),
-  category: z.string().min(1, { message: 'Kategoria jest wymagana' }).max(50, {
-    message: 'Nazwa kategorii nie może być dłuższa niż 50 znaków.',
-  }),
-  responsible: z
-    .string()
-    .min(MIN_LENGHT_ANNOUNCEMENT_RESPONSIBLE, {
-      message: 'Odpowiedzialny jest wymagany',
-    })
-    .max(MAX_LENGHT_ANNOUNCEMENT_RESPONSIBLE, {
-      message: 'Odpowiedzialny nie może być dłuższy niż 50 znaków.',
-    }),
-  isCommentable: z.string(),
-  street: z
-    .string()
-    .min(3, { message: 'Ulica jest wymagana' })
-    .max(100, { message: 'Nie może być dłuższa niż 100 znaków.' }),
-  buildingNr: z
-    .string()
-    .min(1, { message: 'Numer domu jest wymagany' })
-    .max(10, { message: 'Nie może być dłuższy niż 10 znaków.' }),
-  apartmentNr: z
-    .string()
-    .max(10, {
-      message: 'Nie może być dłuższy niż 10 znaków.',
-    })
-    .optional(),
-  thumbnail: z.any(),
-  district: z.string().optional(),
-});
-
-type AnnouncementFormData = z.infer<typeof announcementFormSchema>;
+import { AnnouncementFormData, announcementFormSchema } from './form-schemas';
 
 export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
   const {
@@ -128,7 +74,9 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
     fetchAvailableCategories,
     setResetList,
   } = useAnnouncementStore();
+  const { setRightbarStage } = useUiStore();
 
+  const [preview, setPreview] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [uploadedThumbnail, setUploadedThumbnail] = useState<FileBadge[]>([]);
   const [uploadedAttachments, setUploadedAttachments] = useState<FileBadge[]>(
@@ -136,7 +84,6 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
   );
   const [initialSingleAnnouncement, setInitialSingleAnnouncement] =
     useState<AnnouncementDto>();
-
   const [initialUploadedThumbnail, setInitialUploadedThumbnail] = useState<
     FileBadge[]
   >([]);
@@ -144,72 +91,53 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
     FileBadge[]
   >([]);
 
-  const { setRightbarStage } = useUiStore();
-  const [slug, setSlug] = useState<string | null>(null);
+  const form = useForm<AnnouncementFormData>({
+    resolver: zodResolver(announcementFormSchema),
+    mode: 'onChange',
+  });
+
+  const navigate = useNavigate();
+  const watchStreet = form.watch('street');
+  const watchBuildingNr = form.watch('buildingNr');
 
   useEffect(() => {
+    fetchAvailableCategories();
     setRightbarStage(RIGHTBAR_STAGE_AREA);
-  }, []);
 
-  useEffect(() => {
     return () => {
       clearSingleAnnouncement();
     };
   }, []);
 
   useEffect(() => {
-    const slug = window.location.pathname.split('/').pop();
-    if (edit && slug) {
-      setSlug(slug);
+    const slugFromUrl = window.location.pathname.split('/').pop();
+    if (edit && slugFromUrl) {
+      setSingleAnnouncement(slugFromUrl, () => {});
     }
-  }, []);
+    if (!edit) {
+      form.reset();
+      setUploadedFiles([]);
+      setUploadedThumbnail([]);
+      clearSingleAnnouncement();
+    }
+  }, [edit]);
 
   useEffect(() => {
-    fetchAvailableCategories();
-    if (edit && slug) {
-      setSingleAnnouncement(slug, () => {});
+    if ((watchStreet ?? '').length < 3) {
+      form.setValue('buildingNr', '');
+      form.setValue('apartmentNr', '');
     }
-  }, []);
+  }, [watchStreet, form]);
 
   useEffect(() => {
-    if (edit && slug) {
-      setSingleAnnouncement(slug, () => {});
+    if ((watchBuildingNr ?? '').length < 3) {
+      form.setValue('apartmentNr', '');
     }
-  }, [slug]);
-
-  function validateImage(
-    event: ChangeEvent<HTMLInputElement>,
-    onChange: (event: any) => void,
-  ) {
-    // FileList is immutable, so we need to create a new one
-    const dataTransfer = new DataTransfer();
-    if (event.target && event.target.files?.length == 0) return;
-
-    let guard = false;
-    // Add newly uploaded images
-    Array.from(event.target.files!).forEach((image) => {
-      const [error, fileType] = validateFile(image, [FILE_IMAGE_NAME]);
-
-      if (error) {
-        emitError(error);
-        guard = true;
-        return;
-      }
-
-      dataTransfer.items.add(image);
-      if (edit) setUploadedThumbnail([]);
-    });
-
-    if (guard) return;
-
-    const files = dataTransfer.files;
-    const displayUrl = URL.createObjectURL(event.target.files![0]);
-    onChange(files);
-    setPreview(displayUrl);
-  }
+  }, [watchBuildingNr, form]);
 
   useEffect(() => {
     if (singleAnnouncement && edit) {
+      console.log(singleAnnouncement);
       setInitialSingleAnnouncement(singleAnnouncement);
       form.setValue('title', singleAnnouncement.title);
       form.setValue('description', singleAnnouncement.content);
@@ -268,23 +196,34 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
     };
   }, [singleAnnouncement]);
 
-  useEffect(() => {
-    if (!edit) {
-      form.reset();
-      setUploadedFiles([]);
-      setUploadedThumbnail([]);
-      clearSingleAnnouncement();
-    }
-  }, [edit]);
+  function validateImage(
+    event: ChangeEvent<HTMLInputElement>,
+    onChange: (event: any) => void,
+  ) {
+    const dataTransfer = new DataTransfer();
+    if (event.target && event.target.files?.length == 0) return;
 
-  const [preview, setPreview] = useState('');
+    let guard = false;
+    Array.from(event.target.files!).forEach((image) => {
+      const [error, fileType] = validateFile(image, [FILE_IMAGE_NAME]);
 
-  const form = useForm<AnnouncementFormData>({
-    resolver: zodResolver(announcementFormSchema),
-    mode: 'onChange',
-  });
+      if (error) {
+        emitError(error);
+        guard = true;
+        return;
+      }
 
-  const navigate = useNavigate();
+      dataTransfer.items.add(image);
+      if (edit) setUploadedThumbnail([]);
+    });
+
+    if (guard) return;
+
+    const files = dataTransfer.files;
+    const displayUrl = URL.createObjectURL(event.target.files![0]);
+    onChange(files);
+    setPreview(displayUrl);
+  }
 
   const onSubmit: SubmitHandler<AnnouncementFormData> = (data) => {
     if (!data.thumbnail) {
@@ -309,9 +248,9 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
       title: data.title,
       content: data.description,
       categoryName: data.category,
-      street: data.street.trim(),
-      buildingNr: data.buildingNr.trim(),
-      apartmentNr: data.apartmentNr?.trim(),
+      street: data.street,
+      buildingNr: data.buildingNr,
+      apartmentNr: data.apartmentNr,
       responsible: data.responsible,
       isCommentable:
         data.isCommentable === FORM_IS_COMMENTABLE_TRUE ? true : false,
@@ -358,9 +297,9 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
       title: data.title,
       content: data.description,
       categoryName: data.category,
-      street: data.street.trim(),
-      buildingNr: data.buildingNr.trim(),
-      apartmentNr: data.apartmentNr?.trim(),
+      street: data.street,
+      buildingNr: data.buildingNr,
+      apartmentNr: data.apartmentNr,
       isCommentable:
         data.isCommentable === FORM_IS_COMMENTABLE_TRUE ? true : false,
       locationX: location[0],
@@ -475,7 +414,6 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
       return;
     }
     dto.exclude = toBeExcluded.join(';');
-    console.log(dto, files);
     patchAnnouncement(`${initialSingleAnnouncement.id}`, dto, files, (slug) => {
       setResetList(true);
       navigate(ROUTES.MAP.ANNOUNCEMENT.BY_NAME.path(slug));
@@ -617,7 +555,7 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
               name="street"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ulica *</FormLabel>
+                  <FormLabel>Ulica</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -633,7 +571,10 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
                   <FormItem>
                     <FormLabel>Numer budynku</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        disabled={(watchStreet ?? '').length < 3}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -646,7 +587,10 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
                   <FormItem>
                     <FormLabel>Numer mieszkania</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        disabled={(watchBuildingNr ?? '').length < 3}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

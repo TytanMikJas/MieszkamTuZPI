@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import CreateInvestmentForm from '../../../../reusable-components/forms/CreateInvestmentForm';
 import AuthGuard from '../../../../core/auth/AuthGuard';
 import { Role } from '../../../../core/auth/roles';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +10,7 @@ export default function ListingEditPage() {
 
   return (
     <AuthGuard
-      allowedRoles={[Role.OFFICIAL, Role.ANONYMOUS]}
+      allowedRoles={[Role.OFFICIAL]}
       onDeny={() => navigate(ROUTES.MAP.LOGIN.path())}
       renderAllowed={<CreateListingForm edit />}
       renderLoading={<PanelLoader />}

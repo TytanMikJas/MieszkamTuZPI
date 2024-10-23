@@ -114,9 +114,27 @@ export default class InvestmentRepository {
 
     const connections: any = {};
 
+    const currentInvestment = await this.prisma.investment.findUnique({
+      where: { id },
+      include: { badges: true },
+    });
+
+    const currentBadgeNames = currentInvestment.badges.map(
+      (badge) => badge.name,
+    );
+
     if (badges) {
+      const badgesToDisconnect = currentBadgeNames.filter(
+        (name) => !badges.includes(name),
+      );
+
       connections.badges = {
         connect: badges.map((name: string) => ({ name })),
+        disconnect: badgesToDisconnect.map((name: string) => ({ name })),
+      };
+    } else {
+      connections.badges = {
+        disconnect: currentBadgeNames.map((name: string) => ({ name })),
       };
     }
 

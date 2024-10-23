@@ -217,9 +217,11 @@ export const useListingStore = create<
         formData.append('locationX', listing.locationX.toString());
       if (listing.locationY)
         formData.append('locationY', listing.locationY.toString());
-      if (listing.street) formData.append('street', listing.street);
-      if (listing.buildingNr) formData.append('buildingNr', listing.buildingNr);
-      if (listing.apartmentNr)
+      if (listing.street || listing.street === '')
+        formData.append('street', listing.street);
+      if (listing.buildingNr || listing.buildingNr === '')
+        formData.append('buildingNr', listing.buildingNr);
+      if (listing.apartmentNr || listing.apartmentNr === '')
         formData.append('apartmentNr', listing.apartmentNr);
       if (listing.responsible)
         formData.append('responsible', listing.responsible);

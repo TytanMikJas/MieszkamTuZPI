@@ -36,5 +36,9 @@ export const MAX_LENGTH_LISTING_CONTENT = 5096;
 export const MIN_LENGTH_LISTING_CONTENT = 3;
 //
 
-export const MAX_LENGTH_ADDRESS = 256;
-export const MIN_LENGTH_ADDRESS = 3;
+export const MAX_LENGTH_STREET = 64;
+export const MIN_LENGTH_STREET = 3;
+export const MAX_LENGTH_BUILDING_NR = 8;
+export const MIN_LENGTH_BUILDING_NR = 1;
+export const MAX_LENGTH_APARTMENT_NR = 8;
+export const MIN_LENGTH_APARTMENT_NR = 1;
