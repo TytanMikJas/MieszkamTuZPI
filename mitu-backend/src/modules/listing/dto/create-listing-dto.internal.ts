@@ -4,7 +4,7 @@
  * @param {number} price - The price.
  * @param {number} surface - The surface.
  */
-export default class CreateListingExcludePoiDto {
+export default class ListingExcludePoiDto {
   sell: boolean;
   price: number;
   surface: number;

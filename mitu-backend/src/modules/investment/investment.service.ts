@@ -19,10 +19,8 @@ import { SimpleBadRequest } from 'src/exceptions/simple-bad-request.exception';
 import { FilterInvestmentDto } from 'src/modules/investment/dto/filter-investment.dto';
 import { CategoryDto } from 'src/modules/investment/dto/category-dto';
 import BadgeDto from 'src/modules/investment/dto/badge-dto';
-import { slugify } from 'src/utils/string-utils';
 import { PoiService } from 'src/modules/poi/poi.service';
-import UpdateInvestmentExcludePoiDto from 'src/modules/investment/dto/update-investment-dto.internal';
-import CreateInvestmentExcludePoiDto from 'src/modules/investment/dto/create-investment-dto.internal';
+import InvestmentExcludePoiDto from 'src/modules/investment/dto/create-investment-dto.internal';
 
 /**
  * Investment service.
@@ -54,7 +52,7 @@ export class InvestmentService {
   ) {
     return {
       title: investment.title,
-      slug: slugify(investment.title),
+      slug: investment.title,
       locationX: investment.locationX,
       locationY: investment.locationY,
       responsible: investment.responsible,
@@ -64,21 +62,9 @@ export class InvestmentService {
     };
   }
 
-  getUpdateInvestmentParameters(
-    investment: UpdateInvestmentInputDto,
-  ): UpdateInvestmentExcludePoiDto {
-    return {
-      area: investment.area,
-      categoryName: investment.categoryName,
-      isCommentable: investment.isCommentable,
-      status: investment.status,
-      badges: investment.badges,
-    };
-  }
-
-  getCreateInvestmentParameters(
+  getInvestmentParameters(
     investment: CreateInvestmentInputDto,
-  ): CreateInvestmentExcludePoiDto {
+  ): InvestmentExcludePoiDto {
     return {
       area: investment.area,
       isCommentable: investment.isCommentable,
@@ -113,7 +99,7 @@ export class InvestmentService {
     try {
       investment = await this.investmentRepository.create(
         post.id,
-        this.getCreateInvestmentParameters(body),
+        this.getInvestmentParameters(body),
       );
     } catch (e) {
       await this.postService.delete(post.id);
@@ -188,11 +174,10 @@ export class InvestmentService {
     id: PRISMA_ID,
     body: UpdateInvestmentInputDto,
     files: PostFilesGrouped,
-  ): Promise<{ slug: string; prevSlug: string }> {
-    const { exclude, thumbnail, content, ...investment } = body;
+  ): Promise<string> {
+    const { exclude, thumbnail, content } = body;
 
     const _p = await this.postService.getOne(id);
-
     const _l = await this.investmentRepository.getOne(id);
     if (!_l) throw new SimpleNotFound(ERROR_INVESTMENT_NOT_FOUND);
 
@@ -206,11 +191,14 @@ export class InvestmentService {
     if (isThumbnailDeleted) await this.postService.setThumbnail(id, '');
 
     await this.postService.setContent(id, content);
-    await this.poiService.update({ id, ...this.getPoiParameters(body) });
+    const poi = await this.poiService.update({
+      id,
+      ...this.getPoiParameters(body),
+    });
 
     await this.investmentRepository.update(
       id,
-      this.getUpdateInvestmentParameters(body),
+      this.getInvestmentParameters(body),
     );
 
     if (
@@ -227,13 +215,7 @@ export class InvestmentService {
     ) {
       await this.postService.setThumbnail(id, thumbnail);
     }
-    const prevSlug = _l.slug;
-    const _s = investment.slug ? investment.slug : _l.slug;
-
-    return {
-      slug: _s,
-      prevSlug,
-    };
+    return poi.slug;
   }
 
   async delete(id: PRISMA_ID): Promise<{ prevSlug: string }> {

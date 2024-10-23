@@ -18,7 +18,6 @@ import { UpdateAnnouncementInputDto } from 'src/modules/announcement/dto/update-
 import AnnouncementRepository from 'src/modules/announcement/announcement.repository';
 import CategoryDto from 'src/modules/announcement/dto/category-dto';
 import { PoiService } from '../poi/poi.service';
-import { slugify } from 'src/utils/string-utils';
 import AnnouncementExcludePoiDto from './dto/create-announcement-dto.internal';
 
 /**
@@ -59,7 +58,7 @@ export class AnnouncementService {
   ) {
     return {
       title: announcement.title,
-      slug: slugify(announcement.title),
+      slug: announcement.title,
       locationX: announcement.locationX,
       locationY: announcement.locationY,
       responsible: announcement.responsible,
@@ -75,7 +74,7 @@ export class AnnouncementService {
    * @returns {AnnouncementExcludePoiDto}
    * */
   getAnnouncementParameters(
-    announcement: CreateAnnouncementInputDto,
+    announcement: CreateAnnouncementInputDto | UpdateAnnouncementInputDto,
   ): AnnouncementExcludePoiDto {
     return {
       area: announcement.area,
@@ -202,17 +201,15 @@ export class AnnouncementService {
    * @param {PRISMA_ID} id
    * @param {UpdateAnnouncementInputDto} body
    * @param {PostFilesGrouped} files
-   * @returns {Promise<{ slug: string; prevSlug: string }>}
+   * @returns {Promise<string>}
    * */
   async update(
     id: PRISMA_ID,
     body: UpdateAnnouncementInputDto,
     files: PostFilesGrouped,
-  ): Promise<{ slug: string; prevSlug: string }> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { exclude, thumbnail, content, ..._announcement } = body;
+  ): Promise<string> {
+    const { exclude, thumbnail, content } = body;
     const _p = await this.postService.getOne(id);
-
     const _l = await this.announcementRepository.getOne(id);
     if (!_l) throw new SimpleNotFound(ERROR_ANNOUNCEMENT_NOT_FOUND);
 
@@ -236,8 +233,6 @@ export class AnnouncementService {
       this.getAnnouncementParameters(body),
     );
 
-    //check if the thumbnail is to be updated
-    //and if it can be updated
     if (
       thumbnail &&
       (await this.filehandlerService.canAssignThumbnail(
@@ -253,10 +248,7 @@ export class AnnouncementService {
       await this.postService.setThumbnail(id, thumbnail);
     }
 
-    return {
-      slug: poi.slug,
-      prevSlug: _l.slug,
-    };
+    return poi.slug;
   }
 
   /**

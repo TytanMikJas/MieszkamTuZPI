@@ -1,11 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { GenericFilter } from 'src/query.filter';
 import { Injectable } from '@nestjs/common';
-import { slugify } from 'src/utils/string-utils';
 import { ListingDto } from 'src/modules/listing/dto/listing-dto';
 import { POIDTO } from 'src/modules/poi/dto/poi-dto.internal';
-import UpdateListingInternalDto from 'src/modules/listing/dto/update-listing-dto';
-import CreateListingExcludePoiDto from 'src/modules/listing/dto/create-listing-dto.internal';
+import ListingExcludePoiDto from 'src/modules/listing/dto/create-listing-dto.internal';
 import { ListingInternalDto } from './dto/listing-dto.internal';
 
 /**
@@ -28,18 +26,12 @@ export default class ListingRepository {
     };
   }
 
-  async create(
-    id: number,
-    body: CreateListingExcludePoiDto,
-  ): Promise<ListingDto> {
-    const { sell, price, surface, ...rest } = body;
+  async create(id: number, body: ListingExcludePoiDto): Promise<ListingDto> {
+    const { ...rest } = body;
     return this.prisma.listing
       .create({
         data: {
           ...rest,
-          sell,
-          price,
-          surface,
           post: {
             connect: {
               id: id,
@@ -85,13 +77,7 @@ export default class ListingRepository {
       .then((l) => (l ? this.mapListingToDto(l, l.poi) : null));
   }
 
-  async update(
-    id: number,
-    body: UpdateListingInternalDto,
-  ): Promise<ListingDto> {
-    if (body.title) {
-      body.slug = slugify(body.title);
-    }
+  async update(id: number, body: ListingExcludePoiDto): Promise<ListingDto> {
     return this.prisma.listing
       .update({
         where: { id },

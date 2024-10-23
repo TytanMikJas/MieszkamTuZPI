@@ -126,7 +126,7 @@ export class InvestmentController {
    * @param files - files
    * @param id - investment id
    * @param body - UpdateInvestmentInputDto
-   * @returns { slug: string; prevSlug: string } - object with previous and current slug
+   * @returns Promise<string> - newly generated slug
    */
   @Patch('/one/:id')
   @Roles($Enums.UserRole.OFFICIAL)
@@ -137,7 +137,7 @@ export class InvestmentController {
     @UploadedPostFiles($Enums.PostType.INVESTMENT) files: PostFilesGrouped,
     @Param('id', ParsePrismaID) id: PRISMA_ID,
     @Body() body: UpdateInvestmentInputDto,
-  ): Promise<{ slug: string; prevSlug: string }> {
+  ): Promise<string> {
     return await this.investmentsService.update(id, body, files);
   }
 

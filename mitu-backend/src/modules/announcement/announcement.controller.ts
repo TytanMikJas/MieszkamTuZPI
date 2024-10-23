@@ -112,10 +112,10 @@ export class AnnouncementController {
 
   /**
    * Update announcement
-   * @param {PRISMA_ID} id
-   * @param {UpdateAnnouncementInputDto} body
-   * @param {PostFilesGrouped} files
-   * @returns {Promise<{ slug: string; prevSlug: string }>}
+   * @param {PRISMA_ID} id - id
+   * @param {UpdateAnnouncementInputDto} body - Announcement
+   * @param {PostFilesGrouped} files - files
+   * @returns Promise<string> - newly generated slug
    * */
   @Patch('/one/:id')
   @Roles($Enums.UserRole.OFFICIAL)
@@ -126,7 +126,7 @@ export class AnnouncementController {
     @UploadedPostFiles($Enums.PostType.ANNOUNCEMENT) files: PostFilesGrouped,
     @Param('id', ParsePrismaID) id: PRISMA_ID,
     @Body() body: UpdateAnnouncementInputDto,
-  ): Promise<{ slug: string; prevSlug: string }> {
+  ): Promise<string> {
     return this.announcementService.update(id, body, files);
   }
 

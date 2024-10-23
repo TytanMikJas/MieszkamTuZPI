@@ -8,7 +8,7 @@ import { InvestmentStatus } from '@prisma/client';
  * @param {string} status - The status.
  * @param {string[]} badges - The badges.
  */
-export default class CreateInvestmentExcludePoiDto {
+export default class InvestmentExcludePoiDto {
   area: string;
   isCommentable: boolean;
   status: InvestmentStatus;

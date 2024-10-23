@@ -439,7 +439,6 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
       return;
     }
     dto.exclude = toBeExcluded.join(';');
-    console.log('ASDASDSA');
     patchListing(`${initialSingleListing.id}`, dto, files, (slug) => {
       setResetList(true);
       navigate(ROUTES.MAP.LISTING.BY_NAME.path(slug));

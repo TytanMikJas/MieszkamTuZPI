@@ -7,8 +7,7 @@ import { CategoryDto } from 'src/modules/investment/dto/category-dto';
 import BadgeDto from 'src/modules/investment/dto/badge-dto';
 import { POIDTO } from 'src/modules/poi/dto/poi-dto.internal';
 import { InvestmentInternalDto } from 'src/modules/investment/dto/investment-dto.internal';
-import UpdateInvestmentExcludePoiDto from 'src/modules/investment/dto/update-investment-dto.internal';
-import CreateInvestmentExcludePoiDto from 'src/modules/investment/dto/create-investment-dto.internal';
+import InvestmentExcludePoiDto from 'src/modules/investment/dto/create-investment-dto.internal';
 
 /**
  * Investment repository.
@@ -32,7 +31,7 @@ export default class InvestmentRepository {
 
   async create(
     id: number,
-    body: CreateInvestmentExcludePoiDto,
+    body: InvestmentExcludePoiDto,
   ): Promise<InvestmentDto> {
     const { badges, categoryName, ...rest } = body;
     return this.prisma.investment
@@ -109,7 +108,7 @@ export default class InvestmentRepository {
 
   async update(
     id: number,
-    body: UpdateInvestmentExcludePoiDto,
+    body: InvestmentExcludePoiDto,
   ): Promise<InvestmentDto> {
     const { badges, categoryName, ...rest } = body;
 
@@ -117,7 +116,7 @@ export default class InvestmentRepository {
 
     if (badges) {
       connections.badges = {
-        set: badges.map((name: string) => ({ name })),
+        connect: badges.map((name: string) => ({ name })),
       };
     }
 

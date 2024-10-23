@@ -10,7 +10,7 @@ export default function AnnouncementCreatePage() {
 
   return (
     <AuthGuard
-      allowedRoles={[Role.OFFICIAL, Role.OFFICIAL]}
+      allowedRoles={[Role.OFFICIAL]}
       onDeny={() => navigate(ROUTES.MAP.LOGIN.path())}
       renderAllowed={<CreateAnnouncementForm />}
       renderLoading={<PanelLoader />}

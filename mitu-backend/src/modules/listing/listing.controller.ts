@@ -110,7 +110,7 @@ export class ListingController {
    * @param files - files
    * @param id - listing id
    * @param body - UpdateListingInputDto
-   * @returns {slug: string, prevSlug: string} - object with current slug and prevSlug
+   * @returns Promise<string> - newly generated slug
    */
   @Patch('/one/:id')
   @Roles($Enums.UserRole.OFFICIAL)
@@ -121,7 +121,7 @@ export class ListingController {
     @UploadedPostFiles($Enums.PostType.LISTING) files: PostFilesGrouped,
     @Param('id', ParsePrismaID) id: PRISMA_ID,
     @Body() body: UpdateListingInputDto,
-  ): Promise<{ slug: string; prevSlug: string }> {
+  ): Promise<string> {
     return this.listingService.update(id, body, files);
   }
 

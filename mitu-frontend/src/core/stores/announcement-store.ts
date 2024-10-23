@@ -292,12 +292,9 @@ export const useAnnouncementStore = create<
     });
 
     axiosInstance
-      .patch<SuccessResponse<{ slug: string; prevSlug: string }>>(
-        `/announcement/one/${id}`,
-        formData,
-      )
+      .patch<SuccessResponse<string>>(`/announcement/one/${id}`, formData)
       .then((response) => {
-        onSuccess(response.data.data.slug);
+        onSuccess(response.data.data);
       })
       .catch((error) => {
         console.error(error);

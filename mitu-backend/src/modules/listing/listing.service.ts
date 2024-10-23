@@ -16,10 +16,8 @@ import { PostService } from 'src/modules/post/post.service';
 import ListingRepository from './listing.repository';
 import { SimpleBadRequest } from '../../exceptions/simple-bad-request.exception';
 import { UpdateListingInputDto } from './dto/update-listing-dto';
-import { slugify } from 'src/utils/string-utils';
 import { PoiService } from 'src/modules/poi/poi.service';
-import UpdateListingExcludePoiDto from 'src/modules/listing/dto/update-listing-dto.internal';
-import CreateListingExcludePoiDto from 'src/modules/listing/dto/create-listing-dto.internal';
+import ListingExcludePoiDto from 'src/modules/listing/dto/create-listing-dto.internal';
 
 @Injectable()
 export class ListingService {
@@ -33,7 +31,7 @@ export class ListingService {
   getPoiParameters(listing: CreateListingInputDto | UpdateListingInputDto) {
     return {
       title: listing.title,
-      slug: slugify(listing.title),
+      slug: listing.title,
       locationX: listing.locationX,
       locationY: listing.locationY,
       responsible: listing.responsible,
@@ -43,19 +41,9 @@ export class ListingService {
     };
   }
 
-  getUpdateListingParameters(
-    listing: UpdateListingInputDto,
-  ): UpdateListingExcludePoiDto {
-    return {
-      sell: listing.sell,
-      price: listing.price,
-      surface: listing.surface,
-    };
-  }
-
-  getCreateListingParameters(
-    listing: CreateListingInputDto,
-  ): CreateListingExcludePoiDto {
+  getListingParameters(
+    listing: CreateListingInputDto | UpdateListingInputDto,
+  ): ListingExcludePoiDto {
     return {
       sell: listing.sell,
       price: listing.price,
@@ -88,7 +76,7 @@ export class ListingService {
     try {
       listing = await this.listingRepository.create(
         post.id,
-        this.getCreateListingParameters(body),
+        this.getListingParameters(body),
       );
     } catch (e) {
       await this.postService.delete(post.id);
@@ -156,10 +144,10 @@ export class ListingService {
     id: PRISMA_ID,
     body: UpdateListingInputDto,
     files: PostFilesGrouped,
-  ): Promise<{ slug: string; prevSlug: string }> {
-    const { exclude, thumbnail, content, ...listingRest } = body;
-    const _p = await this.postService.getOne(id);
+  ): Promise<string> {
+    const { exclude, thumbnail, content } = body;
 
+    const _p = await this.postService.getOne(id);
     const _l = await this.listingRepository.getOne(id);
     if (!_l) throw new SimpleNotFound(ERROR_LISTING_NOT_FOUND);
 
@@ -173,12 +161,12 @@ export class ListingService {
     if (isThumbnailDeleted) await this.postService.setThumbnail(id, '');
 
     await this.postService.setContent(id, content);
+    const poi = await this.poiService.update({
+      id,
+      ...this.getPoiParameters(body),
+    });
 
-    if (listingRest.title) {
-      listingRest.slug = slugify(listingRest.title);
-    }
-
-    await this.listingRepository.update(id, listingRest);
+    await this.listingRepository.update(id, this.getListingParameters(body));
 
     if (
       thumbnail &&
@@ -194,13 +182,8 @@ export class ListingService {
     ) {
       await this.postService.setThumbnail(id, thumbnail);
     }
-    const prevSlug = _l.slug;
-    const _s = listingRest.slug ? listingRest.slug : _l.slug;
 
-    return {
-      slug: _s,
-      prevSlug,
-    };
+    return poi.slug;
   }
 
   async delete(id: PRISMA_ID): Promise<{ prevSlug: string }> {
