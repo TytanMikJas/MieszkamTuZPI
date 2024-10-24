@@ -1324,20 +1324,46 @@ async function seedDummyComments() {
 }
 
 async function seedPostVotes() {
-  const userIds = Array.from({ length: NUMBER_OF_USERS }, (_, i) => i);
-  const postIds = Array.from({ length: counter }, (_, i) => i);
-  const voteTypes = [PostVoteType.UPVOTE, PostVoteType.DOWNVOTE];
+  const HIGHEST_CUSTOM_POST_NUM = 44;
+  const userIds = Array.from(
+    { length: NUMBER_OF_USERS },
+    (_, i) => i + ID_OFFSET,
+  );
+  const postIds = Array.from(
+    { length: HIGHEST_CUSTOM_POST_NUM },
+    (_, i) => i + 1,
+  );
+  const voteTypes: PostVoteType[] = [
+    PostVoteType.UPVOTE,
+    PostVoteType.DOWNVOTE,
+  ];
 
   const votePromises = userIds.flatMap((userId) => {
-    return postIds.map((postId) => {
-      const voteType = voteTypes[Math.floor(Math.random() * voteTypes.length)];
-      return prisma.postVote.create({
+    return postIds.map(async (postId) => {
+      const random = Math.random();
+      const voteType: PostVoteType = random < 0.8 ? voteTypes[0] : voteTypes[1];
+
+      // Create the PostVote record
+      await prisma.postVote.create({
         data: {
           userId,
           postId,
           type: voteType,
         },
       });
+
+      // Update the Post's vote counts
+      if (voteType === PostVoteType.UPVOTE) {
+        await prisma.post.update({
+          where: { id: postId },
+          data: { upvoteCount: { increment: 1 } },
+        });
+      } else {
+        await prisma.post.update({
+          where: { id: postId },
+          data: { downvoteCount: { increment: 1 } },
+        });
+      }
     });
   });
 
