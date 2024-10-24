@@ -19,7 +19,7 @@ export interface AuthStoreError {
 }
 
 export interface AuthStore {
-  me: MeDto | null;
+  me: MeDto | null | undefined;
   error?: AuthStoreError | null;
   loading?: boolean;
   signIn: (email: string, password: string, onSuccess: () => void) => void;
@@ -48,13 +48,13 @@ export interface AuthStore {
 
 export const useAuthStore = create<AuthStore, [['zustand/devtools', never]]>(
   devtools((set, get) => ({
-    me: null as MeDto | null,
+    me: undefined as MeDto | null | undefined,
     error: null as AuthStoreError | null, // Update the type of 'error' property
     loading: false as boolean,
     signIn: (email: string, password: string, onSuccess: () => void) => {
       const { loading, error, me } = get();
       if (loading) return;
-      set({ loading: true, error: null, me: null });
+      set({ loading: true, error: null, me: undefined });
 
       axiosInstance
         .post<SuccessResponse<MeDto>>('/auth/signIn', { email, password })
@@ -64,6 +64,7 @@ export const useAuthStore = create<AuthStore, [['zustand/devtools', never]]>(
         })
         .catch((error) => {
           set({
+            me: null,
             error: { message: error.message },
             loading: false,
           });
@@ -119,7 +120,7 @@ export const useAuthStore = create<AuthStore, [['zustand/devtools', never]]>(
     signUp: (signUpDto: CreateUserInputDto, onSuccess: () => void) => {
       const { loading, error, me } = get();
       if (loading) return;
-      set({ loading: true, error: null, me: null });
+      set({ loading: true, error: null, me: undefined });
 
       axiosInstance
         .post<SuccessResponse<MeDto>>('/auth/signUp', signUpDto)
@@ -136,11 +137,13 @@ export const useAuthStore = create<AuthStore, [['zustand/devtools', never]]>(
                 field: error?.response?.data?.data[0]?.field,
               },
               loading: false,
+              me: null,
             });
           } else {
             set({
               error: { message: ERROR_SERVER_ERROR },
               loading: false,
+              me: null,
             });
           }
         });
