@@ -1,3 +1,4 @@
+import { PhoneLayoutPage } from '@/reusable-components/app-layout/PhoneLayout';
 import { RIGHTBAR_STAGE_MAP } from '@/strings';
 import { RightbarStage } from '@/types';
 import { create } from 'zustand';
@@ -7,6 +8,7 @@ interface InitialUiStore {
   rightbarStage: RightbarStage;
   leftPanelState: LeftPanelState;
   currentBottomSheetSnap: PhoneLayoutSnap;
+  phoneLayoutPage: PhoneLayoutPage;
 }
 
 export enum PhoneLayoutSnap {
@@ -25,6 +27,7 @@ const initialUiStore: InitialUiStore = {
   leftPanelState: LeftPanelState.ONLY_LEFT,
   rightbarStage: RIGHTBAR_STAGE_MAP,
   currentBottomSheetSnap: PhoneLayoutSnap.TOP,
+  phoneLayoutPage: PhoneLayoutPage.LEFT,
 };
 
 export interface UiStore extends InitialUiStore {
@@ -36,6 +39,7 @@ export interface UiStore extends InitialUiStore {
     followUp?: () => void,
   ) => void;
   setCurrentBottomSheetSnap: (snap: PhoneLayoutSnap) => void;
+  setPhoneLayoutPage: (page: PhoneLayoutPage) => void;
 }
 
 export const useUiStore = create<UiStore, [['zustand/devtools', never]]>(
@@ -55,6 +59,9 @@ export const useUiStore = create<UiStore, [['zustand/devtools', never]]>(
     setRightbarStage: (rightbarStage, followUp) => {
       set({ rightbarStage });
       if (followUp) followUp();
+    },
+    setPhoneLayoutPage: (phoneLayoutPage) => {
+      set({ phoneLayoutPage });
     },
     ...initialUiStore,
   })),

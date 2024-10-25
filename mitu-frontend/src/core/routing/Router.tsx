@@ -1,24 +1,35 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
-import { Role } from '../api/auth/roles';
+import { Role } from '../auth/roles';
 import GlobalLayout from '@/pages/GlobalLayout';
 import MapWithPostsLayout from '@/pages/map/MapWithPostsLayout';
 import MapWithSidepanelsLayout from '@/pages/map/map-with-sidepanels/MapWithSidepanelsLayout';
+import {
+  MoveBottomSheetMiddle,
+  MoveBottomSheetUp,
+} from '@/reusable-components/effects/BottomSheetPositionEffect';
+import { LandingPage } from '@/reusable-components/landing-page/LandingPage';
+import InvestmentDetails from '@/reusable-components/post-details/investment-details/InvestmentDetails';
 import NamedRoute from './named-outlet/NamedRoute';
-import AnnouncementDetails from '@/reusable-components/post-details/announcement-details/AnnouncementDetails';
-import AnnouncementsPage from '@/pages/map/map-with-sidepanels/announcements/AnnouncementsPage';
-import AnnouncementCreatePage from '@/pages/map/map-with-sidepanels/announcement/AnnouncementCreatePage';
-import AnnouncementEditPage from '@/pages/map/map-with-sidepanels/announcement/AnnouncementEditPage';
 import LoginPage from '@/pages/map/map-with-sidepanels/login/LoginPage';
 import RegisterPage from '@/pages/map/map-with-sidepanels/register/RegisterPage';
-import InvestmentCreatePage from '@/pages/map/map-with-sidepanels/investment/InvestmentCreatePage';
-import InvestmentEditPage from '@/pages/map/map-with-sidepanels/investment/InvestmentEditPage';
 import InvestmentsPage from '@/pages/map/map-with-sidepanels/investments/InvestmentsPage';
-import InvestmentDetails from '@/reusable-components/post-details/investment-details/InvestmentDetails';
-import ListingCreatePage from '@/pages/map/map-with-sidepanels/listing/ListingCreatePage';
-import ListingEditPage from '@/pages/map/map-with-sidepanels/listing/ListingEditPage';
+import OfficialLayout from '@/pages/official/OfficialLayout';
+import PostTypeEffect from '@/reusable-components/effects/PostTypeEffect';
+import { ANNOUNCEMENT_NAME, INVESTMENT_NAME, LISTING_NAME } from '@/strings';
+import { OpenOnlyLeftPanel } from '@/reusable-components/effects/LeftPanelStateEffect';
 import ListingsPage from '@/pages/map/map-with-sidepanels/listings/ListingsPage';
 import ListingDetails from '@/reusable-components/post-details/listing-details/ListingDetails';
-import { LandingPage } from '@/reusable-components/landing-page/LandingPage';
+import ClearCommentsEffect from '@/reusable-components/effects/ClearCommentsEffect';
+import AnnouncementDetails from '@/reusable-components/post-details/announcement-details/AnnouncementDetails';
+import AnnouncementsPage from '@/pages/map/map-with-sidepanels/announcements/AnnouncementsPage';
+import InvestmentCreatePage from '@/pages/map/map-with-sidepanels/investment/InvestmentCreatePage';
+import InvestmentEditPage from '@/pages/map/map-with-sidepanels/investment/InvestmentEditPage';
+import AnnouncementCreatePage from '@/pages/map/map-with-sidepanels/announcement/AnnouncementCreatePage';
+import AnnouncementEditPage from '@/pages/map/map-with-sidepanels/announcement/AnnouncementEditPage';
+import ListingCreatePage from '@/pages/map/map-with-sidepanels/listing/ListingCreatePage';
+import ListingEditPage from '@/pages/map/map-with-sidepanels/listing/ListingEditPage';
+import ClearPhoneLayoutEffect from '@/reusable-components/effects/ClearPhoneLayoutEffect';
+import ForgotPasswordPage from '@/pages/map/forgot-password/ForgotPasswordPage';
 
 export const MAP = 'mapa';
 export const LANDING_PAGE = 'start';
@@ -30,15 +41,15 @@ export const INVESTMENTS = 'inwestycje';
 export const INVESTMENT_CREATE = 'kreator-inwestycji';
 export const INVESTMENT_EDIT = 'edycja-inwestycji';
 
-export const LISTING = 'nieruchomosc';
-export const LISTINGS = 'nieruchomosci';
-export const LISTING_CREATE = 'kreator-nieruchomosci';
-export const LISTING_EDIT = 'edycja-nieruchomosci';
-
 export const ANNOUNCEMENT = 'ogloszenie';
 export const ANNOUNCEMENTS = 'ogloszenia';
 export const ANNOUNCEMENT_CREATE = 'kreator-ogloszenia';
 export const ANNOUNCEMENT_EDIT = 'edycja-ogloszenia';
+
+export const LISTING = 'nieruchomosc';
+export const LISTINGS = 'nieruchomosci';
+export const LISTING_CREATE = 'kreator-nieruchomosci';
+export const LISTING_EDIT = 'edycja-nieruchomosci';
 
 export const BAF_CALCULATOR = 'kalkulator-baf';
 export const BAF_CALCULATOR_SIMPLE = 'kalkulator-baf-prosty';
@@ -53,7 +64,6 @@ export const DASHBOARD = 'dashboard';
 export const SETTINGS = 'settings';
 export const NEWSLETTER = 'newsletter';
 export const FORGOT_PASSWORD = 'zapomnialem-hasla';
-
 export const ROUTES = {
   MAP: {
     FORGOT_PASSWORD: {
@@ -95,28 +105,6 @@ export const ROUTES = {
         allowed: [Role.OFFICIAL],
       },
     },
-    LISTING: {
-      path: () => `/${MAP}/${LISTING}`,
-      BY_NAME: {
-        path: (slug: string) => `/${MAP}/${LISTING}/${slug}`,
-        allowed: [Role.ANONYMOUS, Role.USER, Role.ADMIN, Role.OFFICIAL],
-      },
-    },
-    LISTINGS: {
-      path: () => `/${MAP}/${LISTINGS}`,
-      allowed: [Role.ANONYMOUS, Role.USER, Role.ADMIN, Role.OFFICIAL],
-    },
-    LISTING_CREATE: {
-      path: () => `/${MAP}/${LISTING_CREATE}`,
-      allowed: [Role.OFFICIAL],
-    },
-    LISTING_EDIT: {
-      path: () => `/${MAP}/${LISTING_EDIT}`,
-      BY_NAME: {
-        path: (slug: string) => `/${MAP}/${LISTING_EDIT}/${slug}`,
-        allowed: [Role.OFFICIAL],
-      },
-    },
     ANNOUNCEMENT: {
       path: () => `/${MAP}/${ANNOUNCEMENT}`,
       BY_NAME: {
@@ -136,6 +124,28 @@ export const ROUTES = {
       path: () => `/${MAP}/${ANNOUNCEMENT_EDIT}`,
       BY_NAME: {
         path: (slug: string) => `/${MAP}/${ANNOUNCEMENT_EDIT}/${slug}`,
+        allowed: [Role.OFFICIAL],
+      },
+    },
+    LISTING: {
+      path: () => `/${MAP}/${LISTING}`,
+      BY_NAME: {
+        path: (slug: string) => `/${MAP}/${LISTING}/${slug}`,
+        allowed: [Role.ANONYMOUS, Role.USER, Role.ADMIN, Role.OFFICIAL],
+      },
+    },
+    LISTINGS: {
+      path: () => `/${MAP}/${LISTINGS}`,
+      allowed: [Role.ANONYMOUS, Role.USER, Role.ADMIN, Role.OFFICIAL],
+    },
+    LISTING_CREATE: {
+      path: () => `/${MAP}/${LISTING_CREATE}`,
+      allowed: [Role.OFFICIAL],
+    },
+    LISTING_EDIT: {
+      path: () => `/${MAP}/${LISTING_EDIT}`,
+      BY_NAME: {
+        path: (slug: string) => `/${MAP}/${LISTING_EDIT}/${slug}`,
         allowed: [Role.OFFICIAL],
       },
     },
@@ -180,7 +190,15 @@ export const router = createBrowserRouter([
                 path: ROUTES.MAP.FORGOT_PASSWORD.path(),
                 element: (
                   <NamedRoute
-                    outlets={[{ name: 'left', content: <div>FORGOT</div> }]}
+                    outlets={[
+                      { name: 'left', content: <ForgotPasswordPage /> },
+                    ]}
+                    effect={
+                      <>
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
                   />
                 ),
               },
@@ -189,6 +207,12 @@ export const router = createBrowserRouter([
                 element: (
                   <NamedRoute
                     outlets={[{ name: 'left', content: <LandingPage /> }]}
+                    effect={
+                      <>
+                        <MoveBottomSheetMiddle />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
                   />
                 ),
               },
@@ -197,6 +221,12 @@ export const router = createBrowserRouter([
                 element: (
                   <NamedRoute
                     outlets={[{ name: 'left', content: <LoginPage /> }]}
+                    effect={
+                      <>
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
                   />
                 ),
               },
@@ -205,6 +235,12 @@ export const router = createBrowserRouter([
                 element: (
                   <NamedRoute
                     outlets={[{ name: 'left', content: <RegisterPage /> }]}
+                    effect={
+                      <>
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
                   />
                 ),
               },
@@ -217,7 +253,19 @@ export const router = createBrowserRouter([
                         name: 'left',
                         content: <InvestmentDetails />,
                       },
+                      {
+                        name: 'right',
+                        content: <div>Here there be investment comments</div>,
+                      },
                     ]}
+                    effect={
+                      <>
+                        <PostTypeEffect postType={INVESTMENT_NAME} />
+                        <MoveBottomSheetUp />
+                        <ClearCommentsEffect />
+                        <ClearPhoneLayoutEffect />
+                      </>
+                    }
                   />
                 ),
               },
@@ -226,6 +274,13 @@ export const router = createBrowserRouter([
                 element: (
                   <NamedRoute
                     outlets={[{ name: 'left', content: <InvestmentsPage /> }]}
+                    effect={
+                      <>
+                        <PostTypeEffect postType={INVESTMENT_NAME} />
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
                   />
                 ),
               },
@@ -236,6 +291,12 @@ export const router = createBrowserRouter([
                     outlets={[
                       { name: 'left', content: <InvestmentCreatePage /> },
                     ]}
+                    effect={
+                      <>
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
                   />
                 ),
               },
@@ -246,43 +307,12 @@ export const router = createBrowserRouter([
                     outlets={[
                       { name: 'left', content: <InvestmentEditPage /> },
                     ]}
-                  />
-                ),
-              },
-              {
-                path: ROUTES.MAP.LISTING.BY_NAME.path(':name'),
-                element: (
-                  <NamedRoute
-                    outlets={[
-                      {
-                        name: 'left',
-                        content: <ListingDetails />,
-                      },
-                    ]}
-                  />
-                ),
-              },
-              {
-                path: ROUTES.MAP.LISTINGS.path(),
-                element: (
-                  <NamedRoute
-                    outlets={[{ name: 'left', content: <ListingsPage /> }]}
-                  />
-                ),
-              },
-              {
-                path: ROUTES.MAP.LISTING_CREATE.path(),
-                element: (
-                  <NamedRoute
-                    outlets={[{ name: 'left', content: <ListingCreatePage /> }]}
-                  />
-                ),
-              },
-              {
-                path: ROUTES.MAP.LISTING_EDIT.BY_NAME.path(':name'),
-                element: (
-                  <NamedRoute
-                    outlets={[{ name: 'left', content: <ListingEditPage /> }]}
+                    effect={
+                      <>
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
                   />
                 ),
               },
@@ -297,9 +327,16 @@ export const router = createBrowserRouter([
                       },
                       {
                         name: 'right',
-                        content: <div>tu beda komentarze</div>,
+                        content: <div>Here there be Annoucement comments</div>,
                       },
                     ]}
+                    effect={
+                      <>
+                        <PostTypeEffect postType={ANNOUNCEMENT_NAME} />
+                        <MoveBottomSheetUp />
+                        <ClearPhoneLayoutEffect />
+                      </>
+                    }
                   />
                 ),
               },
@@ -313,6 +350,13 @@ export const router = createBrowserRouter([
                         content: <AnnouncementsPage />,
                       },
                     ]}
+                    effect={
+                      <>
+                        <PostTypeEffect postType={ANNOUNCEMENT_NAME} />
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
                   />
                 ),
               },
@@ -323,6 +367,7 @@ export const router = createBrowserRouter([
                     outlets={[
                       { name: 'left', content: <AnnouncementCreatePage /> },
                     ]}
+                    effect={<MoveBottomSheetUp />}
                   />
                 ),
               },
@@ -336,6 +381,75 @@ export const router = createBrowserRouter([
                         content: <AnnouncementEditPage />,
                       },
                     ]}
+                    effect={
+                      <>
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
+                  />
+                ),
+              },
+              {
+                path: ROUTES.MAP.LISTING.BY_NAME.path(':name'),
+                element: (
+                  <NamedRoute
+                    outlets={[
+                      {
+                        name: 'left',
+                        content: <ListingDetails />,
+                      },
+                    ]}
+                    effect={
+                      <>
+                        <PostTypeEffect postType={LISTING_NAME} />
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
+                  />
+                ),
+              },
+              {
+                path: ROUTES.MAP.LISTINGS.path(),
+                element: (
+                  <NamedRoute
+                    outlets={[{ name: 'left', content: <ListingsPage /> }]}
+                    effect={
+                      <>
+                        <PostTypeEffect postType={LISTING_NAME} />
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
+                  />
+                ),
+              },
+              {
+                path: ROUTES.MAP.LISTING_CREATE.path(),
+                element: (
+                  <NamedRoute
+                    outlets={[{ name: 'left', content: <ListingCreatePage /> }]}
+                    effect={
+                      <>
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
+                  />
+                ),
+              },
+              {
+                path: ROUTES.MAP.LISTING_EDIT.BY_NAME.path(':name'),
+                element: (
+                  <NamedRoute
+                    outlets={[{ name: 'left', content: <ListingEditPage /> }]}
+                    effect={
+                      <>
+                        <MoveBottomSheetUp />
+                        <OpenOnlyLeftPanel />
+                      </>
+                    }
                   />
                 ),
               },
@@ -343,11 +457,16 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: ROUTES.OFFICIAL.path(),
+        element: <OfficialLayout />,
+        children: [],
+      },
+      {
+        path: '*',
+        element: <Navigate to={ROUTES.MAP.LANDING_PAGE.path()} />,
+      },
     ],
-  },
-  {
-    path: ROUTES.ADMIN.path(),
-    element: <div>admin</div>,
   },
   {
     path: '*',
