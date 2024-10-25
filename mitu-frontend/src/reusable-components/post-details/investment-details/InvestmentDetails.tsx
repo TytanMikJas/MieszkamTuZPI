@@ -30,6 +30,8 @@ import { FILES_URL } from '@/constants';
 import InvestmentDto from '@/core/api/investment/dto/investment';
 import DeletePostIcon from '@/reusable-components/icons/delete-icon/DeletePostIcon';
 import { buildAddress } from '@/utils/string-utils';
+import { useModelStore } from '@/core/stores/model-store';
+import MapIcon from '@/reusable-components/icons/map-icon/MapIcon';
 
 export default function InvestmentDetails() {
   const {
@@ -38,11 +40,13 @@ export default function InvestmentDetails() {
     setSingleInvestment,
     deleteInvestment,
   } = useInvestmentStore();
+  const uiStore = useUiStore();
 
   const { setRightbarStage, rightbarStage } = useUiStore();
   const { visible, openGallery } = useGalleryStore();
+  const isModelVisible = rightbarStage === RIGHTBAR_STAGE_MODEL;
   const navigate = useNavigate();
-  const uiStore = useUiStore();
+  const { setModelUrl, clearModelUrl } = useModelStore();
 
   const slug = window.location.pathname.split(`${INVESTMENT}/`).pop();
   useEffect(() => {
@@ -55,9 +59,34 @@ export default function InvestmentDetails() {
     });
   }, [investment?.id, slug]);
 
+  const modelFile: AttachmentDto | null = investment?.attachments.find(
+    (attachment: AttachmentDto) => attachment.fileType === FILE_TD_NAME,
+  );
+
+  const handleSetModelStage = () => {
+    if (!modelFile) return;
+    setRightbarStage(RIGHTBAR_STAGE_MODEL, () => {
+      setModelUrl(
+        `${FILES_URL}${investment?.filePaths.TD}${modelFile.fileName}`,
+      );
+    });
+  };
+
+  const handleSetMapStage = () => {
+    setRightbarStage(RIGHTBAR_STAGE_MAP, clearModelUrl);
+  };
+
   const handleNavigateEdit = () => {
     if (investment?.slug) {
       navigate(ROUTES.MAP.INVESTMENT_EDIT.BY_NAME.path(investment.slug));
+    }
+  };
+
+  const toggleModelStage = () => {
+    if (isModelVisible) {
+      handleSetMapStage();
+    } else {
+      handleSetModelStage();
     }
   };
 
@@ -66,6 +95,7 @@ export default function InvestmentDetails() {
   };
 
   const handleDelete = () => {
+    handleSetMapStage();
     deleteInvestment(`${investment?.id}`, navigateList);
   };
 
@@ -145,6 +175,16 @@ export default function InvestmentDetails() {
       >
         <span>Galeria zdjęć</span>
       </ToggleButton>
+
+      {modelFile && (
+        <ToggleButton
+          onClick={toggleModelStage}
+          isActive={false}
+          icon={isModelVisible ? <MapIcon /> : <ModelIcon />}
+        >
+          {isModelVisible ? <span>Mapa</span> : <span>Model 3D</span>}
+        </ToggleButton>
+      )}
     </div>
   ) : (
     <NotFound />

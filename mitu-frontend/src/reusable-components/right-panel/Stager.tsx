@@ -4,6 +4,8 @@ import {
   RIGHTBAR_STAGE_MAP,
   RIGHTBAR_STAGE_MODEL,
 } from '@/strings';
+import ModelPreview from '../model-preview/ModelPreview';
+import { MoveBottomSheetDown } from '../effects/BottomSheetPositionEffect';
 
 export default function Stager() {
   const { rightbarStage } = useUiStore();
@@ -16,7 +18,12 @@ export default function Stager() {
     case RIGHTBAR_STAGE_AREA:
       return <div>map editable</div>;
     case RIGHTBAR_STAGE_MODEL:
-      return <div>model 3d</div>;
+      return (
+        <>
+          <ModelPreview />
+          <MoveBottomSheetDown />
+        </>
+      );
     default:
       return map;
   }

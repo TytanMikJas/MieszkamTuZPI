@@ -120,6 +120,7 @@
     "@types/react-helmet": "^6.1.11",
     "@types/react-infinite-scroller": "1.2.5",
     "@types/react-virtualized": "9.21.29",
+    "@types/three": "^0.169.0",
     "@typescript-eslint/eslint-plugin": "7.1.0",
     "@typescript-eslint/parser": "7.1.0",
     "@vitejs/plugin-react": "4.2.1",

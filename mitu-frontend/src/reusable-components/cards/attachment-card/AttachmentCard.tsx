@@ -26,7 +26,6 @@ export default function AttachmentCard({
   };
 
   const filePath = `${FILES_URL}${filePaths[attachment.fileType]}${attachment.fileName}`;
-  console.log(filePath);
 
   const handleOpen = () => {
     window.open(filePath);
