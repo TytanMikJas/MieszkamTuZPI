@@ -1,3 +1,4 @@
+import { RatingType } from './core/api/common/rating/RatingDto';
 import {
   ANNOUNCEMENT_NAME,
   FILE_DOC_NAME,
@@ -77,6 +78,12 @@ export type FilePaths = {
   [FILE_PATHS_TD]: string;
   [FILE_PATHS_OTHER]: string;
 };
+
+export type PerformVote = (
+  type: RatingType,
+  postId: string,
+  parentId?: string,
+) => void;
 
 export type PostComment = (id: string, content: string, files?: File[]) => void;
 export type SelectCardLoadingList = (postId: string) => boolean;

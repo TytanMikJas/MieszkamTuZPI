@@ -18,6 +18,7 @@ import { PostModule } from './modules/post/post.module';
 import { PoiModule } from './modules/poi/poi.module';
 import { InvestmentModule } from './modules/investment/investment.module';
 import { ListingModule } from './modules/listing/listing.module';
+import { CommentModule } from './modules/comment/comment.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ListingModule } from './modules/listing/listing.module';
     FilehandlerModule,
     AttachmentModule,
     PrismaModule,
+    CommentModule,
     UserModule,
     AuthModule,
     AnnouncementModule,

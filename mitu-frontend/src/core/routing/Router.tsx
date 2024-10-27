@@ -30,6 +30,9 @@ import ListingCreatePage from '@/pages/map/map-with-sidepanels/listing/ListingCr
 import ListingEditPage from '@/pages/map/map-with-sidepanels/listing/ListingEditPage';
 import ClearPhoneLayoutEffect from '@/reusable-components/effects/ClearPhoneLayoutEffect';
 import ForgotPasswordPage from '@/pages/map/forgot-password/ForgotPasswordPage';
+import InvestmentComments from '@/pages/map/map-with-sidepanels/investment/InvestmentComments';
+import AnnouncementComments from '@/pages/map/map-with-sidepanels/announcement/AnnouncementComments';
+import OfficialPage from '@/pages/official/OfficialPage';
 
 export const MAP = 'mapa';
 export const LANDING_PAGE = 'start';
@@ -255,7 +258,7 @@ export const router = createBrowserRouter([
                       },
                       {
                         name: 'right',
-                        content: <div>Here there be investment comments</div>,
+                        content: <InvestmentComments />,
                       },
                     ]}
                     effect={
@@ -327,7 +330,7 @@ export const router = createBrowserRouter([
                       },
                       {
                         name: 'right',
-                        content: <div>Here there be Annoucement comments</div>,
+                        content: <AnnouncementComments />,
                       },
                     ]}
                     effect={
@@ -460,7 +463,21 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.OFFICIAL.path(),
         element: <OfficialLayout />,
-        children: [],
+        children: [
+          {
+            path: ROUTES.OFFICIAL.path(),
+            element: <OfficialPage />,
+          },
+          {
+            path: ROUTES.OFFICIAL.NEWSLETTER.path(),
+            children: [
+              {
+                path: ROUTES.OFFICIAL.NEWSLETTER.path(),
+                element: <div>Here there be a newsletter editor</div>,
+              },
+            ],
+          },
+        ],
       },
       {
         path: '*',

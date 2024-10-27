@@ -49,6 +49,16 @@ export function DropdownOfficialMenu() {
             Nieruchomość
           </DropdownMenuItem>
         </NavLink>
+        <NavLink
+          to={ROUTES.OFFICIAL.path()}
+          className={({ isActive }) =>
+            `text-nowrap ${isActive ? 'text-red-500 font-bold' : ''}`
+          }
+        >
+          <DropdownMenuItem className="cursor-pointer">
+            Zarządzaj komentarzami
+          </DropdownMenuItem>
+        </NavLink>
         <DropdownMenuSeparator />
         <Link to={ROUTES.OFFICIAL.NEWSLETTER.path()}>
           <DropdownMenuItem className="cursor-pointer">
