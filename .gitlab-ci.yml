@@ -125,9 +125,30 @@ build-cron:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
 
-deploy-azure:
+deploy-wroclaw:
   stage: deploy
+  tags:
+    - vm-wroclaw
+  before_script:
+    - docker login $CI_REGISTRY -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD
   script:
-    - echo "Load test backend"
+    - echo "Deploy Wroclaw"
+    - mv $DOTENV_PROD_WROCLAW .env.prod
+    - docker compose down
+    - docker compose up -d
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+deploy-warszawa:
+  stage: deploy
+  tags:
+    - vm-warszawa
+  before_script:
+    - docker login $CI_REGISTRY -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD
+  script:
+    - echo "Desploy Warszawa"
+    - mv $DOTENV_PROD_WARSZAWA .env.prod
+    - docker compose down
+    - docker compose up -d
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
