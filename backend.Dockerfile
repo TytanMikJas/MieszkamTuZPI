@@ -11,7 +11,6 @@
     COPY ./mitu-backend .
     
     RUN npx prisma generate
-    RUN npm run env:prod prisma migrate reset
     RUN npm run build
     
     ENTRYPOINT npm run start:prod 
