@@ -19,6 +19,7 @@ import { PoiModule } from './modules/poi/poi.module';
 import { InvestmentModule } from './modules/investment/investment.module';
 import { ListingModule } from './modules/listing/listing.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { CommentModule } from './modules/comment/comment.module';
     ListingModule,
     PostModule,
     PoiModule,
+    AdminModule,
   ],
   providers: [
     Reflector,

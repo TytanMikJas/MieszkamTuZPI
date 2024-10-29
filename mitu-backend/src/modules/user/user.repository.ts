@@ -3,6 +3,7 @@ import { PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import UserInternalDto from './dto/user.internal';
 import PublicUserDto from './dto/public-user-dto';
 import { PRISMA_ID } from '../../types';
+import { FilterUsersDto } from '../admin/dto/filter-users.dto';
 import UpdateUserInfoInputDto from './dto/update-user-info.input';
 
 @Injectable()
@@ -224,6 +225,14 @@ export default class UserRepository {
     avatar: true,
     forceChangePassword: true,
   };
+
+  async getAll(filter?: FilterUsersDto): Promise<PublicUserDto[]> {
+    return this.prisma.user.findMany({
+      where: filter.where,
+      orderBy: filter.order,
+      select: { ...this.visibleUserProps, id: true },
+    });
+  }
 
   async findAllByNewsletterAgreement(newsletterAgreement: boolean) {
     return this.prisma.user.findMany({

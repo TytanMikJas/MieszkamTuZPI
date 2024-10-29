@@ -33,6 +33,7 @@ import ForgotPasswordPage from '@/pages/map/forgot-password/ForgotPasswordPage';
 import InvestmentComments from '@/pages/map/map-with-sidepanels/investment/InvestmentComments';
 import AnnouncementComments from '@/pages/map/map-with-sidepanels/announcement/AnnouncementComments';
 import OfficialPage from '@/pages/official/OfficialPage';
+import AdminPage from '@/pages/admin/AdminPage';
 
 export const MAP = 'mapa';
 export const LANDING_PAGE = 'start';
@@ -484,6 +485,10 @@ export const router = createBrowserRouter([
         element: <Navigate to={ROUTES.MAP.LANDING_PAGE.path()} />,
       },
     ],
+  },
+  {
+    path: ROUTES.ADMIN.path(),
+    element: <AdminPage />,
   },
   {
     path: '*',

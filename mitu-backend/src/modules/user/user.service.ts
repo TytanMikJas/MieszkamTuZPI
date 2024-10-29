@@ -1,22 +1,22 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import CreateUserInputDto from './dto/create-user.input';
 import { AuthService } from '../auth/auth.service';
-import {
-  InvalidEmailException,
-  InvalidPasswordException,
-} from 'src/exceptions/invalid-input.exception';
+import { InvalidInputException } from 'src/exceptions/invalid-input.exception';
 import UserInternalDto from './dto/user.internal';
 import UserRepository from './user.repository';
+import { RenderType } from 'src/dto/exception.output';
 import { UserRole, UserStatus } from '@prisma/client';
-import { ERROR_USER_NOT_FOUND } from 'src/strings';
+import { ERROR_USER_NOT_FOUND, USER_LOGIN_ALREADY_EXISTS } from 'src/strings';
 import PublicUserDto from './dto/public-user-dto';
 import { PRISMA_ID } from '../../types';
+import { FilterUsersDto } from '../admin/dto/filter-users.dto';
 import UpdateUserInfoInputDto from './dto/update-user-info.input';
 import UpdateUserPasswordInputDto from './dto/update-user-password.input';
 import UpdateUserEmailInputDto from './dto/update-user-email.input';
 import * as bcrypt from 'bcrypt';
 import DeleteAccountInputDto from './dto/delete-account-input-dto';
 import { SimpleNotFound } from 'src/exceptions/simple-not-found.exception';
+import { MailService } from '../mail/mail-sender.service';
 
 @Injectable()
 export default class UserService {
@@ -24,10 +24,16 @@ export default class UserService {
     private readonly userRepository: UserRepository,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
+    private readonly mailService: MailService,
   ) {}
   async create(body: CreateUserInputDto, status?: UserStatus): Promise<void> {
     if (await this.findByEmail(body.email)) {
-      throw new InvalidEmailException();
+      throw new InvalidInputException(
+        USER_LOGIN_ALREADY_EXISTS,
+        HttpStatus.BAD_REQUEST,
+        RenderType.form,
+        'email',
+      );
     }
 
     //hash password
@@ -52,13 +58,18 @@ export default class UserService {
 
   async adminCreate(body: CreateUserInputDto): Promise<void> {
     if (await this.findByEmail(body.email)) {
-      throw new InvalidEmailException();
+      throw new InvalidInputException(
+        USER_LOGIN_ALREADY_EXISTS,
+        HttpStatus.BAD_REQUEST,
+        RenderType.form,
+        'email',
+      );
     }
 
     //hash password
     const hashedPassword = await this.authService.hashPassword(body.password);
     //create user
-    await this.userRepository.create({
+    const user = await this.userRepository.create({
       firstName: body.firstName,
       lastName: body.lastName,
       password: hashedPassword,
@@ -70,7 +81,7 @@ export default class UserService {
         ? body.forceChangePassword
         : false,
     });
-    //TODO send admin created your account email
+    this.mailService.sendAdminCreatedYourAccountMail(user.email, body.password);
   }
 
   async updateInfo(id: PRISMA_ID, body: UpdateUserInfoInputDto): Promise<void> {
@@ -89,7 +100,11 @@ export default class UserService {
     );
 
     if (!passwordsMatch) {
-      throw new InvalidPasswordException();
+      throw new InvalidInputException(
+        'Nieprawidłowe hasło',
+        HttpStatus.CONFLICT,
+        RenderType.form,
+      );
     }
 
     const hashedPassword = await this.authService.hashPassword(
@@ -112,12 +127,21 @@ export default class UserService {
     );
 
     if (!passwordsMatch) {
-      throw new InvalidPasswordException();
+      throw new InvalidInputException(
+        'Nieprawidłowe hasło',
+        HttpStatus.CONFLICT,
+        RenderType.form,
+      );
     }
 
     const emailExists = await this.findByEmail(body.email);
     if (emailExists && emailExists.id !== id) {
-      throw new InvalidEmailException();
+      throw new InvalidInputException(
+        USER_LOGIN_ALREADY_EXISTS,
+        HttpStatus.BAD_REQUEST,
+        RenderType.form,
+        'email',
+      );
     }
     await this.userRepository.updateEmail(id, body.email);
   }
@@ -131,7 +155,11 @@ export default class UserService {
     );
 
     if (!passwordsMatch) {
-      throw new InvalidPasswordException();
+      throw new InvalidInputException(
+        'Nieprawidłowe hasło',
+        HttpStatus.CONFLICT,
+        RenderType.form,
+      );
     }
 
     await this.userRepository.deleteUser(id);
@@ -157,6 +185,11 @@ export default class UserService {
   async findById(id: number): Promise<UserInternalDto | null> {
     const user = await this.userRepository.findById(id);
     return user;
+  }
+
+  async getAll(filter: FilterUsersDto): Promise<PublicUserDto[]> {
+    filter.roles = [UserRole.ADMIN, UserRole.OFFICIAL];
+    return await this.userRepository.getAll(filter);
   }
 
   async getAllWithNewsletterAgreement(): Promise<UserInternalDto[]> {
