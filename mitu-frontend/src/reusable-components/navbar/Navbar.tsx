@@ -134,7 +134,11 @@ export default function Navbar() {
               to={ROUTES.MAP.LANDING_PAGE.path()}
               className="flex items-center"
             >
-              <img src="/mitu.png" className="w-11 mr-3" alt="" />
+              <img
+                src={import.meta.env.VITE_CITY_SVG}
+                className="w-11 mr-3"
+                alt={`${import.meta.env.VITE_CITY_NAME} city`}
+              />
               <h1 className="text-xl py-3 font-bold">
                 {isTablet ? 'MieszkamTu' : 'MieszkamTu'}
                 <sub className="ml-1 text-xs">
