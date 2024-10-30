@@ -1,7 +1,7 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { UserAvatar } from './UserAvatar';
 import { ROUTES } from '../../core/routing/Router';
-import { Search, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import AuthGuard from '@/core/auth/AuthGuard';
 import { DropdownOfficialMenu } from './DropdownOfficialMenu';
 import { useMediaQuery } from 'react-responsive';
@@ -52,8 +52,6 @@ export default function Navbar() {
   const isTablet = useMediaQuery({ query: '(max-width: 1375px)' });
   const isMobile = useMediaQuery({ query: '(max-width: 875px)' });
   const [open, setOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
 
   if (isMobile) {
     return (
