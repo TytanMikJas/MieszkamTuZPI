@@ -6,17 +6,19 @@ import {
 } from '@/strings';
 import ModelPreview from '../model-preview/ModelPreview';
 import { MoveBottomSheetDown } from '../effects/BottomSheetPositionEffect';
+import MapWithPosts from '../mapLeaflet/mapWithPosts/MapWithPosts';
+import MapEditable from '../mapLeaflet/mapEditable/MapEditable';
 
 export default function Stager() {
   const { rightbarStage } = useUiStore();
 
-  const map = <div>map</div>;
+  const map = <MapWithPosts />;
 
   switch (rightbarStage) {
     case RIGHTBAR_STAGE_MAP:
       return map;
     case RIGHTBAR_STAGE_AREA:
-      return <div>map editable</div>;
+      return <MapEditable />;
     case RIGHTBAR_STAGE_MODEL:
       return (
         <>

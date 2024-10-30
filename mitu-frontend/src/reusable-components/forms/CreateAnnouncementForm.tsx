@@ -61,6 +61,8 @@ import AnnouncementDto from '@/core/api/announcement/dto/announcement';
 import MultipleFilesUploader from './MultipleFilesUploader';
 import AttachmentBadge from './AttachmentBadge';
 import { AnnouncementFormData, announcementFormSchema } from './form-schemas';
+import { useMapEditStore } from '@/core/stores/map/map-edit-store';
+import { LatLng } from 'leaflet';
 
 export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
   const {
@@ -74,6 +76,13 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
     fetchAvailableCategories,
     setResetList,
   } = useAnnouncementStore();
+  const {
+    getParsedLocation,
+    getParsedArea,
+    setArea,
+    setLocation,
+    resetEditStoreState,
+  } = useMapEditStore();
   const { setRightbarStage } = useUiStore();
 
   const [preview, setPreview] = useState('');
@@ -105,6 +114,7 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
     setRightbarStage(RIGHTBAR_STAGE_AREA);
 
     return () => {
+      setRightbarStage(RIGHTBAR_STAGE_MAP, resetEditStoreState);
       clearSingleAnnouncement();
     };
   }, []);
@@ -148,6 +158,13 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
         singleAnnouncement.isCommentable
           ? FORM_IS_COMMENTABLE_TRUE
           : FORM_IS_COMMENTABLE_FALSE,
+      );
+
+      if (singleAnnouncement.area) {
+        setArea(singleAnnouncement.area);
+      }
+      setLocation(
+        new LatLng(singleAnnouncement.locationX, singleAnnouncement.locationY),
       );
 
       if (singleAnnouncement.street) {
@@ -231,11 +248,10 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
       return;
     }
 
-    const location = [51.110194, 17.032589];
-    const area =
-      '51.109300,17.029289;51.109300,17.029489;51.109084,17.029289;51.109084,17.029489';
+    const location = getParsedLocation();
+    const area = getParsedArea(false);
 
-    if (area && area.length > 1 && area.length < 3) {
+    if (!area || area.length <= 2) {
       emitError('Nieprawidłowy obszar');
       return;
     }
@@ -256,6 +272,7 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
         data.isCommentable === FORM_IS_COMMENTABLE_TRUE ? true : false,
       locationX: location[0],
       locationY: location[1],
+      area: area,
       thumbnail: data.thumbnail[0].name,
     };
 
@@ -280,11 +297,10 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
   };
 
   const onEdit: SubmitHandler<AnnouncementFormData> = (data) => {
-    const location = [51.110194, 17.032589];
-    const area =
-      '51.109300,17.029289;51.109300,17.029489;51.109084,17.029289;51.109084,17.029489';
+    const location = getParsedLocation();
+    const area = getParsedArea(false);
 
-    if (area && area.length > 1 && area.length < 3) {
+    if (!area || area.length <= 2) {
       emitError('Nieprawidłowy obszar');
       return;
     }
@@ -304,12 +320,9 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
         data.isCommentable === FORM_IS_COMMENTABLE_TRUE ? true : false,
       locationX: location[0],
       locationY: location[1],
+      area: area,
       responsible: data.responsible,
     };
-
-    if (area) {
-      dto.area = area;
-    }
 
     if (!initialSingleAnnouncement) return;
 

@@ -32,6 +32,10 @@ import DeletePostIcon from '@/reusable-components/icons/delete-icon/DeletePostIc
 import { buildAddress } from '@/utils/string-utils';
 import { useModelStore } from '@/core/stores/model-store';
 import MapIcon from '@/reusable-components/icons/map-icon/MapIcon';
+import { useMapSettingsStore } from '@/core/stores/map/map-settings-store';
+import { useMapWithPostsStore } from '@/core/stores/map/map-with-posts-store';
+import { useCommentStore } from '@/core/stores/comment-store';
+import { LatLng } from 'leaflet';
 
 export default function InvestmentDetails() {
   const {
@@ -41,23 +45,36 @@ export default function InvestmentDetails() {
     deleteInvestment,
   } = useInvestmentStore();
   const uiStore = useUiStore();
-
   const { setRightbarStage, rightbarStage } = useUiStore();
   const { visible, openGallery } = useGalleryStore();
   const isModelVisible = rightbarStage === RIGHTBAR_STAGE_MODEL;
   const navigate = useNavigate();
   const { setModelUrl, clearModelUrl } = useModelStore();
+  const { setCenterWithForce } = useMapSettingsStore();
+  const { setSpecificPostWithForce } = useMapWithPostsStore();
+  const { clearComments } = useCommentStore();
 
   const slug = window.location.pathname.split(`${INVESTMENT}/`).pop();
   useEffect(() => {
+    clearComments();
     setSingleInvestment(slug!, (investment: InvestmentDto) => {
       if (investment.isCommentable) {
         uiStore.openBothPanels();
       } else {
         uiStore.openOnlyLeftPanel();
       }
+      setCenterWithForce(
+        new LatLng(investment.locationX, investment.locationY),
+      );
+      setSpecificPostWithForce(investment);
     });
   }, [investment?.id, slug]);
+
+  useEffect(() => {
+    return () => {
+      handleSetMapStage();
+    };
+  }, []);
 
   const modelFile: AttachmentDto | null = investment?.attachments.find(
     (attachment: AttachmentDto) => attachment.fileType === FILE_TD_NAME,
