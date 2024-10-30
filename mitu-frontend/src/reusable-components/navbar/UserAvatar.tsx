@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
 } from '../../shadcn/dropdown-menu';
 import { useAuthStore } from '@/core/stores/auth-store';
+import EditProfile from '../edit-profile/EditProfile';
 import Avatar from '../misc/avatar/Avatar';
 
 type Props = {
@@ -37,7 +38,7 @@ export function UserAvatar({ avatar, name, surname, email }: Props) {
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
-        {/* <EditProfile /> */}
+        <EditProfile />
         <DropdownMenuItem
           onClick={() => logOut()}
           className="text-red-700 cursor-pointer"
