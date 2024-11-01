@@ -10,6 +10,9 @@ import { FilehandlerService } from 'src/modules/filehandler/filehandler.service'
 import { GenericFilter } from 'src/query.filter';
 import { $Enums } from '@prisma/client';
 
+/**
+ * Service for the Post entity
+ */
 @Injectable()
 export class PostService {
   constructor(
@@ -54,6 +57,34 @@ export class PostService {
 
     if (!_p) throw new SimpleNotFound(ERROR_POST_NOT_FOUND);
     return await this.postRepository.decrementComentCount(id);
+  }
+
+  async incrementUpvoteCount(id: PRISMA_ID): Promise<void> {
+    const _p = await this.postRepository.getOne(id);
+
+    if (!_p) throw new SimpleNotFound(ERROR_POST_NOT_FOUND);
+    return await this.postRepository.incrementUpvoteCount(id);
+  }
+
+  async decrementUpvoteCount(id: PRISMA_ID): Promise<void> {
+    const _p = await this.postRepository.getOne(id);
+
+    if (!_p) throw new SimpleNotFound(ERROR_POST_NOT_FOUND);
+    return await this.postRepository.decrementUpvoteCount(id);
+  }
+
+  async incrementDownvoteCount(id: PRISMA_ID): Promise<void> {
+    const _p = await this.postRepository.getOne(id);
+
+    if (!_p) throw new SimpleNotFound(ERROR_POST_NOT_FOUND);
+    return await this.postRepository.incrementDownvoteCount(id);
+  }
+
+  async decrementDownvoteCount(id: PRISMA_ID): Promise<void> {
+    const _p = await this.postRepository.getOne(id);
+
+    if (!_p) throw new SimpleNotFound(ERROR_POST_NOT_FOUND);
+    return await this.postRepository.decrementDownvoteCount(id);
   }
 
   async getOne(id: PRISMA_ID): Promise<PostDto> {
