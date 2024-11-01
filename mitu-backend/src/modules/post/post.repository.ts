@@ -7,7 +7,9 @@ import PostDto, {
 import { PRISMA_ID } from 'src/types';
 import { POST_TAKE_COMMENTS } from 'src/constants';
 import { GenericFilter } from 'src/query.filter';
-
+/**
+ * Repository for the Post entity
+ */
 @Injectable()
 export default class PostRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -24,6 +26,34 @@ export default class PostRepository {
       },
     },
   };
+
+  async decrementDownvoteCount(id: PRISMA_ID): Promise<void> {
+    this.prisma.post.update({
+      where: { id },
+      data: { downvoteCount: { decrement: 1 } },
+    });
+  }
+
+  async incrementDownvoteCount(id: PRISMA_ID): Promise<void> {
+    this.prisma.post.update({
+      where: { id },
+      data: { downvoteCount: { increment: 1 } },
+    });
+  }
+
+  async decrementUpvoteCount(id: PRISMA_ID): Promise<void> {
+    this.prisma.post.update({
+      where: { id },
+      data: { upvoteCount: { decrement: 1 } },
+    });
+  }
+
+  async incrementUpvoteCount(id: PRISMA_ID): Promise<void> {
+    this.prisma.post.update({
+      where: { id },
+      data: { upvoteCount: { increment: 1 } },
+    });
+  }
 
   async create(body: CreatePostDto, userId: PRISMA_ID): Promise<PostDto> {
     return await this.prisma.post.create({

@@ -20,6 +20,7 @@ import { InvestmentModule } from './modules/investment/investment.module';
 import { ListingModule } from './modules/listing/listing.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { RatingModule } from './modules/rating/rating.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { AdminModule } from './modules/admin/admin.module';
     PostModule,
     PoiModule,
     AdminModule,
+    RatingModule,
   ],
   providers: [
     Reflector,
