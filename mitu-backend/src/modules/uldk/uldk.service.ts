@@ -8,7 +8,7 @@ import {
   calculatePolygonCenter,
   transformCoordinates,
 } from './geotranslator.util';
-import * as proj4 from 'proj4';
+import proj4 from 'proj4';
 import fetch from 'node-fetch';
 import { ParcelWKTInternalOutputDto } from './dto/parcel-wkt.internal.output';
 import { getCoordsByAddresss } from './geocode.util';

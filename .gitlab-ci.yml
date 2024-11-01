@@ -37,6 +37,17 @@ lint-check-backend:
   rules:
     - if: '$CI_MERGE_REQUEST_ID'
 
+typescript-check-backend:
+  stage: lint
+  image: node:20
+  script:
+    - echo "Checking, if Kacper Grobelny wrote compilable code"
+    - cd mitu-backend
+    - npm install
+    - npm run tsc:check
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+
 unit-test-backend:
   stage: test
   image: node:20
