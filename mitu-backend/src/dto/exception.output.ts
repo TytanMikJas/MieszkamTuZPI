@@ -3,6 +3,14 @@ export enum RenderType {
   form = 'form',
 }
 
+/**
+ * Exception output dto
+ * @param {string[]} messages
+ * @param {string} field
+ * @param {RenderType} type
+ * @returns {ExceptionOutputDto}
+ * @constructor
+ */
 export class ExceptionOutputDto {
   field: string;
   messages: string[];

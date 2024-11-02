@@ -10,12 +10,22 @@ export const POLISH_CHARS = {
   ż: 'z',
 };
 
+/**
+ * Capitalize first letter of string
+ * @param string - string to capitalize
+ * @returns string with first letter capitalized
+ */
 export function capitalizeFirstLetter(string: string) {
   return (
     string.charAt(0).toLocaleUpperCase() + string.slice(1).toLocaleLowerCase()
   );
 }
 
+/**
+ * Slugify string
+ * @param title - string to slugify
+ * @returns slugified string
+ */
 export function slugify(title: string): string {
   return (
     title
@@ -30,6 +40,11 @@ export function slugify(title: string): string {
   );
 }
 
+/**
+ * Generate random string of n characters
+ * @param n - number of characters
+ * @returns random string of n characters
+ */
 function randomNchars(n: number) {
   return Math.random()
     .toString(36)

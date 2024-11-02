@@ -13,10 +13,20 @@ import fetch from 'node-fetch';
 import { ParcelWKTInternalOutputDto } from './dto/parcel-wkt.internal.output';
 import { getCoordsByAddresss } from './geocode.util';
 
+/**
+ * ULDK service
+ * @export
+ * @class ULDKService
+ */
 @Injectable()
 export class ULDKService {
   constructor() {}
 
+  /**
+   * Fetch ULDK
+   * @param {string} endpoint
+   * @returns {Promise<string>}
+   */
   private async fetchULDK(endpoint: string): Promise<string> {
     return await fetch(`https://uldk.gugik.gov.pl/${endpoint}`).then(
       async (response) => {
@@ -31,6 +41,12 @@ export class ULDKService {
     );
   }
 
+  /**
+   * Transform coordinates from EPSG2180 to EPSG4326
+   * @param {EPSG2180} latitude
+   * @param {EPSG2180} longitude
+   * @returns {ParcelCoordinatesInternalOutputDto}
+   */
   epsg2180epsg4326(
     latitude: EPSG2180,
     longitude: EPSG2180,
@@ -42,6 +58,12 @@ export class ULDKService {
     );
   }
 
+  /**
+   * Transform coordinates from EPSG4326 to EPSG2180
+   * @param {EPSG4326} longitude
+   * @param {EPSG4326} latitude
+   * @returns {ParcelCoordinatesInternalOutputDto}
+   */
   epsg4326epsg2180(
     longitude: EPSG4326,
     latitude: EPSG4326,
@@ -53,14 +75,30 @@ export class ULDKService {
     );
   }
 
+  /**
+   * Calculate polygon center
+   * @param {number[][]} coordinates
+   * @returns {number[]}
+   */
   calculatePolygonCenter(coordinates: number[][]): number[] {
     return calculatePolygonCenter(coordinates);
   }
 
+  /**
+   * Calculate polygon bounds
+   * @param {number[][]} coordinates
+   * @returns {number[]}
+   */
   calculatePolygonBounds(coordinates: number[][]): number[] {
     return calculatePolygonBounds(coordinates);
   }
 
+  /**
+   * Get parcel data
+   * @param {EPSG2180} x
+   * @param {EPSG2180} y
+   * @returns {Promise<ParcelDataInternalOutputDto>}
+   */
   async getParcelData(
     x: EPSG2180,
     y: EPSG2180,
@@ -74,6 +112,12 @@ export class ULDKService {
     return { parcelNumber, parcelRegion };
   }
 
+  /**
+   * Get parcel WKT
+   * @param {EPSG2180} x
+   * @param {EPSG2180} y
+   * @returns {Promise<ParcelWKTInternalOutputDto>}
+   */
   async getParcelWKT(
     x: EPSG2180,
     y: EPSG2180,
@@ -85,6 +129,12 @@ export class ULDKService {
     return { parcelWKT: parcelWKT.split(';')[1] };
   }
 
+  /**
+   * Get parcel WKT by name
+   * @param {string} parcelNumber
+   * @param {string} parcelRegion
+   * @returns {Promise<ParcelWKTInternalOutputDto>}
+   */
   async getParcelWKTbyName(
     parcelNumber: string,
     parcelRegion: string,
@@ -98,6 +148,11 @@ export class ULDKService {
     return { parcelWKT: parcelWKT.split(';')[1] };
   }
 
+  /**
+   * Get coordinates by address
+   * @param {string} address
+   * @returns {Promise<ParcelCoordinatesInternalOutputDto>}
+   */
   async getCoordinatesByAddress(
     address: string,
   ): Promise<ParcelCoordinatesInternalOutputDto> {

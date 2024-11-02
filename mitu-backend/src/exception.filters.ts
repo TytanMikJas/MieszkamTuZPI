@@ -12,6 +12,11 @@ import { Prisma } from '@prisma/client';
 import { isArray } from 'class-validator';
 import { ERROR_INTERNAL_SERVER_ERROR } from './strings';
 
+/**
+ * Formats the errors to an array.
+ * @param errors The errors to be formatted.
+ * @returns The formatted errors.
+ */
 function formatErrors(errors: any) {
   if (isArray(errors)) return errors;
   else return [errors];
@@ -19,9 +24,25 @@ function formatErrors(errors: any) {
 
 const logger = new Logger('ExceptionFilter');
 
+/**
+ * Filter for Prisma exceptions.
+ * Catches Prisma.PrismaClientValidationError and formats it to JSON.
+ * @implements {ExceptionFilter}
+ * @class
+ * @exports
+ */
 @Catch(Prisma.PrismaClientValidationError)
 export class PrismaExceptionFilter implements ExceptionFilter {
-  catch(exception: Prisma.PrismaClientValidationError, host: ArgumentsHost) {
+  /**
+   * Catches Prisma.PrismaClientValidationError and formats it to JSON.
+   * @param {Prisma.PrismaClientValidationError} exception The exception to be caught.
+   * @param {ArgumentsHost} host The host of the exception.
+   * @returns {void}
+   */
+  catch(
+    exception: Prisma.PrismaClientValidationError,
+    host: ArgumentsHost,
+  ): void {
     const ctx = host.switchToHttp();
     const request = ctx.getRequest<Request>();
     const response = ctx.getResponse<Response>();
@@ -35,6 +56,14 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     logger.error(formatErrorMessage(json, request));
   }
 }
+
+/**
+ * Filter for Http exceptions.
+ * Catches HttpException and formats it to JSON.
+ * @implements {ExceptionFilter}
+ * @class
+ * @exports
+ */
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
@@ -55,6 +84,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
   }
 }
 
+/**
+ * Filter for general exceptions.
+ * Catches Error and formats it to JSON.
+ * @implements {ExceptionFilter}
+ * @class
+ * @exports
+ */
 @Catch(Error)
 export class ErrorFilter implements ExceptionFilter {
   catch(exception: Error, host: ArgumentsHost) {
@@ -73,6 +109,12 @@ export class ErrorFilter implements ExceptionFilter {
   }
 }
 
+/**
+ * Formats the error message.
+ * @param resBody The response body.
+ * @param req The request.
+ * @returns The formatted error message.
+ */
 function formatErrorMessage(resBody: object, req: Request) {
   const queryString = JSON.stringify(req.query, null, 2);
   const path = req.path;

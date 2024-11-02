@@ -4,6 +4,11 @@ import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailService } from './mail-sender.service';
 
+/**
+ * Mail module
+ * @export
+ * @class MailModule
+ */
 @Module({
   imports: [
     MailerModule.forRoot({

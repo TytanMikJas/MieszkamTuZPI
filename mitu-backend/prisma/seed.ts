@@ -18,6 +18,9 @@ const NUMBER_OF_USERS = 13;
 const ID_OFFSET = 10_000;
 let counter = 1;
 
+/**
+ * function for seeding the prisma database
+ */
 async function main() {
   await seedUsers();
 
@@ -46,6 +49,9 @@ async function main() {
   await seedBlankNewsletters();
 }
 
+/**
+ * badges for investments
+ */
 const badges = [
   {
     name: 'Przyjazne niepełnosprawnym',
@@ -103,6 +109,9 @@ const badges = [
   },
 ];
 
+/**
+ * categories that investment can have
+ */
 const investmentCategories = [
   {
     name: 'Fabryka',
@@ -170,6 +179,9 @@ const investmentCategories = [
   },
 ];
 
+/**
+ * categories that announcement can have
+ */
 const announcementCategories = [
   {
     name: 'Awaria',
@@ -205,6 +217,9 @@ const announcementCategories = [
   },
 ];
 
+/**
+ * function for seeding users
+ */
 async function seedUsers() {
   const hashedPassword = await hash('P@ssw0rd!', 10);
   await prisma.user.createMany({
@@ -336,8 +351,11 @@ async function seedUsers() {
   console.log('Seeding Users finished.');
 }
 
+/**
+ * function for seeding random badges
+ * @returns random badges
+ */
 function randomBadges(): { name: string }[] {
-  //get a random amount of items from badges
   const badgeIds = badges.map((b) => b.name);
   const randomlyChosen = [
     ...new Set(
@@ -353,10 +371,18 @@ function randomBadges(): { name: string }[] {
   return _R;
 }
 
+/**
+ * function for getting a random number from 0 to max
+ * @param max threshold
+ * @returns number
+ */
 function getRandomInt(max: number) {
   return Math.floor(Math.random() * max);
 }
 
+/**
+ * function for seeding posts for investments
+ */
 async function seedPostsForInvestments() {
   const postContents = [
     'Projekt dotyczący instalacji nowoczesnego zegara słonecznego w centrum miasta, mającego na celu połączenie tradycji z nowoczesną technologią oraz stworzenie przestrzeni edukacyjnej dla mieszkańców i turystów.',
@@ -404,6 +430,9 @@ async function seedPostsForInvestments() {
   console.log('Seeding posts for investments finished.');
 }
 
+/**
+ * function for seeding investments
+ */
 async function seedInvestments() {
   const investments = [
     {
@@ -653,6 +682,9 @@ async function seedInvestments() {
   console.log('Seeding investments finished.');
 }
 
+/**
+ * function for seeding posts for announcements
+ */
 async function seedPostsForAnnouncements() {
   const postContents = [
     'Zapraszamy na niepowtarzalne wydarzenie muzyczne w naszym mieście - Koncert 1000 Gitar! To wyjątkowa okazja, by doświadczyć magii muzyki granej na żywo przez tysiąc gitarzystów z różnych zakątków kraju. Koncert odbędzie się na głównym placu miasta, będąc doskonałą okazją do spędzenia czasu w rodzinnej atmosferze.',
@@ -698,6 +730,9 @@ async function seedPostsForAnnouncements() {
   console.log('Seeding posts for announcements finished.');
 }
 
+/**
+ * function for seeding announcements
+ */
 async function seedAnnouncements() {
   const announcements = [
     {
@@ -889,6 +924,9 @@ async function seedAnnouncements() {
   console.log('Seeding announcements finished.');
 }
 
+/**
+ * function for seeding posts for listings
+ */
 async function seedPostsForListings() {
   const postContents = [
     'Szukasz swojego wymarzonego domu we Wrocławiu? Oferujemy na sprzedaż przestronny, nowoczesny dom położony w malowniczej okolicy, idealny dla rodziny szukającej spokoju i komfortu. Nieruchomość oferuje duży ogród, garaż na dwa samochody i jest wykończona w wysokim standardzie.',
@@ -936,6 +974,9 @@ async function seedPostsForListings() {
   console.log('Seeding posts for listings finished.');
 }
 
+/**
+ * function for seeding listings
+ */
 async function seedListings() {
   const listings = [
     {
@@ -1185,6 +1226,9 @@ async function seedListings() {
   console.log('Seeding listings finished.');
 }
 
+/**
+ * function for seeding posts for comments
+ */
 async function seedPostsForComments() {
   const postContents = [
     'Czy są już dostępne dokładniejsze informacje o planowanym terminie rozpoczęcia budowy zegara słonecznego?',
@@ -1216,6 +1260,9 @@ async function seedPostsForComments() {
   console.log('Seeding posts for comments finished.');
 }
 
+/**
+ * function for seeding comments
+ */
 async function seedComments() {
   await prisma.comment.createMany({
     data: [
@@ -1269,6 +1316,9 @@ async function seedComments() {
   console.log('Seeding comments finished.');
 }
 
+/**
+ * function for seeding post for  dummy comments
+ */
 async function seedPostsForDummyComments() {
   for (let i = 0; i < NUMBER_OF_DUMMY_POSTS * 2; i++) {
     await prisma.post.create({
@@ -1287,6 +1337,9 @@ async function seedPostsForDummyComments() {
   console.log('Seeding DUMMY comment posts finished.');
 }
 
+/**
+ * function for seeding dummy comments
+ */
 async function seedDummyComments() {
   // The dummy comments are added only to the well thought out posts. Meaning the first 44 posts
   // those are 15 investments, 13 announcements, 15 listings. + 1 because prisma iterates from 1
@@ -1323,6 +1376,9 @@ async function seedDummyComments() {
   console.log('Seeding DUMMY comments finished.');
 }
 
+/**
+ * function for seeding post votes
+ */
 async function seedPostVotes() {
   const HIGHEST_CUSTOM_POST_NUM = 44;
   const userIds = Array.from(
@@ -1372,6 +1428,9 @@ async function seedPostVotes() {
   console.log('Seeding post votes finished.');
 }
 
+/**
+ * function for seeding cbadges
+ */
 async function seedBadges() {
   await Promise.all(
     badges.map(async (badge) => {
@@ -1388,6 +1447,9 @@ async function seedBadges() {
   console.log('Seeding badges finished.');
 }
 
+/**
+ * function for seeding ivestment categories
+ */
 async function seedInvestmentCategories() {
   await Promise.all(
     investmentCategories.map(async (category) => {
@@ -1403,6 +1465,9 @@ async function seedInvestmentCategories() {
   console.log('Seeding investment categories finished.');
 }
 
+/**
+ * function for seeding announcement categories
+ */
 async function seedAnnouncementCategories() {
   await Promise.all(
     announcementCategories.map(async (category) => {
@@ -1417,6 +1482,9 @@ async function seedAnnouncementCategories() {
   console.log('Seeding announcement categories finished.');
 }
 
+/**
+ * function for seeding newsletter templates
+ */
 async function seedBlankNewsletters() {
   await prisma.newsletter.createMany({
     data: [
@@ -1445,6 +1513,9 @@ async function seedBlankNewsletters() {
   console.log('Seeding blank newsletters finished.');
 }
 
+/**
+ * run main
+ */
 main()
   .catch((e) => {
     console.error(e);

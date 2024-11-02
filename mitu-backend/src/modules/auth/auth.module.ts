@@ -11,6 +11,11 @@ import RefreshTokenStrategy, {
   RefreshTokenAuthGuard,
 } from './strategies/refresh-token.strategy';
 
+/**
+ * Auth module
+ * @export
+ * @class AuthModule
+ */
 @Module({
   providers: [
     AuthService,

@@ -22,6 +22,12 @@ import { CommentModule } from './modules/comment/comment.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { RatingModule } from './modules/rating/rating.module';
 
+/**
+ * Main module of the application.
+ * Contains all the other modules.
+ * @module
+ * @name AppModule
+ */
 @Module({
   imports: [
     ScheduleModule.forRoot(),

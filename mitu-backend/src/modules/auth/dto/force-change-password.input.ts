@@ -1,5 +1,11 @@
 import { IsString, IsStrongPassword } from 'class-validator';
 
+/**
+ * Data transfer object for changing forgotten password
+ * @export
+ * @class ChangeForgottenPasswordInputDto
+ * @param {string} password
+ */
 export default class ForceChangePasswordInputDto {
   oldPassword: string;
   @IsString()

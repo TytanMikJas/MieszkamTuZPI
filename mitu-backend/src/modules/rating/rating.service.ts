@@ -6,13 +6,37 @@ import { PRISMA_ID } from 'src/types';
 import PostVoteCountInternalDto from './dto/post-vote-count-dto.internal';
 import { PostService } from '../post/post.service';
 
+/**
+ * Rating service
+ * @export
+ * @class RatingService
+ * @param {RatingRepository} ratingRepository
+ * @param {PostService} postService
+ * @method {findByUserIdAndPostId} Find rating by user id and post id
+ * @method {createByUserIdAndPostId} Create rating by user id and post id
+ * @method {deleteByUserIdAndPostId} Delete rating by user id and post id
+ * @method {performVote} Perform vote
+ */
 @Injectable()
 export default class RatingService {
+  /**
+   * Creates an instance of RatingService.
+   * @param {RatingRepository} ratingRepository
+   * @param {PostService} postService
+   * @memberof RatingService
+   * */
   constructor(
     private readonly ratingRepository: RatingRepository,
     @Inject(forwardRef(() => PostService))
     private readonly postService: PostService,
   ) {}
+
+  /**
+   * Find rating by user id and post id
+   * @param {number} userId
+   * @param {number} postId
+   * @returns {Promise<RatingDto>}
+   */
   private async findByUserIdAndPostId(
     userId: number,
     postId: number,
@@ -31,6 +55,14 @@ export default class RatingService {
       return { postId: postId, type: RatingType.DOWNVOTE };
     }
   }
+
+  /**
+   * Create rating by user id and post id
+   * @param {number} userId
+   * @param {number} postId
+   * @param {PostVoteType} type
+   * @returns {Promise<RatingDto>}
+   */
   private async createByUserIdAndPostId(
     userId: number,
     postId: number,
@@ -52,6 +84,12 @@ export default class RatingService {
     }
   }
 
+  /**
+   * Delete rating by user id and post id
+   * @param {number} userId
+   * @param {number} postId
+   * @returns {Promise<RatingDto>}
+   */
   private async deleteByUserIdAndPostId(
     userId: number,
     postId: number,
@@ -67,6 +105,14 @@ export default class RatingService {
     return { postId: postId, type: RatingType.NOVOTE };
   }
 
+  /**
+   * Perform vote
+   * @param {RatingType} desiredVote
+   * @param {RatingType} contrVote
+   * @param {number} userId
+   * @param {number} postId
+   * @returns {Promise<RatingDto>}
+   */
   async performVote(
     desiredVote: RatingType,
     contrVote: RatingType,
@@ -100,6 +146,11 @@ export default class RatingService {
     }
   }
 
+  /**
+   * Map rating type to post vote type
+   * @param {RatingType} type
+   * @returns {PostVoteType}
+   */
   private mapRatingTypeToPostVoteType(type: RatingType): PostVoteType {
     if (type === RatingType.UPVOTE) {
       return PostVoteType.UPVOTE;
@@ -109,12 +160,23 @@ export default class RatingService {
     }
   }
 
+  /**
+   * Get votes count by post id
+   * @param {number} postId
+   * @returns {Promise<PostVoteCountInternalDto>}
+   */
   async getVotesCountByPostId(
     postId: PRISMA_ID,
   ): Promise<PostVoteCountInternalDto> {
     return await this.ratingRepository.getVotesCountByPostId(postId);
   }
 
+  /**
+   * Get votes by user id and post ids
+   * @param {number[]} postId
+   * @param {number} userId
+   * @returns {Promise<PostVote[]>}
+   */
   async getVotesByUserIdAndPostIds(
     postId: PRISMA_ID[],
     userId: PRISMA_ID,

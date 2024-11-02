@@ -7,6 +7,12 @@ import { ListingFiledetails } from 'src/decorators/uploaded-post-files/filedetai
 import { SimpleBadRequest } from 'src/exceptions/simple-bad-request.exception';
 import { ERROR_INVALID_POST_TYPE } from 'src/strings';
 
+/**
+ * File details strategy factory
+ * @export
+ * @param {Enums.PostType} type
+ * @returns {IFiledetailsStrategy}
+ */
 export function FiledetailsStrategyFactory(
   type: $Enums.PostType,
 ): IFiledetailsStrategy {

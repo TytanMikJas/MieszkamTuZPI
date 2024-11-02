@@ -2,10 +2,23 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import UserInternalDto from '../user/dto/user.internal';
 
+/**
+ * Mail service
+ * @export
+ * @class MailService
+ * @param {MailerService} mailerService
+ * @constructor
+ */
 @Injectable()
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
   private logger = new Logger(MailService.name);
+
+  /**
+   * Send register confirmation email
+   * @param {UserInternalDto} user - The user DTO
+   * @param {string} confirmationUrl - The confirmation URL
+   */
   sendRegisterConfirmation(user: UserInternalDto, confirmationUrl: string) {
     this.mailerService.sendMail({
       to: user.email,
@@ -29,6 +42,12 @@ export class MailService {
     );
   }
 
+  /**
+   * Send HTML email
+   * @param {string[]} resepientEmails - The recipient emails
+   * @param {string} subject - The subject
+   * @param {string} html - The HTML
+   */
   sendHtmlMail(resepientEmails: string[], subject: string, html: string) {
     for (const email of resepientEmails) {
       this.mailerService.sendMail({
@@ -39,6 +58,11 @@ export class MailService {
     }
   }
 
+  /**
+   * Send password reset email
+   * @param {string} email - The email
+   * @param {string} newPassword - The new password
+   */
   sendPasswordReset(email: string, newPassword: string) {
     this.mailerService.sendMail({
       to: email,
@@ -51,6 +75,11 @@ export class MailService {
     this.logger.log(`Password reset email sent for ${email}`);
   }
 
+  /**
+   * Send admin created account email
+   * @param {string} email - The email
+   * @param {string} password - The password
+   */
   sendAdminCreatedYourAccountMail(email: string, password: string) {
     this.mailerService.sendMail({
       to: email,
@@ -64,6 +93,11 @@ export class MailService {
     this.logger.log(`Admin created account email sent for ${email}`);
   }
 
+  /**
+   * Send change password link
+   * @param {UserInternalDto} user - The user DTO
+   * @param {string} changePasswordLink - The change password link
+   */
   sendChangePasswordLink(user: UserInternalDto, changePasswordLink: string) {
     this.mailerService.sendMail({
       to: user.email,

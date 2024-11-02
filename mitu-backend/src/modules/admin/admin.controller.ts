@@ -23,19 +23,43 @@ import { ParsePrismaID } from 'src/pipes/parse-prisma-id.pipe';
 
 /**
  * Controller for admin actions
+ * @export
+ * @class AdminController
+ * @param {AdminService} adminService
+ * @constructor
+ * @method {getAllUsers} Get all users
+ * @method {createOfficial} Create official
+ * @method {generatePassword} Generate password
  */
 @ApiTags('admin')
 @Controller('admin')
 @Roles($Enums.UserRole.ADMIN)
 @UseGuards(JWTAuthGuard, RolesGuard)
 export class AdminController {
+  /**
+   * Creates an instance of AdminController.
+   * @param {AdminService} adminService
+   * @memberof AdminController
+   */
   constructor(private readonly adminService: AdminService) {}
 
+  /**
+   * Get all users
+   * @param {FilterUsersDto} filter
+   * @returns
+   * @memberof AdminController
+   */
   @Get('users')
   async getAllUsers(@Query() filter: FilterUsersDto) {
     return this.adminService.getAllUsers(filter);
   }
 
+  /**
+   * Create official
+   * @param {CreateOfficialInputDto} body
+   * @returns
+   * @memberof AdminController
+   */
   @Post('official')
   async createOfficial(
     @Body() body: CreateOfficialInputDto,
@@ -43,6 +67,12 @@ export class AdminController {
     return this.adminService.createOfficial(body);
   }
 
+  /**
+   * Generate password
+   * @param {PRISMA_ID} id
+   * @returns
+   * @memberof AdminController
+   */
   @Patch('password/:id')
   async generatePassword(
     @Param('id', ParsePrismaID) id: PRISMA_ID,
