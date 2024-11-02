@@ -4,6 +4,14 @@ import { IsEnum } from 'class-validator';
 import TransformPrismaID from 'src/decorators/transformers/prismaid.transformer';
 import { PRISMA_ID } from 'src/types';
 
+/**
+ * Comment dto
+ * @export
+ * @class CommentDto
+ * @param {PRISMA_ID} id
+ * @param {PRISMA_ID} parentNodeId
+ * @param {$Enums.CommentStatus} status
+ */
 export default class CommentDto {
   id: PRISMA_ID;
   @TransformPrismaID()

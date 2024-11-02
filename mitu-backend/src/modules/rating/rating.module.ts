@@ -4,6 +4,11 @@ import RatingService from './rating.service';
 import RatingRepository from './rating.repository';
 import { PostModule } from '../post/post.module';
 
+/**
+ * Rating module
+ * @export
+ * @class RatingModule
+ */
 @Module({
   imports: [PostModule],
   controllers: [RatingController],

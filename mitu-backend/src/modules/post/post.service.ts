@@ -15,12 +15,23 @@ import { $Enums } from '@prisma/client';
  */
 @Injectable()
 export class PostService {
+  /**
+   * Creates an instance of PostService.
+   * @param {PostRepository} postRepository - The post repository
+   * @param {FilehandlerService} filehandlerService - The filehandler service
+   */
   constructor(
     private readonly postRepository: PostRepository,
     private readonly filehandlerService: FilehandlerService,
   ) {}
   private readonly logger = new Logger(PostService.name);
 
+  /**
+   * Create a post
+   * @param {CreatePostDto} body - The post DTO
+   * @param {number} userId - The ID of the user
+   * @returns {PostDto} - The post DTO
+   */
   async create(body: CreatePostDto, userId: PRISMA_ID): Promise<PostDto> {
     const _p = await this.postRepository.create(body, userId);
 
@@ -37,6 +48,12 @@ export class PostService {
     return _p;
   }
 
+  /**
+   * Get all posts
+   * @param {GenericFilter} genericFilter - The generic filter
+   * @param {number} userId - The ID of the user
+   * @returns {PostDto[]} - The post DTOs
+   */
   async setContent(id: PRISMA_ID, content: string): Promise<PostDto> {
     const _p = await this.postRepository.getOne(id);
 
@@ -45,6 +62,12 @@ export class PostService {
     return await this.postRepository.setContent(id, content);
   }
 
+  /**
+   * Get all posts
+   * @param {GenericFilter} genericFilter - The generic filter
+   * @param {number} userId - The ID of the user
+   * @returns {PostDto[]} - The post DTOs
+   */
   async incrementComentCount(id: PRISMA_ID): Promise<void> {
     const _p = await this.postRepository.getOne(id);
 
@@ -52,6 +75,12 @@ export class PostService {
     return await this.postRepository.incrementComentCount(id);
   }
 
+  /**
+   * Get all posts
+   * @param {GenericFilter} genericFilter - The generic filter
+   * @param {number} userId - The ID of the user
+   * @returns {PostDto[]} - The post DTOs
+   */
   async decrementComentCount(id: PRISMA_ID): Promise<void> {
     const _p = await this.postRepository.getOne(id);
 
@@ -59,6 +88,11 @@ export class PostService {
     return await this.postRepository.decrementComentCount(id);
   }
 
+  /**
+   * Increment the upvote count of a post
+   * @param {number} id - The ID of the post
+   * @returns {Promise<void>}
+   */
   async incrementUpvoteCount(id: PRISMA_ID): Promise<void> {
     const _p = await this.postRepository.getOne(id);
 
@@ -66,6 +100,11 @@ export class PostService {
     return await this.postRepository.incrementUpvoteCount(id);
   }
 
+  /**
+   * Decrement the upvote count of a post
+   * @param {number} id - The ID of the post
+   * @returns {Promise<void>}
+   */
   async decrementUpvoteCount(id: PRISMA_ID): Promise<void> {
     const _p = await this.postRepository.getOne(id);
 
@@ -73,6 +112,11 @@ export class PostService {
     return await this.postRepository.decrementUpvoteCount(id);
   }
 
+  /**
+   * Increment the downvote count of a post
+   * @param {number} id - The ID of the post
+   * @returns {Promise<void>}
+   */
   async incrementDownvoteCount(id: PRISMA_ID): Promise<void> {
     const _p = await this.postRepository.getOne(id);
 
@@ -80,6 +124,11 @@ export class PostService {
     return await this.postRepository.incrementDownvoteCount(id);
   }
 
+  /**
+   * Decrement the downvote count of a post
+   * @param {number} id - The ID of the post
+   * @returns {Promise<void>}
+   */
   async decrementDownvoteCount(id: PRISMA_ID): Promise<void> {
     const _p = await this.postRepository.getOne(id);
 
@@ -87,6 +136,12 @@ export class PostService {
     return await this.postRepository.decrementDownvoteCount(id);
   }
 
+  /**
+   * Get all posts
+   * @param {GenericFilter} genericFilter - The generic filter
+   * @param {number} userId - The ID of the user
+   * @returns {PostDto[]} - The post DTOs
+   */
   async getOne(id: PRISMA_ID): Promise<PostDto> {
     const _p = await this.postRepository.getOne(id);
 
@@ -95,6 +150,12 @@ export class PostService {
     return _p;
   }
 
+  /**
+   * Get all posts
+   * @param {GenericFilter} genericFilter - The generic filter
+   * @param {number} userId - The ID of the user
+   * @returns {PostDto[]} - The post DTOs
+   */
   async setThumbnail(id: PRISMA_ID, thumbnail: string): Promise<void> {
     await this.postRepository.setThumbnail(
       id,
@@ -102,6 +163,12 @@ export class PostService {
     );
   }
 
+  /**
+   * Get all posts
+   * @param {GenericFilter} genericFilter - The generic filter
+   * @param {number} userId - The ID of the user
+   * @returns {PostDto[]} - The post DTOs
+   */
   async getAttributes(ids: PRISMA_ID[]): Promise<PostAttributesDto[]> {
     const _posts = await this.postRepository.getManyByIds(ids);
 
@@ -116,6 +183,12 @@ export class PostService {
     return attributes;
   }
 
+  /**
+   * Get all posts
+   * @param {GenericFilter} genericFilter - The generic filter
+   * @param {number} userId - The ID of the user
+   * @returns {PostDto[]} - The post DTOs
+   */
   async delete(id: PRISMA_ID): Promise<void> {
     const _p = await this.postRepository.getOne(id);
 
@@ -141,6 +214,12 @@ export class PostService {
     await this.filehandlerService.deletePostDirectory(_p.postType, id);
   }
 
+  /**
+   * Get all posts
+   * @param {GenericFilter} genericFilter - The generic filter
+   * @param {number} userId - The ID of the user
+   * @returns {PostDto[]} - The post DTOs
+   */
   async sortIds(
     genericFilter: GenericFilter,
     postType: $Enums.PostType,
@@ -148,6 +227,12 @@ export class PostService {
     return await this.postRepository.sortIds(genericFilter, postType);
   }
 
+  /**
+   * Get all posts
+   * @param {GenericFilter} genericFilter - The generic filter
+   * @param {number} userId - The ID of the user
+   * @returns {PostDto[]} - The post DTOs
+   */
   async sortPosts<T extends Specialization>(
     specialization: T[],
     genericFilter: GenericFilter,
@@ -174,6 +259,9 @@ export class PostService {
   }
 }
 
+/**
+ * Specialization for the Post entity
+ */
 class Specialization {
   id: number;
 }

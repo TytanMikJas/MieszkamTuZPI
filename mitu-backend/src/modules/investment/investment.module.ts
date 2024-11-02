@@ -7,6 +7,18 @@ import { PostModule } from 'src/modules/post/post.module';
 import { AttachmentModule } from 'src/modules/attachment/attachment.module';
 import { PoiModule } from 'src/modules/poi/poi.module';
 
+/**
+ * Module for Investment
+ * @export
+ * @class InvestmentModule
+ * @param {FilehandlerModule} FilehandlerModule
+ * @param {PostModule} PostModule
+ * @param {AttachmentModule} AttachmentModule
+ * @param {PoiModule} PoiModule
+ * @method {InvestmentController}
+ * @method {InvestmentService}
+ * @method {InvestmentRepository}
+ */
 @Module({
   imports: [FilehandlerModule, PostModule, AttachmentModule, PoiModule],
   controllers: [InvestmentController],

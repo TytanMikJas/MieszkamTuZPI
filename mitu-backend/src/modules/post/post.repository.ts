@@ -14,6 +14,9 @@ import { GenericFilter } from 'src/query.filter';
 export default class PostRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
+  /**
+   * Properties of the user that are visible to the client
+   */
   private visibleUserProps = {
     createdBy: {
       select: {
@@ -27,6 +30,10 @@ export default class PostRepository {
     },
   };
 
+  /**
+   * Decrement the downvote count of a post
+   * @param {number} id - The ID of the post
+   */
   async decrementDownvoteCount(id: PRISMA_ID): Promise<void> {
     this.prisma.post.update({
       where: { id },
@@ -34,6 +41,10 @@ export default class PostRepository {
     });
   }
 
+  /**
+   * Increment the downvote count of a post
+   * @param {number} id - The ID of the post
+   */
   async incrementDownvoteCount(id: PRISMA_ID): Promise<void> {
     this.prisma.post.update({
       where: { id },
@@ -41,6 +52,10 @@ export default class PostRepository {
     });
   }
 
+  /**
+   * Decrement the upvote count of a post
+   * @param {number} id - The ID of the post
+   */
   async decrementUpvoteCount(id: PRISMA_ID): Promise<void> {
     this.prisma.post.update({
       where: { id },
@@ -48,6 +63,10 @@ export default class PostRepository {
     });
   }
 
+  /**
+   * Increment the upvote count of a post
+   * @param {number} id - The ID of the post
+   */
   async incrementUpvoteCount(id: PRISMA_ID): Promise<void> {
     this.prisma.post.update({
       where: { id },
@@ -55,6 +74,12 @@ export default class PostRepository {
     });
   }
 
+  /**
+   * Create a new post
+   * @param {CreatePostDto} body - The post DTO
+   * @param {PRISMA_ID} userId - The user ID
+   * @returns {Promise<PostDto>} - The post DTO
+   */
   async create(body: CreatePostDto, userId: PRISMA_ID): Promise<PostDto> {
     return await this.prisma.post.create({
       data: {
@@ -68,10 +93,20 @@ export default class PostRepository {
     });
   }
 
+  /**
+   * Get a post by its ID
+   * @param {number} id - The ID of the post
+   * @returns {Promise<PostDto>} - The post DTO
+   */
   async getOne(id: PRISMA_ID): Promise<PostDto> {
     return await this.prisma.post.findUnique({ where: { id } });
   }
 
+  /**
+   * Get a post by its ID with the user who created it
+   * @param {number} id - The ID of the post
+   * @returns {Promise<PostDtoWithUser>} - The post DTO
+   */
   async setContent(id: PRISMA_ID, content: string): Promise<PostDto> {
     return await this.prisma.post.update({
       where: { id },
@@ -79,6 +114,11 @@ export default class PostRepository {
     });
   }
 
+  /**
+   * Get a post by its ID with the user who created it
+   * @param {number} id - The ID of the post
+   * @returns {Promise<PostDtoWithUser>} - The post DTO
+   */
   async incrementComentCount(id: PRISMA_ID): Promise<void> {
     await this.prisma.post.update({
       where: { id },
@@ -86,6 +126,11 @@ export default class PostRepository {
     });
   }
 
+  /**
+   * Get a post by its ID with the user who created it
+   * @param {number} id - The ID of the post
+   * @returns {Promise<PostDtoWithUser>} - The post DTO
+   */
   async decrementComentCount(id: PRISMA_ID): Promise<void> {
     await this.prisma.post.update({
       where: { id },
@@ -93,6 +138,11 @@ export default class PostRepository {
     });
   }
 
+  /**
+   * Get a post by its ID with the user who created it
+   * @param {number} id - The ID of the post
+   * @returns {Promise<PostDtoWithUser>} - The post DTO
+   */
   async getManyByIds(ids: PRISMA_ID[]): Promise<PostDtoWithUser[]> {
     const posts = [];
     // Can't use findMany, because it destroys the order
@@ -113,18 +163,38 @@ export default class PostRepository {
     return posts as unknown as PostDtoWithUser[];
   }
 
+  /**
+   * Get a post by its ID with the user who created it
+   * @param {number} id - The ID of the post
+   * @returns {Promise<PostDtoWithUser>} - The post DTO
+   */
   async setThumbnail(id: PRISMA_ID, thumbnail: string): Promise<void> {
     await this.prisma.post.update({ where: { id }, data: { thumbnail } });
   }
 
+  /**
+   * Get a post by its ID with the user who created it
+   * @param {number} id - The ID of the post
+   * @returns {Promise<PostDtoWithUser>} - The post DTO
+   */
   async delete(id: PRISMA_ID): Promise<void> {
     await this.prisma.post.delete({ where: { id } });
   }
 
+  /**
+   * Get a post by its ID with the user who created it
+   * @param {number} id - The ID of the post
+   * @returns {Promise<PostDtoWithUser>} - The post DTO
+   */
   async bulkDelete(ids: PRISMA_ID[]): Promise<void> {
     await this.prisma.post.deleteMany({ where: { id: { in: ids } } });
   }
 
+  /**
+   * Get a post by its ID with the user who created it
+   * @param {number} id - The ID of the post
+   * @returns {Promise<PostDtoWithUser>} - The post DTO
+   */
   async getPostCommentIds(id: PRISMA_ID): Promise<PRISMA_ID[]> {
     return (
       await this.prisma.comment.findMany({
@@ -134,6 +204,11 @@ export default class PostRepository {
     ).map((c) => c.id);
   }
 
+  /**
+   * Get a post by its ID with the user who created it
+   * @param {number} id - The ID of the post
+   * @returns {Promise<PostDtoWithUser>} - The post DTO
+   */
   async updateVotes(
     id: number,
     upvoteCount: number,
@@ -145,10 +220,18 @@ export default class PostRepository {
     });
   }
 
+  /**
+   * Get all posts
+   * @returns {Promise<Post[]>}
+   */
   async getAll(): Promise<Post[]> {
     return await this.prisma.post.findMany();
   }
 
+  /**
+   * Get all posts
+   * @returns {Promise<Post[]>}
+   */
   async sortIds(genericFilter: GenericFilter, postType: $Enums.PostType) {
     const posts = await this.prisma.post.findMany({
       where: {

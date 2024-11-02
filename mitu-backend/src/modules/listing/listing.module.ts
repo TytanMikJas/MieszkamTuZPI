@@ -7,6 +7,11 @@ import { PostModule } from 'src/modules/post/post.module';
 import { AttachmentModule } from 'src/modules/attachment/attachment.module';
 import { PoiModule } from 'src/modules/poi/poi.module';
 
+/**
+ * Listing module
+ * @export
+ * @class ListingModule
+ */
 @Module({
   imports: [FilehandlerModule, PostModule, AttachmentModule, PoiModule],
   controllers: [ListingController],

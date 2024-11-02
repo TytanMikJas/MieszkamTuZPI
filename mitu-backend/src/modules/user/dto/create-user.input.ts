@@ -8,6 +8,17 @@ import {
 } from 'class-validator';
 import { capitalizeFirstLetter } from 'src/utils/string-utils';
 
+/**
+ * Create user input dto
+ * @export
+ * @class CreateUserInputDto
+ * @param {string} firstName
+ * @param {string} lastName
+ * @param {string} password
+ * @param {string} email
+ * @param {boolean} newsletter_agreement
+ * @param {boolean} forceChangePassword
+ */
 export default class CreateUserInputDto {
   @MaxLength(20)
   @Transform(({ value }) => capitalizeFirstLetter(value))

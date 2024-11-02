@@ -34,6 +34,24 @@ import {
 import { ValidateLocationChain } from '../../../decorators/transformers/validate-location-chain.transformer';
 import TransformBoolean from '../../../decorators/transformers/boolean.transformer';
 
+/**
+ * Create announcement data transfer object
+ * @export
+ * @class CreateAnnouncementDto
+ * @param {string} title
+ * @param {number} locationX
+ * @param {number} locationY
+ * @param {LocationChain} area
+ * @param {string} street
+ * @param {string} buildingNr
+ * @param {string} apartmentNr
+ * @param {string} thumbnail
+ * @param {string} categoryName
+ * @param {boolean} isCommentable
+ * @param {string} responsible
+ * @param {string} content
+ * @param {any} files
+ */
 class CreateAnnouncementDto {
   @MaxLength(MAX_LENGTH_ANNOUNCEMENT_TITLE, {
     message: ERROR_ANNOUNCEMENT_TITLE_TOO_LONG,
@@ -104,6 +122,14 @@ class CreateAnnouncementDto {
   responsible: string;
 }
 
+/**
+ * Create announcement input data transfer object
+ * @export
+ * @class CreateAnnouncementInputDto
+ * @extends {CreateAnnouncementDto}
+ * @param {string} content
+ * @param {any} files
+ */
 export default class CreateAnnouncementInputDto extends CreateAnnouncementDto {
   @MaxLength(MAX_LENGTH_ANNOUNCEMENT_CONTENT, {
     message: ERROR_ANNOUNCEMENT_CONTENT_TOO_LONG,
@@ -116,6 +142,15 @@ export default class CreateAnnouncementInputDto extends CreateAnnouncementDto {
   files?: any;
 }
 
+/**
+ * Create announcement input data transfer object with id
+ * @export
+ * @class CreateAnnouncementInputDtoWithId
+ * @extends {CreateAnnouncementDto}
+ * @param {PRISMA_ID} id
+ * @param {string} content
+ * @param {any} files
+ */
 export class CreateAnnouncementInputDtoWithId extends CreateAnnouncementDto {
   @TransformPrismaID()
   id: PRISMA_ID;

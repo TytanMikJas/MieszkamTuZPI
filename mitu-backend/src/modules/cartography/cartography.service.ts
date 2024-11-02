@@ -8,10 +8,24 @@ import { GetParcelShapeOutputDto } from './dto/get-parcel-shape.output';
 import { GetCoordsByAddressInputDto } from './dto/get-coords-by-address.input';
 import { GetCoordsByAddressOutputDto } from './dto/get-coords-by-address.output';
 
+/**
+ * Cartography service
+ * @export
+ * @class CartographyService
+ * @param {ULDKService} uldkProvider
+ * @method {getParcelByCoordinates} getParcelByCoordinates
+ * @method {getParcelShape} getParcelShape
+ * @method {getCoordinatesByAddress} getCoordinatesByAddress
+ */
 @Injectable()
 export class CartographyService {
   constructor(private uldkProvider: ULDKService) {}
 
+  /**
+   * Get parcel by coordinates
+   * @param {GetParcelInputDto} getParcelInput
+   * @returns {Promise<GetParcelOutputDto>}
+   */
   async getParcelByCoordinates(
     getParcelInput: GetParcelInputDto,
   ): Promise<GetParcelOutputDto> {
@@ -26,6 +40,11 @@ export class CartographyService {
     return { parcelNumber, parcelRegion, x, y };
   }
 
+  /**
+   * Get parcel shape
+   * @param {GetParcelShapeInputDto} getParcelShapeInput
+   * @returns {Promise<GetParcelShapeOutputDto>}
+   */
   async getParcelShape(
     getParcelShapeInput: GetParcelShapeInputDto,
   ): Promise<GetParcelShapeOutputDto> {
@@ -66,6 +85,11 @@ export class CartographyService {
     };
   }
 
+  /**
+   * Get coordinates by address
+   * @param {GetCoordsByAddressInputDto} getCoordsByAddressInput
+   * @returns {Promise<GetCoordsByAddressOutputDto>}
+   */
   async getCoordinatesByAddress(
     getCoordsByAddressInput: GetCoordsByAddressInputDto,
   ): Promise<GetCoordsByAddressOutputDto> {

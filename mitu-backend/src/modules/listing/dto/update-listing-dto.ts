@@ -121,6 +121,20 @@ export default class UpdateListingInternalDto {
   sell: boolean;
 }
 
+/**
+ * DTO for updating a listing
+ * @property exclude - Semicolon separated *type/originalname* string informing which post's files to remove
+ * @property thumbnail - Original name of a file sent or already present in the post's files, which will be set as post's thumbnail
+ * @property content - The content of the listing
+ * @example
+ * ```ts
+ * {
+ * exclude: 'images/lichtenstein.png;tds/duck.gltf;doc/sample.pdf',
+ * thumbnail: 'lichtenstein.png',
+ * content: 'Listing content',
+ * }
+ * ```
+ */
 export class UpdateListingInputDto extends UpdateListingInternalDto {
   @IsOptional()
   @ApiProperty({

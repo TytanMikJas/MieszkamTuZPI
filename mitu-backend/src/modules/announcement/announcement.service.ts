@@ -41,6 +41,14 @@ import AnnouncementExcludePoiDto from './dto/create-announcement-dto.internal';
  * */
 @Injectable()
 export class AnnouncementService {
+  /**
+   * Creates an instance of AnnouncementService.
+   * @param {AnnouncementRepository} announcementRepository
+   * @param {FilehandlerService} filehandlerService
+   * @param {PostService} postService
+   * @param {PoiService} poiService
+   * @memberof AnnouncementService
+   */
   constructor(
     private readonly announcementRepository: AnnouncementRepository,
     private readonly filehandlerService: FilehandlerService,

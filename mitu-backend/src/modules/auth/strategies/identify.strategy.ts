@@ -6,8 +6,23 @@ import UserService from 'src/modules/user/user.service';
 import { SECRET_KEY } from 'src/strings';
 import { Observable } from 'rxjs';
 
+/**
+ * Identify strategy that extends PassportStrategy to validate JWT
+ * @export
+ * @class IdentifyStrategy
+ * @extends {PassportStrategy(Strategy)}
+ * @param {UserService} userService
+ * @constructor
+ * @method {validate}
+ * @returns {Promise<UserInternalDto>}
+ */
 @Injectable()
 export default class IdentifyStrategy extends PassportStrategy(Strategy) {
+  /**
+   * Creates an instance of IdentifyStrategy.
+   * @param {UserService} userService
+   * @memberof Identify
+   */
   constructor(private readonly userService: UserService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -21,6 +36,11 @@ export default class IdentifyStrategy extends PassportStrategy(Strategy) {
     });
   }
 
+  /**
+   * Validate the payload
+   * @param {*} payload
+   * @returns {Promise<UserInternalDto>}
+   */
   async validate(payload: any): Promise<UserInternalDto> {
     try {
       const user = await this.userService.findById(payload.userId);
@@ -31,27 +51,43 @@ export default class IdentifyStrategy extends PassportStrategy(Strategy) {
   }
 }
 
+/**
+ * IdentifyAuthGuard that extends AuthGuard to check if the request has an accessToken cookie
+ * @export
+ * @class IdentifyAuthGuard
+ * @extends {AuthGuard('jwt')}
+ * @method {canActivate}
+ * @method {handleRequest}
+ */
 @Injectable()
 export class IdentifyAuthGuard extends AuthGuard('jwt') {
+  /**
+   * Check if the request has an accessToken cookie
+   * @param {ExecutionContext} context
+   * @returns {boolean | Promise<boolean> | Observable<boolean>}
+   */
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    // Check if the request has the accessToken cookie
     if (!request || !request.cookies['accessToken']) {
-      // If no accessToken is present, skip JWT validation and allow the request
       return true;
     }
-    // If accessToken exists, proceed with JWT validation
     return super.canActivate(context);
   }
 
+  /**
+   * Handle the request and return the user
+   * @param {*} _err
+   * @param {*} user
+   * @param {*} _info
+   * @param {ExecutionContext} _context
+   * @returns {UserInternalDto}
+   */
   handleRequest(_err: any, user, _info: any, _context: ExecutionContext) {
-    // If there's no user due to no token or validation failure, return null instead of throwing an error
     if (!user) {
       return null;
     }
-    // If a user is found, proceed normally
     return user;
   }
 }
