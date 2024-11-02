@@ -8,6 +8,14 @@ const logger = new Logger('FilterUsersDto');
 
 /**
  * Data transfer object for filtering users
+ * @export
+ * @class FilterUsersDto
+ * @param {UserStatus} status
+ * @param {UserRole[]} roles
+ * @param {string} orderBy
+ * @param {string} sortOrder
+ * @method {where} Get where clause
+ * @method {order} Get order clause
  */
 export class FilterUsersDto {
   @ApiProperty({ enum: UserStatus })

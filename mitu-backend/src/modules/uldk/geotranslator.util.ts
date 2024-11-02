@@ -1,5 +1,12 @@
 import { ParcelCoordinatesInternalOutputDto } from './dto/parcel-coordinates.internal.output';
 
+/**
+ * Transform coordinates
+ * @param x The x coordinate
+ * @param y The y coordinate
+ * @param transform The transform object
+ * @returns {ParcelCoordinatesInternalOutputDto}
+ */
 export function transformCoordinates(
   x: string,
   y: string,
@@ -11,6 +18,11 @@ export function transformCoordinates(
   return { x: _x.toString(), y: _y.toString() };
 }
 
+/**
+ * Calculate polygon center
+ * @param coordinates The coordinates
+ * @returns {number[]}
+ */
 export function calculatePolygonCenter(coordinates: number[][]): number[] {
   const totalPoints = coordinates.length;
 
@@ -28,6 +40,11 @@ export function calculatePolygonCenter(coordinates: number[][]): number[] {
   return [avgY, avgX];
 }
 
+/**
+ * Calculate polygon bounds
+ * @param coordinates The coordinates
+ * @returns {number[]}
+ */
 export function calculatePolygonBounds(coordinates: number[][]): number[] {
   let minX = Infinity;
   let minY = Infinity;

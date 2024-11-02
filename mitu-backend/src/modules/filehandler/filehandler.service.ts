@@ -30,10 +30,24 @@ import { AttachmentService } from '../attachment/attachment.service';
 import { $Enums } from '@prisma/client';
 import { FiledetailsStrategyFactory } from './factories/filedetailsStrategy.factory';
 
+/**
+ * Filehandler service
+ * @export
+ * @class FilehandlerService
+ * @method transformOriginalnameToFormat
+ * @method preparePostDirectories
+ * @method canAssignThumbnail
+ * @method saveAllPostFiles
+ */
 @Injectable()
 export class FilehandlerService {
   constructor(private readonly attachmentService: AttachmentService) {}
 
+  /**
+   * Check if file exists
+   * @param {string} path
+   * @returns {Promise<boolean>}
+   */
   private async fileExists(path: string): Promise<boolean> {
     try {
       await access(path);
@@ -43,14 +57,30 @@ export class FilehandlerService {
     }
   }
 
+  /**
+   * Create directory
+   * @param {string} path
+   * @returns {Promise<void>}
+   */
   private async createDirectory(path: string): Promise<void> {
     await mkdir(path, { recursive: true });
   }
 
+  /**
+   * Transform originalname to format
+   * @param {string} originalname
+   * @returns {string}
+   */
   transformOriginalnameToFormat(originalname: string): string {
     return originalname.replace(FileExtensionRegExp, DesiredImageFormat);
   }
 
+  /**
+   * Prepare post directories
+   * @param {PostType} type
+   * @param {PRISMA_ID} id
+   * @returns {Promise<void>}
+   */
   async preparePostDirectories(
     type: $Enums.PostType,
     id: PRISMA_ID,
@@ -65,6 +95,14 @@ export class FilehandlerService {
       await this.createDirectory(`${_dir}/${$Enums.FileType.DOC}`);
   }
 
+  /**
+   * Check if thumbnail can be assigned
+   * @param {PRISMA_ID} id
+   * @param {PostType} postType
+   * @param {string} thumbnail
+   * @param {string[]} sent
+   * @returns {Promise<boolean>}
+   */
   async canAssignThumbnail(
     id: PRISMA_ID,
     postType: $Enums.PostType,
@@ -78,6 +116,15 @@ export class FilehandlerService {
     return (await this.fileExists(_dir)) || sent.includes(thumbnail);
   }
 
+  /**
+   * Save all post files
+   * @param file Input file
+   * @param dir directory
+   * @param fileType Type of file
+   * @param postType Type of post
+   * @param postId Post ID
+   * @returns {Promise<void>}
+   */
   private async saveFile(
     file: Express.Multer.File,
     dir: string,
@@ -125,6 +172,15 @@ export class FilehandlerService {
     );
   }
 
+  /**
+   * Save post files by type
+   * @param {Express.Multer.File[]} files
+   * @param {FileType} fileType
+   * @param {string} dir
+   * @param {PostType} postType
+   * @param {PRISMA_ID} postId
+   * @returns {Promise<void>}
+   */
   private async savePostFilesByType(
     files: Array<Express.Multer.File>,
     fileType: $Enums.FileType,
@@ -143,6 +199,13 @@ export class FilehandlerService {
     });
   }
 
+  /**
+   * Save all post files
+   * @param {PostFilesGrouped} files
+   * @param {PostType} postType
+   * @param {PRISMA_ID} postId
+   * @returns {Promise<void>}
+   */
   async saveAllPostFiles(
     files: PostFilesGrouped,
     postType: $Enums.PostType,
@@ -173,6 +236,12 @@ export class FilehandlerService {
     );
   }
 
+  /**
+   * Compress file
+   * @param {Express.Multer.File} file
+   * @param {ICompressionStrategy} strategy
+   * @returns {Promise<Express.Multer.File>}
+   */
   private async compressFile(
     file: Express.Multer.File,
     strategy: ICompressionStrategy,
@@ -180,10 +249,22 @@ export class FilehandlerService {
     return await strategy.compress(file);
   }
 
+  /**
+   * Provide path
+   * @param {PostType} type
+   * @param {PRISMA_ID} id
+   * @returns {string}
+   */
   providePath(type: $Enums.PostType, id: PRISMA_ID): string {
     return `./uploads/${type}/${id}`;
   }
 
+  /**
+   * Get attachments
+   * @param {PostType} type
+   * @param {PRISMA_ID} id
+   * @returns {Promise<PostFilesPaths>}
+   */
   private async getAttachments(
     type: $Enums.PostType,
     id: PRISMA_ID,
@@ -216,10 +297,20 @@ export class FilehandlerService {
     };
   }
 
+  /**
+   * Get files in directory
+   * @param {string} dir
+   * @returns {Promise<string[]>}
+   */
   private async getFilesInDirectory(dir: string): Promise<string[]> {
     return (await readdir(dir)).map((file) => `${file}`);
   }
 
+  /**
+   * Group excluded files
+   * @param {string} exclude
+   * @returns {PostFilesPaths}
+   */
   private groupExcludedFiles(exclude: FileExcludeString): PostFilesPaths {
     if (!exclude)
       return {
@@ -249,7 +340,14 @@ export class FilehandlerService {
     return _groupedFiles;
   }
 
-  //if error is not thrown -> can proceed
+  /**
+   * Check if can proceed with file upload
+   * @param {PostFilesGrouped} files
+   * @param {PostFilesPaths} exclude
+   * @param {PostFilesPaths} attachments
+   * @param {PostType} postType
+   * @returns {void}
+   */
   private canProceedWithFileUpload(
     files: PostFilesGrouped,
     exclude: PostFilesPaths,
@@ -289,6 +387,14 @@ export class FilehandlerService {
       throw new SimpleBadRequest(ERROR_TOO_MANY_DOC_FILES);
   }
 
+  /**
+   * Delete excluded files
+   * @param {PostFilesPaths} exclude
+   * @param {string} dir
+   * @param {PRISMA_ID} postId
+   * @param {string} thumbnail
+   * @returns {Promise<boolean>}
+   */
   private async deleteExcludedFiles(
     exclude: PostFilesPaths,
     dir: string,
@@ -309,6 +415,14 @@ export class FilehandlerService {
     return shouldDeleteThumbnail;
   }
 
+  /**
+   * Delete file
+   * @param {string} dir
+   * @param {FileType} type
+   * @param {string} filename
+   * @param {PRISMA_ID} postId
+   * @returns {Promise<void>}
+   */
   private async deleteFile(
     dir: string,
     type: $Enums.FileType,
@@ -326,6 +440,12 @@ export class FilehandlerService {
       );
   }
 
+  /**
+   * Delete post directory
+   * @param {PostType} type
+   * @param {PRISMA_ID} id
+   * @returns {Promise<void>}
+   */
   async deletePostDirectory(
     type: $Enums.PostType,
     id: PRISMA_ID,
@@ -336,6 +456,15 @@ export class FilehandlerService {
     }
   }
 
+  /**
+   * Handle patched files
+   * @param {PRISMA_ID} id
+   * @param {PostType} postType
+   * @param {PostFilesGrouped} files
+   * @param {string} exclude
+   * @param {string} thumbnail
+   * @returns {Promise<boolean>}
+   */
   async handlePatchedFiles(
     id: PRISMA_ID,
     postType: $Enums.PostType,
@@ -345,13 +474,10 @@ export class FilehandlerService {
   ) {
     const grouppedExlude = this.groupExcludedFiles(exclude);
     const attachments = await this.getAttachments(postType, id);
-    //throws an exception if there are too much files
-    //that means: too little files were excluded
-    //for the amount of files uploaded
+
     this.canProceedWithFileUpload(files, grouppedExlude, attachments, postType);
 
     await this.saveAllPostFiles(files, postType, id);
-    // ^ - newly uploaded files are saved
 
     const isThumbnailDeleted = await this.deleteExcludedFiles(
       grouppedExlude,

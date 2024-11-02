@@ -6,10 +6,20 @@ import { PRISMA_ID } from '../../types';
 import { FilterUsersDto } from '../admin/dto/filter-users.dto';
 import UpdateUserInfoInputDto from './dto/update-user-info.input';
 
+/**
+ * User repository
+ * @export
+ * @class UserRepository
+ */
 @Injectable()
 export default class UserRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
+  /**
+   * Create a new user
+   * @param {Omit<UserInternalDto, 'id'>} user
+   * @returns {Promise<UserInternalDto>}
+   */
   async create(user: Omit<UserInternalDto, 'id'>): Promise<UserInternalDto> {
     const createdUser = await this.prisma.user.create({
       data: {
@@ -40,6 +50,12 @@ export default class UserRepository {
     };
   }
 
+  /**
+   * Update the user information
+   * @param {PRISMA_ID} id
+   * @param {UpdateUserInfoInputDto} user
+   * @returns {Promise<UserInternalDto>}
+   */
   async updateInfo(
     id: PRISMA_ID,
     user: UpdateUserInfoInputDto,
@@ -69,6 +85,12 @@ export default class UserRepository {
     };
   }
 
+  /**
+   * Update the user password
+   * @param {PRISMA_ID} id
+   * @param {string} password
+   * @returns {Promise<UserInternalDto>}
+   */
   async updatePassword(
     id: PRISMA_ID,
     password: string,
@@ -96,6 +118,12 @@ export default class UserRepository {
     };
   }
 
+  /**
+   * Update the user email
+   * @param {PRISMA_ID} id
+   * @param {string} email
+   * @returns {Promise<UserInternalDto>}
+   */
   async updateEmail(id: PRISMA_ID, email: string): Promise<UserInternalDto> {
     const updatedUser = await this.prisma.user.update({
       where: {
@@ -120,6 +148,11 @@ export default class UserRepository {
     };
   }
 
+  /**
+   * Delete the user
+   * @param {PRISMA_ID} id
+   * @returns {Promise<UserInternalDto>}
+   */
   async deleteUser(id: PRISMA_ID): Promise<UserInternalDto> {
     const updatedUser = await this.prisma.user.update({
       where: {
@@ -144,6 +177,12 @@ export default class UserRepository {
     };
   }
 
+  /**
+   * Set the force reset password flag
+   * @param {PRISMA_ID} id
+   * @param {boolean} forceResetPassword
+   * @returns {Promise<void>}
+   */
   async setForceResetPassword(
     id: PRISMA_ID,
     forceResetPassword: boolean,
@@ -154,6 +193,11 @@ export default class UserRepository {
     });
   }
 
+  /**
+   * Find user by id
+   * @param {PRISMA_ID} id
+   * @returns {Promise<UserInternalDto | null>}
+   */
   async findById(id: PRISMA_ID): Promise<UserInternalDto | null> {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -177,6 +221,11 @@ export default class UserRepository {
     };
   }
 
+  /**
+   * Find user by email
+   * @param {string} email
+   * @returns {Promise<UserInternalDto | null>}
+   */
   async findByEmail(email: string): Promise<UserInternalDto | null> {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -200,6 +249,12 @@ export default class UserRepository {
     };
   }
 
+  /**
+   * Update the refresh token
+   * @param {PRISMA_ID} userId
+   * @param {string} refreshToken
+   * @returns {Promise<void>}
+   */
   async updateRefreshToken(
     userId: PRISMA_ID,
     refreshToken: string,
@@ -226,6 +281,11 @@ export default class UserRepository {
     forceChangePassword: true,
   };
 
+  /**
+   * Get all users
+   * @param {FilterUsersDto} filter
+   * @returns {Promise<PublicUserDto[]>}
+   */
   async getAll(filter?: FilterUsersDto): Promise<PublicUserDto[]> {
     return this.prisma.user.findMany({
       where: filter.where,
@@ -234,12 +294,22 @@ export default class UserRepository {
     });
   }
 
+  /**
+   * Get all users with newsletter agreement
+   * @returns {Promise<UserInternalDto[]>}
+   */
   async findAllByNewsletterAgreement(newsletterAgreement: boolean) {
     return this.prisma.user.findMany({
       where: { newsletter_agreement: newsletterAgreement },
     });
   }
 
+  /**
+   * Assign role
+   * @param {PRISMA_ID} id
+   * @param {UserRole} role
+   * @returns {Promise<PublicUserDto>}
+   */
   async assignRole(id: PRISMA_ID, role: UserRole): Promise<PublicUserDto> {
     return this.prisma.user.update({
       where: { id },
@@ -248,6 +318,12 @@ export default class UserRepository {
     });
   }
 
+  /**
+   * Compare passwords
+   * @param {string} plainTextPassword
+   * @param {string} hashedPassword
+   * @returns {Promise<boolean>}
+   */
   async forceUpdatePassword(
     id: PRISMA_ID,
     hashedPassword: string,
@@ -261,6 +337,13 @@ export default class UserRepository {
       where: { userId: id },
     });
   }
+
+  /**
+   * Assign status
+   * @param {PRISMA_ID} id
+   * @param {UserStatus} status
+   * @returns {Promise<PublicUserDto>}
+   */
   async assignStatus(
     id: PRISMA_ID,
     status: UserStatus,

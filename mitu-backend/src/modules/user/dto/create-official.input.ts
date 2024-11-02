@@ -3,6 +3,15 @@ import { Transform } from 'class-transformer';
 import { IsString, MaxLength, IsEmail, IsEnum } from 'class-validator';
 import { capitalizeFirstLetter } from 'src/utils/string-utils';
 
+/**
+ * Create official input dto
+ * @export
+ * @class CreateOfficialInputDto
+ * @param {string} firstName
+ * @param {string} lastName
+ * @param {string} email
+ * @param {UserRole} role
+ */
 export default class CreateOfficialInputDto {
   @IsString()
   @MaxLength(20)

@@ -19,8 +19,26 @@ import { UpdateListingInputDto } from './dto/update-listing-dto';
 import { PoiService } from 'src/modules/poi/poi.service';
 import ListingExcludePoiDto from 'src/modules/listing/dto/create-listing-dto.internal';
 
+/**
+ * Listing service
+ * @export
+ * @class ListingService
+ * @param {ListingRepository} listingRepository
+ * @param {FilehandlerService} filehandlerService
+ * @param {PostService} postService
+ * @param {PoiService} poiService
+ * @constructor
+ */
 @Injectable()
 export class ListingService {
+  /**
+   * Creates an instance of ListingService.
+   * @param {ListingRepository} listingRepository
+   * @param {FilehandlerService} filehandlerService
+   * @param {PostService} postService
+   * @param {PoiService} poiService
+   * @memberof ListingService
+   */
   constructor(
     private readonly listingRepository: ListingRepository,
     private readonly filehandlerService: FilehandlerService,
@@ -28,6 +46,11 @@ export class ListingService {
     private readonly poiService: PoiService,
   ) {}
 
+  /**
+   * Get POI parameters
+   * @param {CreateListingInputDto | UpdateListingInputDto} listing - The listing DTO
+   * @returns {ListingExcludePoiDto} - The listing DTO
+   */
   getPoiParameters(listing: CreateListingInputDto | UpdateListingInputDto) {
     return {
       title: listing.title,
@@ -41,6 +64,11 @@ export class ListingService {
     };
   }
 
+  /**
+   * Get listing parameters
+   * @param {CreateListingInputDto | UpdateListingInputDto} listing - The listing DTO
+   * @returns {ListingExcludePoiDto} - The listing DTO
+   */
   getListingParameters(
     listing: CreateListingInputDto | UpdateListingInputDto,
   ): ListingExcludePoiDto {
@@ -51,6 +79,13 @@ export class ListingService {
     };
   }
 
+  /**
+   * Create a listing
+   * @param {CreateListingInputDto} body - The listing DTO
+   * @param {PostFilesGrouped} files - The files
+   * @param {number} userId - The user ID
+   * @returns {Promise<ListingDto>} - The listing DTO
+   */
   async create(
     body: CreateListingInputDto,
     files: PostFilesGrouped,
@@ -107,6 +142,11 @@ export class ListingService {
     return { ...listing };
   }
 
+  /**
+   * Get all listings
+   * @param {GenericFilter} filter - The filter
+   * @returns {Promise<ListingDto[]>} - The listing DTO
+   */
   async getAll(filter: GenericFilter): Promise<ListingDto[]> {
     if (!filter.orderBy) {
       return this.listingRepository.getAll(filter);
@@ -123,6 +163,11 @@ export class ListingService {
     }
   }
 
+  /**
+   * Get one listing
+   * @param {PRISMA_ID} id - The ID
+   * @returns {Promise<ListingDto | null>} - The listing DTO
+   */
   async getOne(id: PRISMA_ID): Promise<ListingDto | null> {
     const _l = await this.listingRepository.getOne(id);
 
@@ -131,6 +176,11 @@ export class ListingService {
     return _l;
   }
 
+  /**
+   * Get one listing by slug
+   * @param {string} slug - The slug
+   * @returns {Promise<ListingDto>} - The listing DTO
+   */
   async getOneBySlug(slug: string): Promise<ListingDto> {
     const _p = await this.poiService.getOneBySlug(slug);
     const _l = await this.listingRepository.getOne(_p.id);
@@ -140,6 +190,13 @@ export class ListingService {
     return _l;
   }
 
+  /**
+   * Update a listing
+   * @param {PRISMA_ID} id - The ID
+   * @param {UpdateListingInputDto} body - The listing DTO
+   * @param {PostFilesGrouped} files - The files
+   * @returns {Promise<string>} - The slug
+   */
   async update(
     id: PRISMA_ID,
     body: UpdateListingInputDto,
@@ -186,6 +243,11 @@ export class ListingService {
     return poi.slug;
   }
 
+  /**
+   * Delete a listing
+   * @param {PRISMA_ID} id - The ID
+   * @returns {Promise<{ prevSlug: string }>} - The slug
+   */
   async delete(id: PRISMA_ID): Promise<{ prevSlug: string }> {
     const _l = await this.listingRepository.getOne(id);
 
