@@ -35,6 +35,7 @@ import { Roles } from 'src/modules/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/modules/auth/strategies/roles.guard';
 import CategoryDto from 'src/modules/announcement/dto/category-dto';
 import { PostAttributesInterceptor } from 'src/modules/post/interceptors/postAttributes.interceptor';
+import { IdentifyAuthGuard } from '../auth/strategies/identify.strategy';
 
 /**
  * Controller for Announcement
@@ -81,6 +82,7 @@ export class AnnouncementController {
    * @returns {Promise<AnnouncementDto[]>}
    * */
   @Get()
+  @UseGuards(IdentifyAuthGuard)
   @UseInterceptors(PostListAttributesInterceptor)
   async getAll(@Query() filter: GenericFilter): Promise<AnnouncementDto[]> {
     return await this.announcementService.getAll(filter);
@@ -93,6 +95,7 @@ export class AnnouncementController {
    * */
   @Get('/one/:id')
   @UseInterceptors(PostAttributesInterceptor)
+  @UseGuards(IdentifyAuthGuard)
   async getOne(
     @Param('id', ParsePrismaID) id: PRISMA_ID,
   ): Promise<AnnouncementDto> {
@@ -106,6 +109,7 @@ export class AnnouncementController {
    * */
   @Get('/slug/:slug')
   @UseInterceptors(PostAttributesInterceptor)
+  @UseGuards(IdentifyAuthGuard)
   async getOneBySlug(@Param('slug') slug: string): Promise<AnnouncementDto> {
     return this.announcementService.getOneBySlug(slug);
   }

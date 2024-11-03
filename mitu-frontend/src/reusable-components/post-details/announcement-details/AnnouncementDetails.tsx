@@ -26,6 +26,7 @@ import { useMapSettingsStore } from '@/core/stores/map/map-settings-store';
 import { useMapWithPostsStore } from '@/core/stores/map/map-with-posts-store';
 import { useCommentStore } from '@/core/stores/comment-store';
 import { LatLng } from 'leaflet';
+import Rating from '../rating/Rating';
 
 export default function AnnouncementDetails() {
   const {
@@ -33,6 +34,8 @@ export default function AnnouncementDetails() {
     singleAnnouncementLoading: loading,
     setSingleAnnouncement,
     deleteAnnouncement,
+    performVoteDetails,
+    singleAnnouncementRatingLoading,
   } = useAnnouncementStore();
   const { setRightbarStage } = useUiStore();
   const { visible, openGallery } = useGalleryStore();
@@ -113,7 +116,16 @@ export default function AnnouncementDetails() {
             url={announcement.responsible}
             fullName={announcement.responsible}
           />
-          <div>Rating</div>
+          <div>
+            <Rating
+              postId={`${announcement.id}`}
+              upvoteCount={announcement.upvoteCount}
+              downvoteCount={announcement.downvoteCount}
+              currentVote={announcement.personalRating}
+              loading={singleAnnouncementRatingLoading}
+              callback={performVoteDetails}
+            />
+          </div>
         </div>
       </div>
       <div className="text-justify">{announcement.content}</div>

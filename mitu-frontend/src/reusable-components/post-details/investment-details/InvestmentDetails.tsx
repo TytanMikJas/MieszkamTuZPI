@@ -36,6 +36,7 @@ import { useMapSettingsStore } from '@/core/stores/map/map-settings-store';
 import { useMapWithPostsStore } from '@/core/stores/map/map-with-posts-store';
 import { useCommentStore } from '@/core/stores/comment-store';
 import { LatLng } from 'leaflet';
+import Rating from '../rating/Rating';
 
 export default function InvestmentDetails() {
   const {
@@ -43,6 +44,8 @@ export default function InvestmentDetails() {
     singleInvestmentLoading: loading,
     setSingleInvestment,
     deleteInvestment,
+    performVoteDetails,
+    singleInvestmentRatingLoading,
   } = useInvestmentStore();
   const uiStore = useUiStore();
   const { setRightbarStage, rightbarStage } = useUiStore();
@@ -139,6 +142,15 @@ export default function InvestmentDetails() {
         <div className="flex flex-col gap-2">
           <div className="flex  justify-between items-center">
             <h2 className="text-xl font-bold">{investment.title}</h2>
+            <Rating
+              postId={`${investment.id}`}
+              upvoteCount={investment.upvoteCount}
+              downvoteCount={investment.downvoteCount}
+              currentVote={investment.personalRating}
+              loading={singleInvestmentRatingLoading}
+              callback={performVoteDetails}
+              className="bg-white ml-2"
+            />
           </div>
         </div>
         <Separator className="my-4" />

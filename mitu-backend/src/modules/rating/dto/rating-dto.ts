@@ -1,6 +1,6 @@
 export enum RatingType {
-  UPVOTE = 'upvote',
-  DOWNVOTE = 'downvote',
+  UPVOTE = 'UPVOTE',
+  DOWNVOTE = 'DOWNVOTE',
   NOVOTE = 'novote',
 }
 

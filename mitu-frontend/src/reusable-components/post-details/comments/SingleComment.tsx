@@ -25,6 +25,7 @@ import { Textarea } from '@/shadcn/textarea';
 import CancelEditIcon from '@/reusable-components/icons/edit-comm-icon/CancelEditIcon';
 import AcceptEditIcon from '@/reusable-components/icons/edit-comm-icon/AcceptEditIcon';
 import ExpectLoggedIn from '@/reusable-components/login-dialog/ExpectLoggedIn';
+import Rating from '../rating/Rating';
 
 export default function SingleComment({
   comment,
@@ -124,7 +125,14 @@ export default function SingleComment({
           />
           <div className="flex items-center space-x-2">
             <ExpectLoggedIn>
-              <div>Rating</div>
+              <Rating
+                currentVote={comment?.personalRating}
+                postId={`${comment?.id}`}
+                upvoteCount={comment?.upvoteCount}
+                downvoteCount={comment?.downvoteCount}
+                callback={handleRating}
+                loading={comment?.loadingRating}
+              />
             </ExpectLoggedIn>
             {isEditing ? (
               <AuthGuard

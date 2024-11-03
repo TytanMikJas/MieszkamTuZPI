@@ -9,6 +9,9 @@ import { ERROR_POST_NOT_FOUND } from 'src/strings';
 import { FilehandlerService } from 'src/modules/filehandler/filehandler.service';
 import { GenericFilter } from 'src/query.filter';
 import { $Enums } from '@prisma/client';
+import { RatingType } from '../rating/dto/rating-dto';
+import RatingService from '../rating/rating.service';
+import UserInternalDto from '../user/dto/user.internal';
 
 /**
  * Service for the Post entity
@@ -18,6 +21,7 @@ export class PostService {
   constructor(
     private readonly postRepository: PostRepository,
     private readonly filehandlerService: FilehandlerService,
+    private readonly ratingService: RatingService,
   ) {}
   private readonly logger = new Logger(PostService.name);
 
@@ -102,16 +106,36 @@ export class PostService {
     );
   }
 
-  async getAttributes(ids: PRISMA_ID[]): Promise<PostAttributesDto[]> {
+  async getAttributes(
+    ids: PRISMA_ID[],
+    user?: UserInternalDto,
+  ): Promise<PostAttributesDto[]> {
     const _posts = await this.postRepository.getManyByIds(ids);
-
     if (_posts.length != ids.length)
       throw new SimpleNotFound(ERROR_POST_NOT_FOUND);
+    const ratings = {};
+    if (user) {
+      const _ratings = await this.ratingService.getVotesByUserIdAndPostIds(
+        ids,
+        user.id,
+      );
+      _ratings.map((r) => {
+        ratings[r.postId] = r;
+      });
+    }
 
     const attributes = _posts.map(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ({ comments, ...rest }) => rest,
     );
+
+    attributes.map((a) => {
+      if (ratings[a.id]) {
+        a.personalRating = ratings[a.id].type;
+      } else {
+        a.personalRating = RatingType.NOVOTE;
+      }
+    });
 
     return attributes;
   }

@@ -28,30 +28,46 @@ export default class PostRepository {
   };
 
   async decrementDownvoteCount(id: PRISMA_ID): Promise<void> {
-    this.prisma.post.update({
+    const post = await this.prisma.post.findUnique({
       where: { id },
-      data: { downvoteCount: { decrement: 1 } },
+      select: { downvoteCount: true },
+    });
+    await this.prisma.post.update({
+      where: { id },
+      data: { downvoteCount: { set: post.downvoteCount - 1 } },
     });
   }
 
   async incrementDownvoteCount(id: PRISMA_ID): Promise<void> {
-    this.prisma.post.update({
+    const post = await this.prisma.post.findUnique({
       where: { id },
-      data: { downvoteCount: { increment: 1 } },
+      select: { downvoteCount: true },
+    });
+    await this.prisma.post.update({
+      where: { id },
+      data: { downvoteCount: { set: post.downvoteCount + 1 } },
     });
   }
 
   async decrementUpvoteCount(id: PRISMA_ID): Promise<void> {
-    this.prisma.post.update({
+    const post = await this.prisma.post.findUnique({
       where: { id },
-      data: { upvoteCount: { decrement: 1 } },
+      select: { upvoteCount: true },
+    });
+    await this.prisma.post.update({
+      where: { id },
+      data: { upvoteCount: { set: post.upvoteCount - 1 } },
     });
   }
 
   async incrementUpvoteCount(id: PRISMA_ID): Promise<void> {
-    this.prisma.post.update({
+    const post = await this.prisma.post.findUnique({
       where: { id },
-      data: { upvoteCount: { increment: 1 } },
+      select: { upvoteCount: true },
+    });
+    await this.prisma.post.update({
+      where: { id },
+      data: { upvoteCount: { set: post.upvoteCount + 1 } },
     });
   }
 

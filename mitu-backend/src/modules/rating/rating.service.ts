@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import RatingRepository from './rating.repository';
 import { PostVote, PostVoteType } from '@prisma/client';
 import RatingDto, { RatingType } from './dto/rating-dto';
@@ -10,6 +10,7 @@ import { PostService } from '../post/post.service';
 export default class RatingService {
   constructor(
     private readonly ratingRepository: RatingRepository,
+    @Inject(forwardRef(() => PostService))
     private readonly postService: PostService,
   ) {}
   private async findByUserIdAndPostId(
@@ -41,11 +42,12 @@ export default class RatingService {
       type,
     );
     if (postVote.type === PostVoteType.UPVOTE) {
-      this.postService.incrementUpvoteCount(postId);
+      await this.postService.incrementUpvoteCount(postId);
       return { postId: postVote.postId, type: RatingType.UPVOTE };
     }
     if (postVote.type === PostVoteType.DOWNVOTE) {
-      this.postService.incrementDownvoteCount(postId);
+      console.log('got here');
+      await this.postService.incrementDownvoteCount(postId);
       return { postId: postVote.postId, type: RatingType.DOWNVOTE };
     }
   }

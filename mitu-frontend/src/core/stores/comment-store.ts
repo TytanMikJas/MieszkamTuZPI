@@ -13,7 +13,10 @@ import { COMMENTS_PAGE_SIZE, SUBCOMMENTS_PAGE_SIZE } from '@/constants';
 import { axiosInstance } from '../api/axios-instance';
 import EditCommentDto from '../api/common/comment/EditCommentDto';
 import { RatingType, RatingDto } from '../api/common/rating/RatingDto';
-import { RatingTypeToAttribute } from '../api/common/rating/RatingUtils';
+import {
+  ratingsToRatingCountIncrements,
+  RatingTypeToAttribute,
+} from '../api/common/rating/RatingUtils';
 import { SuccessResponse } from '../api/response';
 
 interface CommentSection {
@@ -185,14 +188,12 @@ export const useCommentStore = create<
               if (`${c.id}` === commentId) {
                 const returnedType = response.data.data.type;
                 const personalRating = c.personalRating;
-                const scoreMatrix = RatingTypeToAttribute(
+                const increments = ratingsToRatingCountIncrements(
                   personalRating,
-                  type,
                   returnedType,
                 );
-                scoreMatrix.forEach(([attribute, score]) => {
-                  c[attribute] += score;
-                });
+                c.upvoteCount += increments.upvoteCountIncrement;
+                c.downvoteCount += increments.downvoteCountIncrement;
                 c.personalRating = returnedType;
                 return {
                   ...c,
@@ -259,14 +260,12 @@ export const useCommentStore = create<
                   ...c,
                   comments: c.comments?.map((cc) => {
                     if (`${cc.id}` === commentId) {
-                      const scoreMatrix = RatingTypeToAttribute(
+                      const increments = ratingsToRatingCountIncrements(
                         cc.personalRating,
-                        type,
                         returnedType,
                       );
-                      scoreMatrix.forEach(([attribute, score]) => {
-                        cc[attribute] += score;
-                      });
+                      c.upvoteCount += increments.upvoteCountIncrement;
+                      c.downvoteCount += increments.downvoteCountIncrement;
                       cc.personalRating = returnedType;
                       return {
                         ...cc,

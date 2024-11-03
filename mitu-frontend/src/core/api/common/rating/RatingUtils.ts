@@ -35,3 +35,33 @@ export function RatingTypeToAttribute(
 
   return changes[key] || [[parser(RatingType.NOVOTE), 0]];
 }
+
+export interface RatingIncrements {
+  upvoteCountIncrement: number;
+  downvoteCountIncrement: number;
+}
+
+export function ratingsToRatingCountIncrements(
+  oldType: RatingType,
+  newType: RatingType,
+): RatingIncrements {
+  if (oldType === RatingType.UPVOTE && newType === RatingType.NOVOTE) {
+    return { upvoteCountIncrement: -1, downvoteCountIncrement: 0 };
+  }
+  if (oldType === RatingType.DOWNVOTE && newType === RatingType.NOVOTE) {
+    return { upvoteCountIncrement: 0, downvoteCountIncrement: -1 };
+  }
+  if (oldType === RatingType.NOVOTE && newType === RatingType.UPVOTE) {
+    return { upvoteCountIncrement: 1, downvoteCountIncrement: 0 };
+  }
+  if (oldType === RatingType.NOVOTE && newType === RatingType.DOWNVOTE) {
+    return { upvoteCountIncrement: 0, downvoteCountIncrement: 1 };
+  }
+  if (oldType === RatingType.UPVOTE && newType === RatingType.DOWNVOTE) {
+    return { upvoteCountIncrement: -1, downvoteCountIncrement: 1 };
+  }
+  if (oldType === RatingType.DOWNVOTE && newType === RatingType.UPVOTE) {
+    return { upvoteCountIncrement: 1, downvoteCountIncrement: -1 };
+  }
+  return { upvoteCountIncrement: 0, downvoteCountIncrement: 0 };
+}

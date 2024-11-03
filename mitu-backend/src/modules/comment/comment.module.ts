@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CommentRepository } from './comment.repository';
 import { FilehandlerModule } from '../filehandler/filehandler.module';
@@ -11,7 +11,7 @@ import { CommentController } from './comment.controller';
  * Module for comment operations
  */
 @Module({
-  imports: [FilehandlerModule, PostModule],
+  imports: [FilehandlerModule, forwardRef(() => PostModule)],
   providers: [CommentService, CommentRepository],
   controllers: [CommentController],
   exports: [CommentService],
