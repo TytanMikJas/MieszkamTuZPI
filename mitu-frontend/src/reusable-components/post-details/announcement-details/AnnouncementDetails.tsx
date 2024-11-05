@@ -19,7 +19,6 @@ import TimeFromNow from '@/reusable-components/time/TimeFromNow';
 import LoadableImage from '@/reusable-components/misc/lazy-loaded-image/LoadableImage';
 import AnnouncementDto from '@/core/api/announcement/dto/announcement';
 import DeletePostIcon from '@/reusable-components/icons/delete-icon/DeletePostIcon';
-import ShareButtons from '@/reusable-components/share-buttons/ShareButtons';
 import AuthGuard from '@/core/auth/AuthGuard';
 import { Role } from '@/core/auth/roles';
 import { useMapSettingsStore } from '@/core/stores/map/map-settings-store';
@@ -27,6 +26,7 @@ import { useMapWithPostsStore } from '@/core/stores/map/map-with-posts-store';
 import { useCommentStore } from '@/core/stores/comment-store';
 import { LatLng } from 'leaflet';
 import Rating from '../rating/Rating';
+import ShareButtons from '@/reusable-components/share-buttons/ShareButtons';
 
 export default function AnnouncementDetails() {
   const {

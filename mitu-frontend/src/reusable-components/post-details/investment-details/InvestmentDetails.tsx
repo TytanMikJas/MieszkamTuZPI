@@ -37,6 +37,7 @@ import { useMapWithPostsStore } from '@/core/stores/map/map-with-posts-store';
 import { useCommentStore } from '@/core/stores/comment-store';
 import { LatLng } from 'leaflet';
 import Rating from '../rating/Rating';
+import ShareButtons from '@/reusable-components/share-buttons/ShareButtons';
 
 export default function InvestmentDetails() {
   const {
@@ -214,6 +215,13 @@ export default function InvestmentDetails() {
           {isModelVisible ? <span>Mapa</span> : <span>Model 3D</span>}
         </ToggleButton>
       )}
+      <div className={'justify-center align-middle flex '}>
+        <ShareButtons
+          url={window.location.href}
+          buttonSize={48}
+          thumbnail={`${investment.filePaths.IMAGE}${investment.thumbnail}`}
+        />
+      </div>
     </div>
   ) : (
     <NotFound />

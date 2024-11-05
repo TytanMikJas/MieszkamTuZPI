@@ -35,6 +35,7 @@ import DeletePostIcon from '@/reusable-components/icons/delete-icon/DeletePostIc
 import { useMapSettingsStore } from '@/core/stores/map/map-settings-store';
 import { useMapWithPostsStore } from '@/core/stores/map/map-with-posts-store';
 import { LatLng } from 'leaflet';
+import ShareButtons from '@/reusable-components/share-buttons/ShareButtons';
 
 export default function ListingDetails() {
   const {
@@ -166,7 +167,11 @@ export default function ListingDetails() {
       </ToggleButton>
 
       <div className={'justify-center align-middle flex '}>
-        {/* // TODO add share buttons here in later sprint */}
+        <ShareButtons
+          url={window.location.href}
+          buttonSize={48}
+          thumbnail={`${listing.filePaths.IMAGE}${listing.thumbnail}`}
+        />
       </div>
     </div>
   ) : (
