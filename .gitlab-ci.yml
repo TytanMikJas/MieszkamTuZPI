@@ -73,7 +73,7 @@ unit-test-cron:
   script:
     - echo "Unit cron"
     - cd mitu-cron
-    - mvn test -Dspring.profiles.active=unit_test
+    - mvn clean install
   rules:
     - if: '$CI_MERGE_REQUEST_ID'
 
