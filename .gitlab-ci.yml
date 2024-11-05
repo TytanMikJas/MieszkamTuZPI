@@ -139,6 +139,7 @@ build-cron:
 
 deploy-docs:
   stage: documentation
+  image: node:20.1-alpine
   before_script:
     - cd mitu-backend
     - npm install
