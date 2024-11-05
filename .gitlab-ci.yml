@@ -144,7 +144,7 @@ deploy-docs:
     - cd mitu-backend
     - npm install
   script:
-    - npx @compodoc/compodoc -p tsconfig.json -s
+    - npx @compodoc/compodoc -p tsconfig.json
     - cd ..
     - mkdir .public
     - cp -r /mitu-backend/documentation .public
