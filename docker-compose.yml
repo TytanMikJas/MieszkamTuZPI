@@ -11,7 +11,7 @@ services:
     env_file:
       - .env.prod
   mitu_backend:
-    image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_backend:latest
+    image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_backend:latest_${DOCKER_CITY}
     container_name: mitu_backend
     ports:
       - "3000:3000"
@@ -21,7 +21,7 @@ services:
     env_file:
       - .env.prod
   mitu_frontend:
-    image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_frontend:latest
+    image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_frontend:latest_${DOCKER_CITY}
     container_name: mitu_frontend
     ports:
       - "80:80"
@@ -31,13 +31,13 @@ services:
     env_file:
       - .env.prod
   mitu_prerender:
-    image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_prerender:latest
+    image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_prerender:latest_${DOCKER_CITY}
     container_name: mitu_prerender
     working_dir: /home/node
     depends_on:
       - mitu_frontend
   mitu_cron:
-    image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_cron:latest
+    image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_cron:latest_${DOCKER_CITY}
     container_name: mitu_cron
     depends_on:
       - mitu_postgres
