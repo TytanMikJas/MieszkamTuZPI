@@ -47,6 +47,11 @@ export class InvestmentService {
     private readonly poiService: PoiService,
   ) {}
 
+  /**
+   * Get POI parameters.
+   * @param {CreateInvestmentInputDto | UpdateInvestmentInputDto} investment - The investment DTO.
+   * @returns {POIDTO} - The POI DTO.
+   */
   getPoiParameters(
     investment: CreateInvestmentInputDto | UpdateInvestmentInputDto,
   ) {
@@ -62,6 +67,11 @@ export class InvestmentService {
     };
   }
 
+  /**
+   * Get investment parameters.
+   * @param {CreateInvestmentInputDto} investment - The investment DTO.
+   * @returns {InvestmentExcludePoiDto} - The investment DTO.
+   */
   getInvestmentParameters(
     investment: CreateInvestmentInputDto,
   ): InvestmentExcludePoiDto {
@@ -74,6 +84,13 @@ export class InvestmentService {
     };
   }
 
+  /**
+   * Create investment.
+   * @param {CreateInvestmentInputDto} body - The investment DTO.
+   * @param {PostFilesGrouped} files - The files.
+   * @param {PRISMA_ID} userId - The user ID.
+   * @returns {Promise<InvestmentDto>} - The investment DTO.
+   */
   async create(
     body: CreateInvestmentInputDto,
     files: PostFilesGrouped,
@@ -131,6 +148,12 @@ export class InvestmentService {
     return { ...investment };
   }
 
+  /**
+   * Get all investments.
+   * @param {GenericFilter} genericFilter - The generic filter.
+   * @param {FilterInvestmentDto} investmentFilter - The investment filter.
+   * @returns {Promise<InvestmentDto[]>} - The investment DTO.
+   */
   async getAll(
     genericFilter: GenericFilter,
     investmentFilter: FilterInvestmentDto,
@@ -153,6 +176,11 @@ export class InvestmentService {
     }
   }
 
+  /**
+   * Get one investment.
+   * @param {PRISMA_ID} id - The investment ID.
+   * @returns {Promise<InvestmentDto | null>} - The investment DTO.
+   */
   async getOne(id: PRISMA_ID): Promise<InvestmentDto | null> {
     const _i = await this.investmentRepository.getOne(id);
 
@@ -161,6 +189,11 @@ export class InvestmentService {
     return _i;
   }
 
+  /**
+   * Get one investment by slug.
+   * @param {string} slug - The investment slug.
+   * @returns {Promise<InvestmentDto>} - The investment DTO.
+   */
   async getOneBySlug(slug: string): Promise<InvestmentDto> {
     const _p = await this.poiService.getOneBySlug(slug);
     const _i = await this.investmentRepository.getOne(_p.id);
@@ -170,6 +203,13 @@ export class InvestmentService {
     return _i;
   }
 
+  /**
+   * Update investment.
+   * @param {PRISMA_ID} id - The investment ID.
+   * @param {UpdateInvestmentInputDto} body - The investment DTO.
+   * @param {PostFilesGrouped} files - The files.
+   * @returns {Promise<string>} - The investment slug.
+   */
   async update(
     id: PRISMA_ID,
     body: UpdateInvestmentInputDto,
@@ -218,6 +258,11 @@ export class InvestmentService {
     return poi.slug;
   }
 
+  /**
+   * Delete investment.
+   * @param {PRISMA_ID} id - The investment ID.
+   * @returns {Promise<{ prevSlug: string }>} - The investment slug
+   */
   async delete(id: PRISMA_ID): Promise<{ prevSlug: string }> {
     const _i = await this.investmentRepository.getOne(id);
 
@@ -229,14 +274,26 @@ export class InvestmentService {
     return { prevSlug: _i.slug };
   }
 
+  /**
+   * Get investment statuses.
+   * @returns {typeof $Enums.InvestmentStatus}
+   */
   getStatuses(): typeof $Enums.InvestmentStatus {
     return this.investmentRepository.getStatuses();
   }
 
+  /**
+   * Get categories.
+   * @returns {Promise<CategoryDto[]>} - The category DTO.
+   */
   getCategories(): Promise<CategoryDto[]> {
     return this.investmentRepository.getCategories();
   }
 
+  /**
+   * Get badges.
+   * @returns {Promise<BadgeDto[]>} - The badge DTO.
+   */
   getBadges(): Promise<BadgeDto[]> {
     return this.investmentRepository.getBadges();
   }

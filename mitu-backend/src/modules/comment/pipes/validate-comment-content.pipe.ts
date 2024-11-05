@@ -10,8 +10,19 @@ import {
   ERROR_PATCH_CONTENT_COMMENT_TOO_SHORT,
 } from 'src/strings';
 
+/**
+ * Validate comment content
+ * @export
+ * @class ValidateCommentContent
+ * @implements {PipeTransform}
+ */
 @Injectable()
 export class ValidateCommentContent implements PipeTransform {
+  /**
+   * Transform value
+   * @param {string} value
+   * @returns {string}
+   */
   transform(value: string) {
     if (!value || value.length < 1) {
       throw new SimpleBadRequest(ERROR_PATCH_CONTENT_COMMENT_EMPTY);

@@ -1,4 +1,12 @@
 import { IsString, IsStrongPassword } from 'class-validator';
+
+/**
+ * Update user password input dto
+ * @export
+ * @class UpdateUserPasswordInputDto
+ * @param {string} oldPassword
+ * @param {string} newPassword
+ */
 export default class UpdateUserPasswordInputDto {
   @IsString()
   oldPassword: string;

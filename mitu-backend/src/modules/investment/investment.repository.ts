@@ -22,6 +22,12 @@ import InvestmentExcludePoiDto from 'src/modules/investment/dto/create-investmen
 export default class InvestmentRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
+  /**
+   * Maps investment to DTO.
+   * @param {InvestmentInternalDto} i - The investment internal DTO.
+   * @param {POIDTO} p - The POI DTO.
+   * @returns {InvestmentDto} - The investment DTO.
+   */
   mapInvestmentToDto(i: InvestmentInternalDto, p: POIDTO): InvestmentDto {
     return {
       ...i,
@@ -29,6 +35,12 @@ export default class InvestmentRepository {
     };
   }
 
+  /**
+   * Creates an investment.
+   * @param {number} id - The ID.
+   * @param {InvestmentExcludePoiDto} body - The investment DTO.
+   * @returns {Promise<InvestmentDto>} - The investment DTO.
+   */
   async create(
     id: number,
     body: InvestmentExcludePoiDto,
@@ -66,6 +78,12 @@ export default class InvestmentRepository {
       .then((i) => this.mapInvestmentToDto(i, i.poi));
   }
 
+  /**
+   * Get all investments.
+   * @param {GenericFilter} genericFilter - The generic filter.
+   * @param {FilterInvestmentDto} investmentFilter - The investment filter.
+   * @returns {Promise<InvestmentDto[]>} - The investment DTO.
+   */
   async getAll(
     genericFilter: GenericFilter,
     investmentFilter: FilterInvestmentDto,
@@ -93,6 +111,11 @@ export default class InvestmentRepository {
       );
   }
 
+  /**
+   * Get one investment.
+   * @param {number} id - The ID.
+   * @returns {Promise<InvestmentDto>} - The investment DTO.
+   */
   async getOne(id: number): Promise<InvestmentDto> {
     return this.prisma.investment
       .findUnique({
@@ -106,6 +129,12 @@ export default class InvestmentRepository {
       .then((i) => this.mapInvestmentToDto(i, i.poi));
   }
 
+  /**
+   * Update an investment.
+   * @param {number} id - The ID.
+   * @param {InvestmentExcludePoiDto} body - The investment DTO.
+   * @returns {Promise<InvestmentDto>} - The investment DTO.
+   */
   async update(
     id: number,
     body: InvestmentExcludePoiDto,
@@ -162,14 +191,27 @@ export default class InvestmentRepository {
       .then((i) => this.mapInvestmentToDto(i, i.poi));
   }
 
+  /**
+   * Delete an investment.
+   * @param {number} id - The ID.
+   * @returns {Promise<InvestmentDto>} - The investment DTO.
+   */
   getStatuses(): typeof $Enums.InvestmentStatus {
     return $Enums.InvestmentStatus;
   }
 
+  /**
+   * Get investment statuses.
+   * @returns {Promise<CategoryDto[]>}
+   */
   getCategories(): Promise<CategoryDto[]> {
     return this.prisma.investmentCategory.findMany();
   }
 
+  /**
+   * Get investment badges.
+   * @returns {Promise<BadgeDto[]>}
+   */
   getBadges(): Promise<BadgeDto[]> {
     return this.prisma.badge.findMany();
   }

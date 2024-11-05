@@ -132,6 +132,26 @@ export class CreateListingDto {
   sell: boolean;
 }
 
+/**
+ * DTO for creating a listing with an ID
+ * @property id - The ID of the listing
+ * @example
+ * ```ts
+ * {
+ * id: 1,
+ * title: 'Listing title',
+ * locationX: 12.345,
+ * locationY: 12.345,
+ * street: 'Listing street',
+ * buildingNr: 'Listing building number',
+ * apartmentNr: 'Listing apartment number',
+ * price: 12345,
+ * surface: 200,
+ * responsible: 'UM Czestochowa',
+ * sell: true,
+ * }
+ * ```
+ */
 export default class CreateListingInputDto extends CreateListingDto {
   @IsOptional()
   @MaxLength(MAX_LENGTH_LISTING_CONTENT, {
@@ -146,6 +166,26 @@ export default class CreateListingInputDto extends CreateListingDto {
   files?: any;
 }
 
+/**
+ * DTO for creating a listing with an ID
+ * @property id - The ID of the listing
+ * @example
+ * ```ts
+ * {
+ * id: 1,
+ * title: 'Listing title',
+ * locationX: 12.345,
+ * locationY: 12.345,
+ * street: 'Listing street',
+ * buildingNr: 'Listing building number',
+ * apartmentNr: 'Listing apartment number',
+ * price: 12345,
+ * surface: 200,
+ * responsible: 'UM Czestochowa',
+ * sell: true,
+ * }
+ * ```
+ */
 export class CreateListingInputDtoWithId extends CreateListingDto {
   id: PRISMA_ID;
   thumbnail? = null;

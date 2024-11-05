@@ -2,6 +2,9 @@ import { InvalidValidationException } from './exceptions/invalid-validation.exce
 import { RenderType } from './dto/exception.output';
 import { ValidationPipe } from '@nestjs/common';
 
+/**
+ * Pipe to validate the class-validator decorators.
+ */
 export const ClassValidatorPipe = new ValidationPipe({
   transform: true,
   exceptionFactory: (errors) => {

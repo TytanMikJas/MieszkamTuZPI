@@ -2,6 +2,20 @@ import { Attachment, PostType } from '@prisma/client';
 import { PRISMA_ID } from 'src/types';
 import PublicUserDto from '../../user/dto/public-user-dto';
 
+/**
+ * Post dto
+ * @export
+ * @class PostDto
+ * @param {PRISMA_ID} id
+ * @param {Date} createdAt
+ * @param {PostType} postType
+ * @param {string} thumbnail
+ * @param {Attachment[]} attachments
+ * @param {number} upvoteCount
+ * @param {number} downvoteCount
+ * @param {Comment[]} comments
+ * @param {PRISMA_ID} createdById
+ */
 export default class PostDto {
   id: PRISMA_ID;
   createdAt: Date;
@@ -14,6 +28,13 @@ export default class PostDto {
   createdById: PRISMA_ID;
 }
 
+/**
+ * Post dto with user
+ * @export
+ * @class PostDtoWithUser
+ * @extends {PostDto}
+ * @param {PublicUserDto} createdBy
+ */
 export class PostDtoWithUser extends PostDto {
   createdBy: PublicUserDto;
 }

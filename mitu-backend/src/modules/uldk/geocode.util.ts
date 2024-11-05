@@ -1,5 +1,10 @@
 import fetch from 'node-fetch';
 
+/**
+ * Fetch geocode data from the geocode api
+ * @param {string} endpoint
+ * @returns {Promise<any>}
+ */
 async function fetchGeocode(endpoint: string) {
   return await fetch(
     `https://geocode.maps.co/${endpoint}&api_key=${process.env.GEOCODING_API_KEY}`,
@@ -13,6 +18,11 @@ async function fetchGeocode(endpoint: string) {
   });
 }
 
+/**
+ * Get coords by address
+ * @param {string} address
+ * @returns {Promise<{ x: string; y: string }>}
+ */
 export async function getCoordsByAddresss(
   address: string,
 ): Promise<{ x: string; y: string }> {

@@ -3,6 +3,11 @@ import PostRepository from 'src/modules/post/post.repository';
 import { PostService } from 'src/modules/post/post.service';
 import { FilehandlerModule } from 'src/modules/filehandler/filehandler.module';
 
+/**
+ * Post module
+ * @export
+ * @class PostModule
+ */
 @Module({
   imports: [FilehandlerModule],
   providers: [PostService, PostRepository],

@@ -41,10 +41,43 @@ import ConfirmRegistrationUserNotFound from './exceptions/confirm-registration-u
 import ConfirmRegistrationUserAlreadyVerified from './exceptions/confirm-registration-user-already-verified';
 import ChangeForgottenPasswordInputDto from './dto/change-forgotten-password-dto.input';
 import { SimpleBadRequest } from 'src/exceptions/simple-bad-request.exception';
+
+/**
+ * Auth controller
+ * @export
+ * @class AuthController
+ * @param {UserService} userService
+ * @param {AuthService} authService
+ * @param {ConfigService} configService
+ * @constructor
+ * @method {signUp}
+ * @method {signIn}
+ * @method {updateUserInfo}
+ * @method {updateUserPassword}
+ * @method {updateUserEmail}
+ * @method {DeleteUserAccount}
+ * @method {refreshToken}
+ * @method {me}
+ * @method {logout}
+ * @method {changePassword}
+ * @method {sendConfirmationEmail}
+ * @method {confirmRegistration}
+ * @method {createForgotPasswordToken}
+ * @method {changeForgottenPassword}
+ * @method {validateForgotPasswordToken}
+ */
 @Controller('auth')
 @ApiTags('auth')
 export default class AuthController {
   private logger = new Logger(AuthController.name);
+
+  /**
+   * Creates an instance of AuthController.
+   * @param {UserService} userService
+   * @param {AuthService} authService
+   * @param {ConfigService} configService
+   * @memberof AuthController
+   */
   constructor(
     private readonly userService: UserService,
     private readonly authService: AuthService,
@@ -54,12 +87,23 @@ export default class AuthController {
   }
   private frontendPublicUrl: string;
 
+  /**
+   * Sign up
+   * @param {CreateUserInputDto} body
+   * @returns {Promise<void>}
+   */
   @SuccessMessage(SIGN_UP_MSG)
   @Post('signUp')
   async signUp(@Body() body: CreateUserInputDto): Promise<void> {
     return this.userService.create(body);
   }
 
+  /**
+   * Sign in
+   * @param {UserInternalDto} user
+   * @param {Res} res
+   * @returns {Promise<MeDto>}
+   */
   @SuccessMessage(SIGN_IN_MSG)
   @UseGuards(LocalAuthGuard)
   @Post('signIn')
@@ -83,6 +127,12 @@ export default class AuthController {
     return rest;
   }
 
+  /**
+   * Update user info
+   * @param {UserInternalDto} user
+   * @param {UpdateUserInfoInputDto} body
+   * @returns {Promise<void>}
+   */
   @SuccessMessage(UPDATE_USER_INFO)
   @Patch('updateUserInfo')
   @UseGuards(JWTAuthGuard)
@@ -93,6 +143,12 @@ export default class AuthController {
     await this.userService.updateInfo(user.id, body);
   }
 
+  /**
+   * Update user password
+   * @param {UserInternalDto} user
+   * @param {UpdateUserPasswordInputDto} body
+   * @returns {Promise<void>}
+   */
   @SuccessMessage(UPDATE_USER_PASSWORD)
   @Patch('updateUserPassword')
   @UseGuards(JWTAuthGuard)
@@ -103,6 +159,12 @@ export default class AuthController {
     await this.userService.updatePassword(user.id, body);
   }
 
+  /**
+   * Update user email
+   * @param {UserInternalDto} user
+   * @param {UpdateUserEmailInputDto} body
+   * @returns {Promise<void>}
+   */
   @SuccessMessage(UPDATE_USER_EMAIL)
   @Patch('updateUserEmail')
   @UseGuards(JWTAuthGuard)
@@ -113,6 +175,12 @@ export default class AuthController {
     await this.userService.updateEmail(user.id, body);
   }
 
+  /**
+   * Delete user account
+   * @param {UserInternalDto} user
+   * @param {DeleteAccountInputDto} body
+   * @returns {Promise<void>}
+   */
   @SuccessMessage(DELETE_USER_ACCOUNT)
   @Post('deleteUserAccount')
   @UseGuards(JWTAuthGuard)
@@ -123,6 +191,12 @@ export default class AuthController {
     await this.userService.deteleUser(user.id, body);
   }
 
+  /**
+   * Refresh token
+   * @param {Res} res
+   * @param {UserInternalDto} user
+   * @returns {Promise<void>}
+   */
   @Post('refreshToken')
   @UseGuards(RefreshTokenAuthGuard)
   async refreshToken(
@@ -142,6 +216,11 @@ export default class AuthController {
     });
   }
 
+  /**
+   * Me
+   * @param {UserInternalDto} user
+   * @returns {Promise<MeDto>}
+   */
   @Get('me')
   @UseGuards(JWTAuthGuard)
   async me(@User() user: UserInternalDto): Promise<MeDto> {
@@ -150,12 +229,23 @@ export default class AuthController {
     return rest;
   }
 
+  /**
+   * Logout
+   * @param {Res} res
+   * @returns {Promise<void>}
+   */
   @Post('logout')
   async logout(@Response({ passthrough: true }) res: Res): Promise<void> {
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
   }
 
+  /**
+   * Change password
+   * @param {UserInternalDto} user
+   * @param {ForceChangePasswordInputDto} body
+   * @returns {Promise<void>}
+   */
   @UseGuards(JWTAuthGuard)
   @SuccessMessage(SUCCESS_PSWD_RESET)
   @Patch('forceResetPassword')
@@ -166,6 +256,11 @@ export default class AuthController {
     await this.authService.forceChangePassword(user, body);
   }
 
+  /**
+   * Send confirmation email
+   * @param {string} email
+   * @returns {Promise<void>}
+   */
   @Post('resend-confirmation-email')
   async sendConfirmationEmail(@Query('email') email: string): Promise<void> {
     const user = await this.userService.findByEmail(email);
@@ -175,6 +270,12 @@ export default class AuthController {
     await this.authService.createConfirmation(user);
   }
 
+  /**
+   * Confirm registration
+   * @param {string} token
+   * @param {Res} res
+   * @returns {Promise<void>}
+   */
   @Get('confirm-registration')
   async confirmRegistration(
     @Query('token') token: string,
@@ -200,6 +301,11 @@ export default class AuthController {
     res.redirect(this.frontendPublicUrl + '/mapa/login');
   }
 
+  /**
+   * Create forgot password token
+   * @param {string} email
+   * @returns {Promise<void>}
+   */
   @Post('create-forgot-password-token')
   async createForgotPasswordToken(
     @Query('email') email: string,
@@ -219,6 +325,11 @@ export default class AuthController {
     }
   }
 
+  /**
+   * Change forgotten password
+   * @param {ChangeForgottenPasswordInputDto} body
+   * @returns {Promise<void>}
+   */
   @Post('forgot-password')
   @SuccessMessage('Pomyślnie zmieniono hasło')
   async changeForgottenPassword(
@@ -227,6 +338,11 @@ export default class AuthController {
     await this.authService.changeForgottenPassword(body);
   }
 
+  /**
+   * Validate forgot password token
+   * @param {string} token
+   * @returns {Promise<boolean>}
+   */
   @Get('validate-forgot-password-token')
   async validateForgotPasswordToken(
     @Query('token') token: string,

@@ -1,7 +1,12 @@
 import { Transform } from 'class-transformer';
 import { validate as validateLocationTuple } from './validate-location-tuple.transformer';
 
-function validate(value: string) {
+/**
+ * Validate location chain
+ * @param {string} value
+ * @returns {string}
+ */
+function validate(value: string): string {
   const locationChain = value.split(';');
   locationChain.forEach((locationTuple) => {
     validateLocationTuple(locationTuple);

@@ -29,15 +29,31 @@ import { MailService } from '../mail/mail-sender.service';
  */
 @Injectable()
 export default class AdminService {
+  /**
+   * Creates an instance of AdminService.
+   * @param {UserService} userService
+   * @param {MailService} mailService
+   * @memberof AdminService
+   */
   constructor(
     private readonly userService: UserService,
     private readonly mailService: MailService,
   ) {}
 
+  /**
+   * Get all users
+   * @param {FilterUsersDto} filter
+   * @returns {Promise<PublicUserDto[]>}
+   */
   async getAllUsers(filter: FilterUsersDto): Promise<PublicUserDto[]> {
     return await this.userService.getAll(filter);
   }
 
+  /**
+   * Create official
+   * @param {CreateOfficialInputDto} body
+   * @returns {Promise<CreateOfficialDto>}
+   */
   async createOfficial(
     body: CreateOfficialInputDto,
   ): Promise<CreateOfficialDto> {
@@ -57,6 +73,11 @@ export default class AdminService {
     };
   }
 
+  /**
+   * Generate password
+   * @param {PRISMA_ID} id
+   * @returns {Promise<string>}
+   */
   async generatePassword(id: PRISMA_ID): Promise<string> {
     if (!id) {
       throw new SimpleBadRequest(ERROR_ID_NOT_PROVIDED);
