@@ -6,7 +6,7 @@
 
     COPY ./mitu-prerender/.env . 
 
-    COPY ./mitu-prerender/package*.json .
+    COPY ./mitu-prerender/package*.json ./
 
     # install chromium, tini and clear cache
     RUN apk add --update-cache chromium tini \
