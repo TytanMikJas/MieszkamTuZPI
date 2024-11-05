@@ -147,7 +147,7 @@ deploy-docs:
     - npx @compodoc/compodoc -p tsconfig.json
     - cd ..
     - mkdir .public
-    - cp -r mitu-backend/documentation .public
+    - cp -r mitu-backend/documentation/* .public
     - mv .public public
   artifacts:
     paths:
