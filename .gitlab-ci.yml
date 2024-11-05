@@ -183,7 +183,7 @@ deploy-wroclaw:
     - echo "Deploy Wroclaw"
     - mv $DOTENV_PROD_WROCLAW .env.prod
     - docker compose down
-    - docker compose up -d -e DOCKER_CITY=wroclaw
+    - DOCKER_CITY=wroclaw docker compose up -d
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
 
@@ -197,6 +197,6 @@ deploy-warszawa:
     - echo "Desploy Warszawa"
     - mv $DOTENV_PROD_WARSZAWA .env.prod
     - docker compose down
-    - docker compose up -d -e DOCKER_CITY=warszawa
+    - DOCKER_CITY=warszawa docker compose up -d
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
