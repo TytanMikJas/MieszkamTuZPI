@@ -32,46 +32,39 @@ import Price from '../price/Price';
 import { buildAddress, transformSurface } from '@/utils/string-utils';
 import ImageBackgroundContainer from '../investment-details/image-background/ImageBackgroundContainer';
 import DeletePostIcon from '@/reusable-components/icons/delete-icon/DeletePostIcon';
-// TODO import share buttons in later sprint
+import { useMapSettingsStore } from '@/core/stores/map/map-settings-store';
+import { useMapWithPostsStore } from '@/core/stores/map/map-with-posts-store';
+import { LatLng } from 'leaflet';
+import ShareButtons from '@/reusable-components/share-buttons/ShareButtons';
 
 export default function ListingDetails() {
   const {
     singleListing: listing,
     singleListingLoading: loading,
     setSingleListing,
-    clearSingleListing,
     deleteListing,
   } = useListingStore();
 
   const { setRightbarStage, rightbarStage } = useUiStore();
   const { visible, openGallery } = useGalleryStore();
-  const isModelVisible = rightbarStage === RIGHTBAR_STAGE_MODEL;
+  const { setCenterWithForce } = useMapSettingsStore();
+  const { setSpecificPostWithForce } = useMapWithPostsStore();
   const navigate = useNavigate();
   const uiStore = useUiStore();
   const slug = window.location.pathname.split(`${LISTING}/`).pop();
+
   useEffect(() => {
     setSingleListing(slug!, (listing: ListingDto) => {
       uiStore.openOnlyLeftPanel();
 
-      // setCenterWithForce(new LatLng(listing.locationX, listing.locationY));
-      // setSpecificPostWithForce(listing);
+      setCenterWithForce(new LatLng(listing.locationX, listing.locationY));
+      setSpecificPostWithForce(listing);
     });
   }, [listing?.id, slug]);
 
-  const modelFile: AttachmentDto | null = listing?.attachments.find(
-    (attachment: AttachmentDto) => attachment.fileType === FILE_TD_NAME,
-  );
-
-  // const handleSetModelStage = () => {
-  //   if (!modelFile) return;
-  //   setRightbarStage(RIGHTBAR_STAGE_MODEL, () => {
-  //     setModelUrl(`${FILES_URL}${listing?.filePaths.TD}${modelFile.fileName}`);
-  //   });
-  // };
-
-  // const handleSetMapStage = () => {
-  //   setRightbarStage(RIGHTBAR_STAGE_MAP, clearModelUrl);
-  // };
+  const handleSetMapStage = () => {
+    setRightbarStage(RIGHTBAR_STAGE_MAP);
+  };
 
   const handleNavigateEdit = () => {
     if (listing?.slug) {
@@ -79,13 +72,11 @@ export default function ListingDetails() {
     }
   };
 
-  // const toggleModelStage = () => {
-  //   if (isModelVisible) {
-  //     handleSetMapStage();
-  //   } else {
-  //     handleSetModelStage();
-  //   }
-  // };
+  useEffect(() => {
+    return () => {
+      handleSetMapStage();
+    };
+  }, []);
 
   const images =
     listing?.attachments
@@ -176,7 +167,11 @@ export default function ListingDetails() {
       </ToggleButton>
 
       <div className={'justify-center align-middle flex '}>
-        {/* // TODO add share buttons here in later sprint */}
+        <ShareButtons
+          url={window.location.href}
+          buttonSize={48}
+          thumbnail={`${listing.filePaths.IMAGE}${listing.thumbnail}`}
+        />
       </div>
     </div>
   ) : (

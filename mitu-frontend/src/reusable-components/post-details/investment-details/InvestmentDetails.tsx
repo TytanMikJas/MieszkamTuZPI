@@ -32,6 +32,12 @@ import DeletePostIcon from '@/reusable-components/icons/delete-icon/DeletePostIc
 import { buildAddress } from '@/utils/string-utils';
 import { useModelStore } from '@/core/stores/model-store';
 import MapIcon from '@/reusable-components/icons/map-icon/MapIcon';
+import { useMapSettingsStore } from '@/core/stores/map/map-settings-store';
+import { useMapWithPostsStore } from '@/core/stores/map/map-with-posts-store';
+import { useCommentStore } from '@/core/stores/comment-store';
+import { LatLng } from 'leaflet';
+import Rating from '../rating/Rating';
+import ShareButtons from '@/reusable-components/share-buttons/ShareButtons';
 
 export default function InvestmentDetails() {
   const {
@@ -39,25 +45,40 @@ export default function InvestmentDetails() {
     singleInvestmentLoading: loading,
     setSingleInvestment,
     deleteInvestment,
+    performVoteDetails,
+    singleInvestmentRatingLoading,
   } = useInvestmentStore();
   const uiStore = useUiStore();
-
   const { setRightbarStage, rightbarStage } = useUiStore();
   const { visible, openGallery } = useGalleryStore();
   const isModelVisible = rightbarStage === RIGHTBAR_STAGE_MODEL;
   const navigate = useNavigate();
   const { setModelUrl, clearModelUrl } = useModelStore();
+  const { setCenterWithForce } = useMapSettingsStore();
+  const { setSpecificPostWithForce } = useMapWithPostsStore();
+  const { clearComments } = useCommentStore();
 
   const slug = window.location.pathname.split(`${INVESTMENT}/`).pop();
   useEffect(() => {
+    clearComments();
     setSingleInvestment(slug!, (investment: InvestmentDto) => {
       if (investment.isCommentable) {
         uiStore.openBothPanels();
       } else {
         uiStore.openOnlyLeftPanel();
       }
+      setCenterWithForce(
+        new LatLng(investment.locationX, investment.locationY),
+      );
+      setSpecificPostWithForce(investment);
     });
   }, [investment?.id, slug]);
+
+  useEffect(() => {
+    return () => {
+      handleSetMapStage();
+    };
+  }, []);
 
   const modelFile: AttachmentDto | null = investment?.attachments.find(
     (attachment: AttachmentDto) => attachment.fileType === FILE_TD_NAME,
@@ -122,6 +143,15 @@ export default function InvestmentDetails() {
         <div className="flex flex-col gap-2">
           <div className="flex  justify-between items-center">
             <h2 className="text-xl font-bold">{investment.title}</h2>
+            <Rating
+              postId={`${investment.id}`}
+              upvoteCount={investment.upvoteCount}
+              downvoteCount={investment.downvoteCount}
+              currentVote={investment.personalRating}
+              loading={singleInvestmentRatingLoading}
+              callback={performVoteDetails}
+              className="bg-white ml-2"
+            />
           </div>
         </div>
         <Separator className="my-4" />
@@ -185,6 +215,13 @@ export default function InvestmentDetails() {
           {isModelVisible ? <span>Mapa</span> : <span>Model 3D</span>}
         </ToggleButton>
       )}
+      <div className={'justify-center align-middle flex '}>
+        <ShareButtons
+          url={window.location.href}
+          buttonSize={48}
+          thumbnail={`${investment.filePaths.IMAGE}${investment.thumbnail}`}
+        />
+      </div>
     </div>
   ) : (
     <NotFound />

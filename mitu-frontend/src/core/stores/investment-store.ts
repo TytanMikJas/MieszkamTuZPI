@@ -7,6 +7,7 @@ import {
   FilterFieldRuleValue,
   FilterRule,
   InvestmentStatus,
+  PerformVote,
   SelectCardLoadingList,
   SortingParams,
 } from '../../types';
@@ -27,6 +28,11 @@ import {
 } from '@/strings';
 import InvestmentInputDto from '../api/investment/dto/investment.input';
 import InvestmentInputPatchDto from '../api/investment/dto/investment-patch.input';
+import {
+  ratingsToRatingCountIncrements,
+  RatingTypeToAttribute,
+} from '../api/common/rating/RatingUtils';
+import { RatingType, RatingDto } from '../api/common/rating/RatingDto';
 
 interface ListSection {
   investmentsList: InvestmentDto[];
@@ -62,6 +68,8 @@ export interface InvestmentStore
   setSortingParams: (sortingParams: SortingParams) => void;
   setFilterParams: (filterValues: string[]) => void;
   selectCardLoadingList: SelectCardLoadingList;
+  performVoteList: PerformVote;
+  performVoteDetails: PerformVote;
   setSingleInvestment: (
     slug: string,
     onSuccess: (investment: InvestmentDto) => void,
@@ -307,6 +315,83 @@ export const useInvestmentStore = create<
         })
         .catch((error) => {
           console.error(error);
+        });
+    },
+    performVoteList: async (type: RatingType, investmentId: string) => {
+      const { loadingListIds, investmentsList } = get();
+      if (loadingListIds.includes(investmentId)) return;
+      set({ loadingListIds: [...loadingListIds, investmentId] });
+      axiosInstance
+        .post<SuccessResponse<RatingDto>>(`/rating/${type}/${investmentId}`)
+        .then((response) => {
+          const ratedInvestment = investmentsList.find(
+            (investment) => `${investment.id}` === investmentId,
+          );
+
+          if (ratedInvestment) {
+            const returnedType = response.data.data.type;
+            const oldType = ratedInvestment?.personalRating;
+            const increments = ratingsToRatingCountIncrements(
+              oldType,
+              returnedType,
+            );
+            ratedInvestment.upvoteCount += increments.upvoteCountIncrement;
+            ratedInvestment.downvoteCount += increments.downvoteCountIncrement;
+            ratedInvestment['personalRating'] = returnedType;
+
+            set({
+              investmentsList: [...investmentsList],
+              loadingListIds: loadingListIds.filter(
+                (id) => id !== investmentId,
+              ),
+            });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          set({
+            loadingListIds: loadingListIds.filter((id) => id !== investmentId),
+          });
+        });
+    },
+    performVoteDetails: async (type: RatingType, investmentId: string) => {
+      const { singleInvestmentRatingLoading } = get();
+      if (singleInvestmentRatingLoading) return;
+      set({ singleInvestmentRatingLoading: true });
+      const investments = get().investmentsList;
+      const investmentFromList = investments.find(
+        (investment) => `${investment.id}` === investmentId,
+      );
+      axiosInstance
+        .post<SuccessResponse<RatingDto>>(`/rating/${type}/${investmentId}`)
+        .then((response) => {
+          const { singleInvestment } = get();
+          if (singleInvestment) {
+            const returnedType = response.data.data.type;
+            const personalRating = singleInvestment.personalRating;
+            const increments = ratingsToRatingCountIncrements(
+              personalRating,
+              returnedType,
+            );
+
+            singleInvestment.upvoteCount += increments.upvoteCountIncrement;
+            singleInvestment.downvoteCount += increments.downvoteCountIncrement;
+            singleInvestment['personalRating'] = returnedType;
+
+            if (investmentFromList) {
+              investmentFromList.upvoteCount += increments.upvoteCountIncrement;
+              investmentFromList.downvoteCount +=
+                increments.downvoteCountIncrement;
+              investmentFromList['personalRating'] = returnedType;
+            }
+            set({ singleInvestment, singleInvestmentRatingLoading: false });
+            set({
+              investmentsList: [...investments],
+            });
+          }
+        })
+        .catch((error) => {
+          set({ singleInvestmentRatingLoading: false });
         });
     },
   })),

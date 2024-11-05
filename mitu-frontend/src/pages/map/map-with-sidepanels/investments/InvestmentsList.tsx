@@ -10,6 +10,7 @@ export default function InvestmentsList() {
     fetchInvestmentsList,
     isMoreList,
     selectCardLoadingList,
+    performVoteList,
   } = useInvestmentStore();
 
   const handleClick = (slug: string) => {
@@ -25,6 +26,7 @@ export default function InvestmentsList() {
               key={index}
               investment={investment}
               selectCardLoadingList={selectCardLoadingList}
+              performVoteList={performVoteList}
               onClick={() => handleClick(investment.slug)}
             />
           ))}

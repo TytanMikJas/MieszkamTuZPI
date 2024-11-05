@@ -5,11 +5,7 @@ import { FILES_URL } from '@/constants';
 import AttachmentDto from '@/core/api/common/attachment/AttachmentDto';
 import { useGalleryStore } from '@/core/stores/gallery-store';
 import { useUiStore } from '@/core/stores/ui-store';
-import {
-  RIGHTBAR_STAGE_MODEL,
-  RIGHTBAR_STAGE_MAP,
-  FILE_IMAGE_NAME,
-} from '@/strings';
+import { RIGHTBAR_STAGE_MAP, FILE_IMAGE_NAME } from '@/strings';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NotFound from '@/reusable-components/not-found/NotFound';
@@ -23,9 +19,14 @@ import TimeFromNow from '@/reusable-components/time/TimeFromNow';
 import LoadableImage from '@/reusable-components/misc/lazy-loaded-image/LoadableImage';
 import AnnouncementDto from '@/core/api/announcement/dto/announcement';
 import DeletePostIcon from '@/reusable-components/icons/delete-icon/DeletePostIcon';
-import ShareButtons from '@/reusable-components/share-buttons/ShareButtons';
 import AuthGuard from '@/core/auth/AuthGuard';
 import { Role } from '@/core/auth/roles';
+import { useMapSettingsStore } from '@/core/stores/map/map-settings-store';
+import { useMapWithPostsStore } from '@/core/stores/map/map-with-posts-store';
+import { useCommentStore } from '@/core/stores/comment-store';
+import { LatLng } from 'leaflet';
+import Rating from '../rating/Rating';
+import ShareButtons from '@/reusable-components/share-buttons/ShareButtons';
 
 export default function AnnouncementDetails() {
   const {
@@ -33,32 +34,38 @@ export default function AnnouncementDetails() {
     singleAnnouncementLoading: loading,
     setSingleAnnouncement,
     deleteAnnouncement,
+    performVoteDetails,
+    singleAnnouncementRatingLoading,
   } = useAnnouncementStore();
-
   const { setRightbarStage } = useUiStore();
   const { visible, openGallery } = useGalleryStore();
   const navigate = useNavigate();
   const uiStore = useUiStore();
+  const { setCenterWithForce } = useMapSettingsStore();
+  const { setSpecificPostWithForce } = useMapWithPostsStore();
+  const { clearComments } = useCommentStore();
   const slug = window.location.pathname.split(`${ANNOUNCEMENT}/`).pop();
+
   useEffect(() => {
+    clearComments();
     setSingleAnnouncement(slug!, (announcement: AnnouncementDto) => {
       if (announcement.isCommentable) {
         uiStore.openBothPanels();
       } else {
         uiStore.openOnlyLeftPanel();
       }
+      setCenterWithForce(
+        new LatLng(announcement.locationX, announcement.locationY),
+      );
+      setSpecificPostWithForce(announcement);
     });
   }, [announcement?.id, slug]);
 
   useEffect(() => {
     return () => {
-      handleSetMapStage();
+      setRightbarStage(RIGHTBAR_STAGE_MAP);
     };
   }, []);
-
-  const handleSetMapStage = () => {
-    setRightbarStage(RIGHTBAR_STAGE_MAP);
-  };
 
   const images =
     announcement && announcement?.attachments?.length > 0
@@ -109,7 +116,16 @@ export default function AnnouncementDetails() {
             url={announcement.responsible}
             fullName={announcement.responsible}
           />
-          <div>Rating</div>
+          <div>
+            <Rating
+              postId={`${announcement.id}`}
+              upvoteCount={announcement.upvoteCount}
+              downvoteCount={announcement.downvoteCount}
+              currentVote={announcement.personalRating}
+              loading={singleAnnouncementRatingLoading}
+              callback={performVoteDetails}
+            />
+          </div>
         </div>
       </div>
       <div className="text-justify">{announcement.content}</div>
@@ -126,7 +142,6 @@ export default function AnnouncementDetails() {
               icon={<EditIcon />}
               onClick={handleNavigateEdit}
             />
-
             <DeletePostIcon onClick={handleDelete} />
           </div>
         }

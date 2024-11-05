@@ -4,6 +4,7 @@ import {
   FilterFieldRuleValue,
   FilterRule,
   GetDeleteCommentLoading,
+  PerformVote,
   PostComment,
   SelectCardLoadingList,
   SetReplyTarget,
@@ -21,6 +22,11 @@ import {
 import { ANNOUNCEMENT_SORTING_OPTION_NEWEST_LABEL } from '@/strings';
 import { axiosInstance } from '../api/axios-instance';
 import { SuccessResponse } from '../api/response';
+import { RatingType, RatingDto } from '../api/common/rating/RatingDto';
+import {
+  ratingsToRatingCountIncrements,
+  RatingTypeToAttribute,
+} from '../api/common/rating/RatingUtils';
 
 interface ListSection {
   announcementsList: AnnouncementDto[];
@@ -59,7 +65,8 @@ export interface AnnouncementStore
   fetchAnnouncementsList: () => void;
   setSortingParams: (sortingParams: SortingParams) => void;
   setFilterParams: (filterValues: string[]) => void;
-
+  performVoteList: PerformVote;
+  performVoteDetails: PerformVote;
   selectCardLoadingList: SelectCardLoadingList;
   setSingleAnnouncement: (
     slug: string,
@@ -318,6 +325,87 @@ export const useAnnouncementStore = create<
       })
       .catch((error) => {
         console.error(error);
+      });
+  },
+  performVoteList: (type: RatingType, announcementId: string) => {
+    const { loadingListIds, announcementsList } = get();
+    if (loadingListIds.includes(announcementId)) return;
+    set({ loadingListIds: [...loadingListIds, announcementId] });
+    axiosInstance
+      .post<SuccessResponse<RatingDto>>(`/rating/${type}/${announcementId}`)
+      .then((response) => {
+        const ratedAnnouncement = announcementsList.find(
+          (investment) => `${investment.id}` === announcementId,
+        );
+
+        if (ratedAnnouncement) {
+          const returnedType = response.data.data.type;
+          const oldType = ratedAnnouncement?.personalRating;
+
+          const increments = ratingsToRatingCountIncrements(
+            oldType,
+            returnedType,
+          );
+          ratedAnnouncement.upvoteCount += increments.upvoteCountIncrement;
+          ratedAnnouncement.downvoteCount += increments.downvoteCountIncrement;
+
+          ratedAnnouncement['personalRating'] = returnedType;
+
+          set({
+            announcementsList: [...announcementsList],
+            loadingListIds: loadingListIds.filter(
+              (id) => id !== announcementId,
+            ),
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        set({
+          loadingListIds: loadingListIds.filter((id) => id !== announcementId),
+        });
+      });
+  },
+  performVoteDetails: (type: RatingType, announcementId: string) => {
+    const { singleAnnouncementRatingLoading } = get();
+    if (singleAnnouncementRatingLoading) return;
+    set({ singleAnnouncementRatingLoading: true });
+    axiosInstance
+      .post<SuccessResponse<RatingDto>>(`/rating/${type}/${announcementId}`)
+      .then((response) => {
+        const { singleAnnouncement } = get();
+        const { announcementsList } = get();
+        const announcementFromList = announcementsList.find(
+          (announcement) => announcement.id === singleAnnouncement?.id,
+        );
+        if (singleAnnouncement) {
+          const returnedType = response.data.data.type;
+          const oldType = singleAnnouncement.personalRating;
+
+          const increments = ratingsToRatingCountIncrements(
+            oldType,
+            returnedType,
+          );
+          singleAnnouncement.upvoteCount += increments.upvoteCountIncrement;
+          singleAnnouncement.downvoteCount += increments.downvoteCountIncrement;
+          singleAnnouncement['personalRating'] = returnedType;
+
+          if (announcementFromList) {
+            announcementFromList.upvoteCount += increments.upvoteCountIncrement;
+            announcementFromList.downvoteCount +=
+              increments.downvoteCountIncrement;
+            announcementFromList['personalRating'] = returnedType;
+          }
+
+          set({ singleAnnouncement, singleAnnouncementRatingLoading: false });
+          set({
+            announcementsList: [...announcementsList],
+            loadingListIds: [],
+          });
+        }
+      })
+      .catch((error) => {
+        set({ singleAnnouncementRatingLoading: false });
       });
   },
 }));

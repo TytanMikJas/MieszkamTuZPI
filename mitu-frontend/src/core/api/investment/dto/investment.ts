@@ -4,6 +4,7 @@ import { FilePathsDto } from '../../shared';
 import BadgeDto from './badge';
 
 import MarkerablePostDto from '../../post/dto/markerable-post';
+import { RatingType } from '../../common/rating/RatingDto';
 
 export default interface InvestmentDto extends MarkerablePostDto {
   slug: string;
@@ -22,4 +23,5 @@ export default interface InvestmentDto extends MarkerablePostDto {
   attachments: any[];
   filePaths: FilePathsDto;
   createdBy: CreatedByDto;
+  personalRating: RatingType;
 }

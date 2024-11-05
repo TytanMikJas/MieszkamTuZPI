@@ -38,6 +38,11 @@ export class FileTypeValidationPipe implements PipeTransform {
     this.filedetails = FiledetailsStrategyFactory(type);
   }
 
+  /**
+   * Check if the file size is valid.
+   * @param file The file to be checked.
+   * @param maxSize The maximum size of the file.
+   */
   private isFileSizeValid(file: Express.Multer.File, maxSize: number) {
     if (file.size > maxSize) {
       throw new SimpleBadRequest(

@@ -1,5 +1,10 @@
 import { EPSG2180 } from 'src/modules/uldk/uldk.types';
 
+/**
+ * Get parcel output dto
+ * @export
+ * @class GetParcelOutputDto
+ */
 export class GetParcelOutputDto {
   parcelNumber: string;
 

@@ -40,6 +40,7 @@ import {
   FORM_IS_COMMENTABLE_TRUE,
   FORM_IS_COMMENTABLE_FALSE,
   INVESTMENT_CREATOR_DESCRIPTION_PLACEHOLDER,
+  RIGHTBAR_STAGE_MAP,
 } from '@/strings';
 import {
   extractUniqueFiles,
@@ -71,6 +72,8 @@ import { useUiStore } from '@/core/stores/ui-store';
 import InvestmentDto from '@/core/api/investment/dto/investment';
 import PanelLoader from '../loaders/PanelLoader';
 import { InvestmentFormData, investmentFormSchema } from './form-schemas';
+import { useMapEditStore } from '@/core/stores/map/map-edit-store';
+import { LatLng } from 'leaflet';
 
 export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
   const {
@@ -88,6 +91,13 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
     fetchAvailableCategories,
   } = useInvestmentStore();
   const { setRightbarStage } = useUiStore();
+  const {
+    getParsedLocation,
+    getParsedArea,
+    setArea,
+    setLocation,
+    resetEditStoreState,
+  } = useMapEditStore();
 
   const [preview, setPreview] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -128,6 +138,7 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
     setRightbarStage(RIGHTBAR_STAGE_AREA);
 
     return () => {
+      setRightbarStage(RIGHTBAR_STAGE_MAP, resetEditStoreState);
       clearSingleInvestment();
     };
   }, []);
@@ -177,6 +188,13 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
       form.setValue('street', singleInvestment.street);
       form.setValue('buildingNr', singleInvestment.buildingNr);
       form.setValue('apartmentNr', singleInvestment.apartmentNr);
+
+      if (singleInvestment.area) {
+        setArea(singleInvestment.area);
+      }
+      setLocation(
+        new LatLng(singleInvestment.locationX, singleInvestment.locationY),
+      );
 
       setSelectedBadges(
         singleInvestment.badges.map((badge: BadgeDto) => ({
@@ -290,6 +308,17 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
       return;
     }
 
+    const location = getParsedLocation();
+    const area = getParsedArea(true);
+
+    if (!area || area.length <= 2) {
+      return;
+    }
+
+    if (!location) {
+      return;
+    }
+
     const dto: InvestmentInputDto = {
       title: data.title,
       content: data.description,
@@ -301,9 +330,9 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
       responsible: data.responsible,
       isCommentable:
         data.isCommentable === FORM_IS_COMMENTABLE_TRUE ? true : false,
-      locationX: 51.110383,
-      locationY: 17.033536,
-      area: '51.109300,17.029289;51.109300,17.029489;51.109084,17.029289;51.109084,17.029489',
+      locationX: location[0],
+      locationY: location[1],
+      area: area,
       thumbnail: data.thumbnail[0].name,
     };
 
@@ -332,6 +361,17 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
   };
 
   const onEdit: SubmitHandler<InvestmentFormData> = (data) => {
+    const location = getParsedLocation();
+    const area = getParsedArea(true);
+
+    if (!area) {
+      return;
+    }
+
+    if (!location) {
+      return;
+    }
+
     const dto: InvestmentInputPatchDto = {
       title: data.title,
       content: data.description,
@@ -343,9 +383,9 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
       responsible: data.responsible,
       isCommentable:
         data.isCommentable === FORM_IS_COMMENTABLE_TRUE ? true : false,
-      locationX: 51.110383,
-      locationY: 17.033536,
-      area: '51.109300,17.029289;51.109300,17.029489;51.109084,17.029289;51.109084,17.029489',
+      locationX: location[0],
+      locationY: location[1],
+      area: area,
     };
 
     dto.badges = selectedBadges.map((badge) => badge.value).join(',');

@@ -5,6 +5,11 @@ import UserRepository from './user.repository';
 import { AuthModule } from '../auth/auth.module';
 import { MailModule } from '../mail/mail.module';
 
+/**
+ * User module
+ * @export
+ * @class UserModule
+ */
 @Module({
   controllers: [UserController],
   exports: [UserService],

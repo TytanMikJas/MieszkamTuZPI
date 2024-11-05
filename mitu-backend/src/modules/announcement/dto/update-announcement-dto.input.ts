@@ -28,6 +28,22 @@ import { ValidateLocationChain } from '../../../decorators/transformers/validate
 import TransformPrismaID from '../../../decorators/transformers/prismaid.transformer';
 import TransformBoolean from 'src/decorators/transformers/boolean.transformer';
 
+/**
+ * Update announcement data transfer object
+ * @export
+ * @class UpdateAnnouncementDto
+ * @param {string} title
+ * @param {number} locationX
+ * @param {number} locationY
+ * @param {LocationChain} area
+ * @param {string} street
+ * @param {string} buildingNr
+ * @param {string} apartmentNr
+ * @param {string} categoryName
+ * @param {boolean} isCommentable
+ * @param {string} responsible
+ * @param {string} content
+ */
 class UpdateAnnouncementDto {
   @Exclude()
   id: number;
@@ -96,8 +112,18 @@ class UpdateAnnouncementDto {
   responsible: string;
 }
 
+/**
+ * Update announcement internal data transfer object
+ * @export
+ * @class UpdateAnnouncementInternalDto
+ */
 export default class UpdateAnnouncementInternalDto extends UpdateAnnouncementDto {}
 
+/**
+ * Update announcement input data transfer object
+ * @export
+ * @class UpdateAnnouncementInputDto
+ */
 export class UpdateAnnouncementInputDto extends UpdateAnnouncementInternalDto {
   @IsOptional()
   @ApiProperty({

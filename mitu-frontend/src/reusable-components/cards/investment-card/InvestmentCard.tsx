@@ -1,19 +1,22 @@
 import { buildAddress, mapInvestmentStatusToLabel } from '@/utils/string-utils';
 import InvestmentDto from '../../../core/api/investment/dto/investment';
 import { Separator } from '../../../shadcn/separator';
-import { SelectCardLoadingList } from '../../../types'; // TODO: Check if this import is correct
+import { PerformVote, SelectCardLoadingList } from '../../../types'; // TODO: Check if this import is correct
 import IconLabel from '../../misc/icon-label/IconLabel';
 import LoadableImage from '../../misc/lazy-loaded-image/LoadableImage';
 import TruncateAuto from '../../misc/truncate/TruncateAuto';
 import { FILES_URL } from '@/constants';
+import Rating from '@/reusable-components/post-details/rating/Rating';
 
 export default function InvestmentCard({
   investment,
   selectCardLoadingList,
+  performVoteList,
   onClick,
 }: {
   investment: InvestmentDto;
   selectCardLoadingList: SelectCardLoadingList;
+  performVoteList: PerformVote;
   onClick: () => void;
 }) {
   const ratingLoading = selectCardLoadingList(`${investment?.id}`);
@@ -42,6 +45,14 @@ export default function InvestmentCard({
               investment.apartmentNr,
             )}
           </div>
+          <Rating
+            currentVote={investment.personalRating}
+            loading={ratingLoading}
+            callback={performVoteList}
+            postId={`${investment.id}`}
+            upvoteCount={investment.upvoteCount}
+            downvoteCount={investment.downvoteCount}
+          />
         </div>
       </div>
       <Separator className="my-1 bg-gray-300" />

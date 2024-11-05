@@ -28,7 +28,6 @@ import {
   FILE_IMAGE_NAME,
   FILE_TD_NAME,
   RIGHTBAR_STAGE_AREA,
-  RIGHTBAR_STAGE_MAP,
   FORM_IS_SELLABLE_TRUE,
   FORM_IS_SELLABLE_FALSE,
   LISTING_NAME,
@@ -40,6 +39,7 @@ import {
   LISTING_CREATOR_ATTACHMENTS_LABEL_PLACEHOLDER,
   LISTING_CREATOR_THUMBNAIL_LABEL_PLACEHOLDER,
   LISTING_CREATOR_THUMBNAIL_ACTION_PLACEHOLDER,
+  RIGHTBAR_STAGE_MAP,
 } from '@/strings';
 import { extractUniqueFiles, validateFile, validateFiles } from '@/utils';
 import {
@@ -57,13 +57,14 @@ import { emitError } from '@/toast-actions';
 import AttachmentDto from '@/core/api/common/attachment/AttachmentDto';
 import AttachmentBadge from './AttachmentBadge';
 import { LatLng } from 'leaflet';
-import PanelLoader from '../loaders/PanelLoader';
 import { useUiStore } from '@/core/stores/ui-store';
 import { useListingStore } from '@/core/stores/listing-store';
 import ListingDto from '@/core/api/listing/dto/listing';
 import ListingInputDto from '@/core/api/listing/dto/listing.input';
 import ListingInputPatchDto from '@/core/api/listing/dto/listing-patch.input';
 import { ListingFormData, listingFormSchema } from './form-schemas';
+import { useMapEditStore } from '@/core/stores/map/map-edit-store';
+import PanelLoader from '../loaders/PanelLoader';
 
 export default function CreateListingForm({ edit }: { edit?: boolean }) {
   const {
@@ -76,6 +77,8 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
     setResetList,
   } = useListingStore();
   const { setRightbarStage } = useUiStore();
+  const { getParsedLocation, setLocation, resetEditStoreState } =
+    useMapEditStore();
 
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [uploadedThumbnail, setUploadedThumbnail] = useState<FileBadge[]>([]);
@@ -105,6 +108,7 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
     setRightbarStage(RIGHTBAR_STAGE_AREA);
 
     return () => {
+      setRightbarStage(RIGHTBAR_STAGE_MAP, resetEditStoreState);
       clearSingleListing();
     };
   }, []);
@@ -150,6 +154,8 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
       form.setValue('street', singleListing.street);
       form.setValue('buildingNr', singleListing.buildingNr);
       form.setValue('apartmentNr', singleListing.apartmentNr);
+
+      setLocation(new LatLng(singleListing.locationX, singleListing.locationY));
 
       const attachment_thumbnail = singleListing.attachments.find(
         (attachment: AttachmentDto) =>
@@ -220,6 +226,12 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
       return;
     }
 
+    const location = getParsedLocation();
+
+    if (!location) {
+      return;
+    }
+
     const dto: ListingInputDto = {
       title: data.title,
       content: data.description,
@@ -228,8 +240,8 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
       apartmentNr: data.apartmentNr,
       responsible: data.responsible,
       sell: data.sell === FORM_IS_SELLABLE_TRUE ? true : false,
-      locationX: 51.110383,
-      locationY: 17.033536,
+      locationX: location[0],
+      locationY: location[1],
       thumbnail: data.thumbnail[0].name,
       price: +data.price,
       surface: +data.surface,
@@ -252,6 +264,12 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
   };
 
   const onEdit: SubmitHandler<ListingFormData> = (data) => {
+    const location = getParsedLocation();
+
+    if (!location) {
+      return;
+    }
+
     const dto: ListingInputPatchDto = {
       title: data.title,
       content: data.description,
@@ -260,8 +278,8 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
       apartmentNr: data.apartmentNr,
       responsible: data.responsible,
       sell: data.sell === FORM_IS_SELLABLE_TRUE ? true : false,
-      locationX: 51.110383,
-      locationY: 17.033536,
+      locationX: location[0],
+      locationY: location[1],
       price: +data.price,
       surface: +data.surface,
     };

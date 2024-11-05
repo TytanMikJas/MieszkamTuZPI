@@ -2,6 +2,11 @@
 import { Module, Global } from '@nestjs/common';
 import { $Enums, PrismaClient } from '@prisma/client';
 
+/**
+ * Prisma module
+ * @export
+ * @class PrismaModule
+ */
 @Global()
 @Module({
   providers: [

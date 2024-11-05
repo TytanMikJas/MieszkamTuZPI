@@ -20,7 +20,14 @@ import { InvestmentModule } from './modules/investment/investment.module';
 import { ListingModule } from './modules/listing/listing.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { RatingModule } from './modules/rating/rating.module';
 
+/**
+ * Main module of the application.
+ * Contains all the other modules.
+ * @module
+ * @name AppModule
+ */
 @Module({
   imports: [
     ScheduleModule.forRoot(),
@@ -35,15 +42,16 @@ import { AdminModule } from './modules/admin/admin.module';
     FilehandlerModule,
     AttachmentModule,
     PrismaModule,
+    PostModule,
     CommentModule,
     UserModule,
     AuthModule,
     AnnouncementModule,
     InvestmentModule,
     ListingModule,
-    PostModule,
     PoiModule,
     AdminModule,
+    RatingModule,
   ],
   providers: [
     Reflector,
