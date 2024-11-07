@@ -84,7 +84,7 @@ export default function Navbar() {
                       to={item.path}
                       end={true}
                       className={({ isActive }) =>
-                        `hover:text-red-500 ${isActive || location.pathname.includes(item.path) || location.pathname.includes(item.subpath) ? 'text-red-500 font-bold' : ''}`
+                        `hover:text-blue-500 ${isActive || location.pathname.includes(item.path) || location.pathname.includes(item.subpath) ? 'text-blue-500 font-bold' : ''}`
                       }
                       onClick={() => setOpen(false)}
                     >
@@ -151,7 +151,7 @@ export default function Navbar() {
                 key={idx}
                 to={item.path}
                 className={({ isActive }) =>
-                  `hover:text-red-500 text-nowrap ${isActive || location.pathname.includes(item.path) || location.pathname.includes(item.subpath) ? 'text-red-500 font-bold' : ''}`
+                  `hover:text-blue-500 text-nowrap ${isActive || location.pathname.includes(item.path) || location.pathname.includes(item.subpath) ? 'text-blue-500 font-bold' : ''}`
                 }
               >
                 {item.title}

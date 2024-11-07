@@ -206,7 +206,7 @@ export default function SingleComment({
         )}
 
         {!readyToDisplay && (
-          <div className="text-red-500 mt-1">
+          <div className="text-blue-500 mt-1">
             {COMMENT_NOT_APPROVED_MESSAGE}
           </div>
         )}

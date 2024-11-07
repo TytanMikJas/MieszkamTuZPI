@@ -77,7 +77,7 @@ export default function OfficialCommentCard({
         </div>
         <div
           onClick={handleReject}
-          className="flex w-full p-3 items-center justify-center text-white bg-primary hover:bg-red-500 ease-in duration-100 cursor-pointer"
+          className="flex w-full p-3 items-center justify-center text-white bg-primary hover:bg-blue-500 ease-in duration-100 cursor-pointer"
         >
           ODRZUC
         </div>

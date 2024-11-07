@@ -96,7 +96,7 @@ function Area() {
       <Polygon
         ref={polygonRef}
         key={'polygon'}
-        pathOptions={{ color: 'red' }}
+        pathOptions={{ color: 'blue' }}
         positions={area}
       />
     </>

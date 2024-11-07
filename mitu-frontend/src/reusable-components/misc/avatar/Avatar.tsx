@@ -11,7 +11,7 @@ export default function Avatar(props: {
       size={size}
       name={!src ? 'default' : src}
       variant="beam"
-      colors={['#E44044', '#FFFFFF', '#F6D5D4', '#EB919A', '#1B1818']}
+      colors={['#2B6CB0', '#FFFFFF', '#DBEAFE', '#BFDBFF', '#1B1818']}
     />
   );
 }

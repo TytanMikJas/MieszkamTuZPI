@@ -116,7 +116,7 @@ function Area() {
     const [x, y] = markerPoints.split(',').map((point) => parseFloat(point));
     return new LatLng(x, y);
   });
-  return <Polygon pathOptions={{ color: 'red' }} positions={area} />;
+  return <Polygon pathOptions={{ color: 'blue' }} positions={area} />;
 }
 
 function MapMain() {

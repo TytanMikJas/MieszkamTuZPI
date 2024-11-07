@@ -15,6 +15,7 @@ export default function PlusIcon({
       icon="add"
       size={30}
       fill
+      color="red"
       grade={25}
       className={`text-primary ${selected ? 'bg-red-200 rounded-full' : ''} ${className}`}
     />

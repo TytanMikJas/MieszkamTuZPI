@@ -13,7 +13,7 @@ export function DropdownOfficialMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <p className="hover:text-red-500 cursor-pointer text-nowrap">
+        <p className="hover:text-blue-500 cursor-pointer text-nowrap">
           Menu Urzędnika
         </p>
       </DropdownMenuTrigger>
@@ -22,7 +22,7 @@ export function DropdownOfficialMenu() {
         <NavLink
           to={ROUTES.MAP.INVESTMENT_CREATE.path()}
           className={({ isActive }) =>
-            `text-nowrap ${isActive ? 'text-red-500 font-bold' : ''}`
+            `text-nowrap ${isActive ? 'text-blue-500 font-bold' : ''}`
           }
         >
           <DropdownMenuItem className="cursor-pointer">
@@ -32,7 +32,7 @@ export function DropdownOfficialMenu() {
         <NavLink
           to={ROUTES.MAP.ANNOUNCEMENT_CREATE.path()}
           className={({ isActive }) =>
-            `text-nowrap ${isActive ? 'text-red-500 font-bold' : ''}`
+            `text-nowrap ${isActive ? 'text-blue-500 font-bold' : ''}`
           }
         >
           <DropdownMenuItem className="cursor-pointer">
@@ -42,7 +42,7 @@ export function DropdownOfficialMenu() {
         <NavLink
           to={ROUTES.MAP.LISTING_CREATE.path()}
           className={({ isActive }) =>
-            `text-nowrap ${isActive ? 'text-red-500 font-bold' : ''}`
+            `text-nowrap ${isActive ? 'text-blue-500 font-bold' : ''}`
           }
         >
           <DropdownMenuItem className="cursor-pointer">
@@ -52,7 +52,7 @@ export function DropdownOfficialMenu() {
         <NavLink
           to={ROUTES.OFFICIAL.path()}
           className={({ isActive }) =>
-            `text-nowrap ${isActive ? 'text-red-500 font-bold' : ''}`
+            `text-nowrap ${isActive ? 'text-blue-500 font-bold' : ''}`
           }
         >
           <DropdownMenuItem className="cursor-pointer">

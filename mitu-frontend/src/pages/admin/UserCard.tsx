@@ -22,7 +22,7 @@ export default function UserCard({ user }: { user: UserPublicExtendedDto }) {
   return (
     <div
       onClick={handleSelect}
-      className={`flex flex-col rounded-lg shadow gap-2 p-2 cursor-pointer hover:bg-gray-100 duration-1 ease-in active:bg-gray-200 ${isSelected ? 'bg-red-100' : 'bg-white'}`}
+      className={`flex flex-col rounded-lg shadow gap-2 p-2 cursor-pointer hover:bg-gray-100 duration-1 ease-in active:bg-gray-200 ${isSelected ? 'bg-blue-100' : 'bg-white'}`}
     >
       <div className="flex items-center justify-between p-2">
         <UserInfo

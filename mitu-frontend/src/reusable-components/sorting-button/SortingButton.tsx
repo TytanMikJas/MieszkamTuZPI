@@ -34,7 +34,7 @@ export default function SortingButton({
       size={30}
       fill
       grade={25}
-      color="red"
+      color="blue"
     ></MaterialSymbol>
   ),
   textStatic = 'Sortuj',

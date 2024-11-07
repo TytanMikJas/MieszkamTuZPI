@@ -6,7 +6,7 @@ interface PriceProps {
 export default function Price({ sell, price }: PriceProps) {
   return (
     <div
-      className={`flex flex-row items-center h-9 border border-gray-200 shadow-sm px-2 py-1.5 rounded-full bg-red-200 text-black
+      className={`flex flex-row items-center h-9 border border-gray-200 shadow-sm px-2 py-1.5 rounded-full bg-blue-200 text-black
     ease-in
     duration-1
   `}

@@ -73,7 +73,7 @@ export default function FilterButton({
       size={30}
       fill
       grade={25}
-      color="red"
+      color="blue"
     ></MaterialSymbol>
   ),
   buttonType = {
