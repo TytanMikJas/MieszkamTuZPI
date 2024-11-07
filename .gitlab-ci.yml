@@ -155,7 +155,7 @@ build-prerender:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
 
-deploy-docs:
+pages:
   stage: documentation
   image: node:20.1-alpine
   before_script:
