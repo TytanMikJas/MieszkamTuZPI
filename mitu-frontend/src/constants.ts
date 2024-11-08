@@ -75,7 +75,7 @@ export const TD_EXT_LIST = ['glb'];
 export const DOC_EXT_LIST = ['pdf'];
 
 export const IMAGE_SIZE_LIMIT = 5000000;
-export const TD_SIZE_LIMIT = 200000000;
+export const TD_SIZE_LIMIT = 10000000;
 export const DOC_SIZE_LIMIT = 10000000;
 export const PAGE_NUM_LIMIT = 100;
 
