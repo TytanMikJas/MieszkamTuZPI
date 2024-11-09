@@ -167,7 +167,7 @@ export default function Navbar() {
             />
           </div>
           <div className="flex items-center space-x-4">
-            <div className="flex items-center z-1000">
+            <div className="flex items-center z-1000" data-testId="avatar">
               {me ? (
                 <UserAvatar
                   avatar={me.avatar || ''}

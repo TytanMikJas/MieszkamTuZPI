@@ -41,12 +41,14 @@ export default function InvestmentFilter() {
   };
 
   return (
-    <FilterButton
-      title={FILTER_BUTTON_LABEL}
-      menuAlignment="start"
-      filters={filters}
-      callback={(filters) => setFilterParams(filterParser(filters))}
-      buttonType={{ variant: 'outline', size: 'lg' }}
-    />
+    <div data-testId="investments-filter">
+      <FilterButton
+        title={FILTER_BUTTON_LABEL}
+        menuAlignment="start"
+        filters={filters}
+        callback={(filters) => setFilterParams(filterParser(filters))}
+        buttonType={{ variant: 'outline', size: 'lg' }}
+      />
+    </div>
   );
 }

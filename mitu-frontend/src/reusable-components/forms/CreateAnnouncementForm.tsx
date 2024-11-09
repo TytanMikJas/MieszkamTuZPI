@@ -602,7 +602,7 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
                     <FormControl>
                       <Input
                         {...field}
-                        disabled={(watchBuildingNr ?? '').length < 3}
+                        disabled={(watchBuildingNr ?? '').length < 1}
                       />
                     </FormControl>
                     <FormMessage />

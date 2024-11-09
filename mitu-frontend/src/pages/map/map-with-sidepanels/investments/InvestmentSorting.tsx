@@ -35,15 +35,17 @@ export default function InvestmentSorting() {
   };
 
   return (
-    <SortingButton
-      callback={(option) => {
-        setSortingParams(sortingParams[option]);
-      }}
-      options={sortingOptions}
-      setCurrentOption={setSortingOption}
-      currentOption={sortingOption}
-      defaultOption={'Najnowsze'}
-      menuAlignment={'end'}
-    />
+    <div data-testId="investments-sort">
+      <SortingButton
+        callback={(option) => {
+          setSortingParams(sortingParams[option]);
+        }}
+        options={sortingOptions}
+        setCurrentOption={setSortingOption}
+        currentOption={sortingOption}
+        defaultOption={'Najnowsze'}
+        menuAlignment={'end'}
+      />
+    </div>
   );
 }

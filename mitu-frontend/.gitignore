@@ -5,3 +5,8 @@ dist-ssr
 *.local
 node_modules/*
 .idea
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/.auth

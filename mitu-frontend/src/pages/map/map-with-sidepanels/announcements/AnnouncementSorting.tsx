@@ -39,15 +39,17 @@ export default function AnnouncementSorting() {
   };
 
   return (
-    <SortingButton
-      callback={(option) => {
-        setSortingParams(sortingParams[option]);
-      }}
-      options={sortingOptions}
-      setCurrentOption={setSortingOption}
-      currentOption={sortingOption}
-      defaultOption={'Najnowsze'}
-      menuAlignment={'end'}
-    />
+    <div data-testid="announcements-sort">
+      <SortingButton
+        callback={(option) => {
+          setSortingParams(sortingParams[option]);
+        }}
+        options={sortingOptions}
+        setCurrentOption={setSortingOption}
+        currentOption={sortingOption}
+        defaultOption={'Najnowsze'}
+        menuAlignment={'end'}
+      />
+    </div>
   );
 }

@@ -20,7 +20,10 @@ export default function InvestmentsList() {
   return (
     <div className="flex flex-col w-full h-full items-center scrollable-vertical">
       <InfiniteList loadMore={fetchInvestmentsList} isMore={isMoreList}>
-        <div className="flex-grow grid grid-cols-1 grid-rows-[auto_1fr] md:grid-cols-2 gap-6 py-2">
+        <div
+          className="flex-grow grid grid-cols-1 grid-rows-[auto_1fr] md:grid-cols-2 gap-6 py-2"
+          data-testid="investments-list"
+        >
           {investmentsList.map((investment, index) => (
             <InvestmentCard
               key={index}

@@ -22,7 +22,10 @@ export default function InvestmentCard({
   const ratingLoading = selectCardLoadingList(`${investment?.id}`);
 
   return (
-    <div className="flex flex-col relative gap-2 w-full md:max-w-64 max-w-72 min-w-32">
+    <div
+      className="flex flex-col relative gap-2 w-full md:max-w-64 max-w-72 min-w-32"
+      data-testid="investment-card"
+    >
       <LoadableImage
         onClick={onClick}
         className="rounded-lg"

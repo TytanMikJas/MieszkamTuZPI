@@ -21,7 +21,9 @@ export default function IconLabel({
         grade={-25}
         color="textdark"
       />
-      <div className="line-clamp-1">{text}</div>
+      <div className="line-clamp-1" data-testid="icon-label-text">
+        {text}
+      </div>
       {verified && <VerifiedIcon />}
     </div>
   );

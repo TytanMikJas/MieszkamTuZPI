@@ -192,7 +192,9 @@ export default function SingleComment({
             />
           </div>
         ) : (
-          <p className="mt-2">{comment?.content}</p>
+          <p className="mt-2" data-testid="comment-content">
+            {comment?.content}
+          </p>
         )}
 
         {comment?.thumbnail !== '' && (

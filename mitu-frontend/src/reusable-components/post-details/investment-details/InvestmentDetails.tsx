@@ -176,7 +176,9 @@ export default function InvestmentDetails() {
           />
         </div>
         <Separator className="my-4" />
-        <div className="text-justify">{investment.content}</div>
+        <div className="text-justify" data-testid="investment-content">
+          {investment.content}
+        </div>
       </ImageBackgroundContainer>
       <BadgesArea badges={investment.badges} />
       <AttachmentsArea

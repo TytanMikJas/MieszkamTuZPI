@@ -9,8 +9,10 @@
     "lint": "eslint ./src --ext .jsx,.js,.ts,.tsx,.md --ignore-path ./.gitignore",
     "lint-fix": "eslint --fix ./src --ext .jsx,.js,.ts,.tsx,.md --ignore-path ./.gitignore",
     "prettier": "prettier  --log-level warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" ",
-    "type-check": "tsc",
     "test": "echo \"Passed: no test specified\" && exit 0",
+    "ui-test": "npx playwright test",
+    "ui-test-showcase": "npx playwright test --workers=1 --headed",
+    "type-check": "tsc",
     "env:dev": "dotenv -e ../.env.dev --",
     "env:prod": "dotenv -e ../.env.prod --"
   },
@@ -112,9 +114,10 @@
     "zustand": "4.5.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.48.2",
     "@types/geodesy": "2.2.7",
     "@types/leaflet": "1.9.8",
-    "@types/node": "20.11.30",
+    "@types/node": "^20.17.6",
     "@types/react": "18.2.66",
     "@types/react-dom": "18.2.19",
     "@types/react-helmet": "^6.1.11",

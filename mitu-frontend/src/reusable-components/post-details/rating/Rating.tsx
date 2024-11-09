@@ -46,12 +46,11 @@ export default function Rating({
           selected={currentVote === RatingType.DOWNVOTE}
           className="cursor-pointer hover:bg-blue-200 hover:bg-opacity-50 duration-1 ease-in rounded-full"
         />
-        <div className="flex text-lg font-bold text-black w-9 justify-center">
-          {loading ? (
-            <ShortNumber number={upvoteCount - downvoteCount} />
-          ) : (
-            <ShortNumber number={upvoteCount - downvoteCount} />
-          )}
+        <div
+          className="flex text-lg font-bold text-black w-9 justify-center"
+          data-testid="rating-count"
+        >
+          <ShortNumber number={upvoteCount - downvoteCount} />
         </div>
 
         <PlusIcon

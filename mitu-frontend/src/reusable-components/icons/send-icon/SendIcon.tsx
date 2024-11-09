@@ -9,6 +9,7 @@ export default function SendIcon({ onClick }: { onClick?: () => void }) {
       fill
       grade={25}
       className="text-primary cursor-pointer"
+      data-testid="send-icon"
     />
   );
 }

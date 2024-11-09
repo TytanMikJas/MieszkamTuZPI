@@ -39,6 +39,7 @@ export default function AnnouncementCard({
       <div
         className="font-bold hover:text-primary duration-1 ease-in cursor-pointer"
         onClick={onClick}
+        data-testid="announcement-title"
       >
         {announcement.title}
       </div>

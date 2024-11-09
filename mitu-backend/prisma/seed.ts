@@ -629,7 +629,7 @@ async function seedInvestments() {
       apartmentNr: null,
       status: InvestmentStatus.APPROVED,
       responsible: 'UM Wrocław',
-      isCommentable: false,
+      isCommentable: true,
     },
   ];
 
