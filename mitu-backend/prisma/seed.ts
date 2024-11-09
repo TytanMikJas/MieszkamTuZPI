@@ -221,7 +221,8 @@ const announcementCategories = [
  * function for seeding users
  */
 async function seedUsers() {
-  const hashedPassword = await hash('P@ssw0rd!', 10);
+  const plainPassword = process.env.DEV_PASSWORD;
+  const hashedPassword = await hash(plainPassword, 10);
   await prisma.user.createMany({
     data: [
       {
@@ -717,7 +718,7 @@ async function seedPostsForAnnouncements() {
         attachments: {
           create: [
             {
-              fileName: `investment${index + 1}.jpg`,
+              fileName: `announcement${index + 1}.jpg`,
               fileType: FileType.IMAGE,
               postType: PostType.ANNOUNCEMENT,
             },
@@ -961,7 +962,7 @@ async function seedPostsForListings() {
         attachments: {
           create: [
             {
-              fileName: `investment${index + 1}.jpg`,
+              fileName: `listing${index + 1}.jpg`,
               fileType: FileType.IMAGE,
               postType: PostType.LISTING,
             },
