@@ -24,6 +24,7 @@ import { ConfigService } from '@nestjs/config';
 import ConfirmRegistrationUserNotFound from './exceptions/confirm-registration-user-not-found';
 import ConfirmRegistrationUserAlreadyVerified from './exceptions/confirm-registration-user-already-verified';
 import ChangeForgottenPasswordInputDto from './dto/change-forgotten-password-dto.input';
+import { SimpleForbidden } from 'src/exceptions/simple-forbidden.exception';
 export const saltRounds = 10;
 
 /**
@@ -92,7 +93,6 @@ export class AuthService {
   /**
    * Sign up
    * @param user user
-   * @returns {Promise<SignInOutputDto>}
    */
   async forceChangePassword(
     user: UserInternalDto,
@@ -155,7 +155,7 @@ export class AuthService {
    * @param hashedPassword hashedPassword
    * @returns {Promise<boolean>}
    */
-  async comparePassword(
+  private async comparePassword(
     plaintextPassword: string,
     hashedPassword: string,
   ): Promise<boolean> {
@@ -230,16 +230,16 @@ export class AuthService {
         return;
       }
       case UserStatus.BANNED: {
-        throw new SimpleNotFound(ERROR_USER_DELETED);
+        throw new SimpleForbidden(ERROR_USER_DELETED);
       }
       case UserStatus.DELETED: {
-        throw new SimpleNotFound(ERROR_USER_DELETED);
+        throw new SimpleForbidden(ERROR_USER_DELETED);
       }
       case UserStatus.EMAIL_NOT_CONFIRMED: {
-        throw new SimpleNotFound(ERROR_EMAIL_NOT_CONFIRMED);
+        throw new SimpleForbidden(ERROR_EMAIL_NOT_CONFIRMED);
       }
       case UserStatus.SHADOW_BANNED: {
-        throw new SimpleNotFound(ERROR_USER_DELETED);
+        throw new SimpleForbidden(ERROR_USER_DELETED);
       }
     }
   }

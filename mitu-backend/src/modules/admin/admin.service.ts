@@ -10,7 +10,7 @@ import {
   ERROR_USER_NOT_FOUND,
   ERROR_USER_PASSWORD_ADMIN,
 } from 'src/strings';
-import { generatePassword as pswdGenerate } from './utils';
+import { generatePassword as pswdGenerate } from './admin.utils';
 import { $Enums } from '@prisma/client';
 import { SimpleBadRequest } from 'src/exceptions/simple-bad-request.exception';
 import CreateOfficialInputDto from '../user/dto/create-official.input';

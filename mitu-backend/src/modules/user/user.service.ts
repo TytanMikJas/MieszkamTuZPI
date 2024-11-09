@@ -271,7 +271,7 @@ export default class UserService {
    * @param {string} hashedPassword
    * @returns {Promise<boolean>}
    */
-  async comparePasswords(
+  private async comparePasswords(
     plainTextPassword: string,
     hashedPassword: string,
   ): Promise<boolean> {
