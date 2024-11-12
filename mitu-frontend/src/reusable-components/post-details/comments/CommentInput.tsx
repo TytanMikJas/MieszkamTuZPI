@@ -38,7 +38,6 @@ export default function CommentInput({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const handlePostComment = () => {
-    console.log(postComment);
     if (inputRef.current?.value) {
       const val = inputRef.current.value;
 

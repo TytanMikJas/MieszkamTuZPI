@@ -74,7 +74,6 @@ export class InvestmentController {
     @Body() body: CreateInvestmentInputDto,
     @User() user: UserInternalDto,
   ): Promise<InvestmentDto> {
-    console.log(body);
     return this.investmentsService.create(body, files, user.id);
   }
 

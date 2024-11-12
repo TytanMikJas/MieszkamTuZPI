@@ -26,7 +26,6 @@ function ForgotPasswordPage({}: Props) {
       </div>
     );
   }
-  console.log(store.tokenValid.value);
 
   if (!store.tokenValid.value) {
     return (

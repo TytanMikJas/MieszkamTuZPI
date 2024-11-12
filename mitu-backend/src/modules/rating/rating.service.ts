@@ -78,7 +78,6 @@ export default class RatingService {
       return { postId: postVote.postId, type: RatingType.UPVOTE };
     }
     if (postVote.type === PostVoteType.DOWNVOTE) {
-      console.log('got here');
       await this.postService.incrementDownvoteCount(postId);
       return { postId: postVote.postId, type: RatingType.DOWNVOTE };
     }

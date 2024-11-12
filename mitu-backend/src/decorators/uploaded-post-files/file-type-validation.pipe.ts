@@ -62,9 +62,7 @@ export class FileTypeValidationPipe implements PipeTransform {
 
     files = await Promise.all(
       files.map(async (file) => {
-        console.log(file);
         const type = await fileTypeFromBuffer(file.buffer);
-        console.log(type);
         if (!type) {
           throw new SimpleBadRequest(ERROR_INVALID_FILE_TYPE);
         }

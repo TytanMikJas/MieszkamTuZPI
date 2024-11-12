@@ -6,7 +6,6 @@ export default function TestIconButton() {
     <div className={'w-5'}>
       <IconButton
         icon={<EnvelopeOpenIcon />}
-        onClick={() => console.log('Komentarze')}
         hint={'Wyświetl komentarze'}
         buttonType={{
           variant: 'default',
@@ -17,7 +16,6 @@ export default function TestIconButton() {
 
       <IconButton
         text={'Komentarze'}
-        onClick={() => console.log('Komentarze')}
         hint={'Wyświetl komentarze'}
         buttonType={{
           variant: 'secondary',
@@ -29,7 +27,6 @@ export default function TestIconButton() {
       <IconButton
         icon={<EnvelopeOpenIcon />}
         text={'Komentarze'}
-        onClick={() => console.log('Komentarze')}
         hint={'Wyświetl komentarze'}
         buttonType={{
           variant: 'outline',

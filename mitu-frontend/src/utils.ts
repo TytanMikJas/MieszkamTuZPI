@@ -211,7 +211,6 @@ export function extractUniqueFiles(
   files: File[],
   ignoreFiles: string[],
 ): File[] {
-  console.log('ignore', ignoreFiles);
   const uniqueFiles = files.filter(
     (file: File, index, array) =>
       array.findIndex((f) => f.name === file.name) === index,

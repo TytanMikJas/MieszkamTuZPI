@@ -10,7 +10,7 @@ interface HelpPopoverProps {
 
 const HelpPopover: React.FC<HelpPopoverProps> = ({
   icon = (
-    <MaterialSymbol size={36} icon="help" color="#E44044" className="ml-2" />
+    <MaterialSymbol size={36} icon="help" color="#2b6cb0" className="ml-2" />
   ),
   content,
   htmlContent,

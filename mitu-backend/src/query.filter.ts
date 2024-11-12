@@ -267,7 +267,6 @@ export class GenericFilter {
     if (this.orderBy) {
       sortingOptions.unshift({ [this.orderBy]: this.sortOrder });
     }
-    console.log('sortingOptions', sortingOptions);
     return sortingOptions;
   }
 

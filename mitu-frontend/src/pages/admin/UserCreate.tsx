@@ -59,7 +59,6 @@ export default function UserCreate() {
     const lastName = ln_ref.current?.value;
     const email = em_ref.current?.value;
     const role = r_ref.current?.innerHTML;
-    console.log({ firstName, lastName, email, role });
     if (
       !firstName ||
       firstName.length < MIN_LENGTH_USER_FIRST_NAME ||

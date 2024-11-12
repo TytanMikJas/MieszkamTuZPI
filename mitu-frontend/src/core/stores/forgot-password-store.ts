@@ -45,7 +45,6 @@ export const useForgotPasswordStore = create<
       axiosInstance
         .get(`/auth/validate-forgot-password-token?token=${token}`)
         .then((response) => {
-          console.log(response.data);
           set({ tokenValid: { value: response.data.data, loading: false } });
         })
         .catch(() => {

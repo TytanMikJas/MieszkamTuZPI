@@ -3,10 +3,8 @@ import { PerformVote } from '../../../types';
 import { cn } from '@/utils/tailwind-utils';
 import MinusIcon from '../../icons/minus-icon/MinusIcon';
 import PlusIcon from '../../icons/plus-icon/PlusIcon';
-import PulseLoader from '../../loaders/PulseLoader';
 import ExpectLoggedIn from '@/reusable-components/login-dialog/ExpectLoggedIn';
 import ShortNumber from '@/reusable-components/misc/short-number/ShortNumber';
-import { useEffect, useState } from 'react';
 
 export default function Rating({
   postId,

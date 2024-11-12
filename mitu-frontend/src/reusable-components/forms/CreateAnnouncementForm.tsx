@@ -147,7 +147,6 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
 
   useEffect(() => {
     if (singleAnnouncement && edit) {
-      console.log(singleAnnouncement);
       setInitialSingleAnnouncement(singleAnnouncement);
       form.setValue('title', singleAnnouncement.title);
       form.setValue('description', singleAnnouncement.content);

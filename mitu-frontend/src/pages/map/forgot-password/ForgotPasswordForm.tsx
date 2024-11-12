@@ -1,20 +1,10 @@
-import { ROUTES } from '@/core/routing/Router';
-import { useAuthStore } from '@/core/stores/auth-store';
 import { useForgotPasswordStore } from '@/core/stores/forgot-password-store';
-import { Divider } from '@/reusable-components/authentication/Divider';
 import ButtonWithLoader from '@/reusable-components/buttons/ButtonWithLoader';
-import ForgotPasswordDialog from '@/reusable-components/forgot-password-dialog/ForgotPasswordDialog';
-import IconPlayOnce from '@/reusable-components/lordicon/IconPlayOnce';
 import { PasswordInput } from '@/reusable-components/password-input/PasswordInput';
-import { Button } from '@/shadcn/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/shadcn/card';
-import { FormField, FormItem, FormControl, FormMessage } from '@/shadcn/form';
-import { Input } from '@/shadcn/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { register } from 'module';
-import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Form, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { z } from 'zod';
 
 type Props = {
@@ -67,9 +57,7 @@ function ForgotPasswordForm({ onSubmit }: Props) {
       (data) => {
         onSubmit(data.password);
       },
-      () => {
-        console.log('error');
-      },
+      () => {},
     )();
   };
 

@@ -34,6 +34,9 @@ import InvestmentComments from '@/pages/map/map-with-sidepanels/investment/Inves
 import AnnouncementComments from '@/pages/map/map-with-sidepanels/announcement/AnnouncementComments';
 import OfficialPage from '@/pages/official/OfficialPage';
 import AdminPage from '@/pages/admin/AdminPage';
+import BafSimplePage from '@/pages/baf-simple/BafSimplePage';
+import BafChoosePage from '@/pages/baf-choose/BafChoosePage';
+import BafEditorPage from '@/pages/baf-editor/BAFEditorPage';
 
 export const MAP = 'mapa';
 export const LANDING_PAGE = 'start';
@@ -479,6 +482,18 @@ export const router = createBrowserRouter([
             ],
           },
         ],
+      },
+      {
+        path: ROUTES.BAF_CALCULATOR.path(),
+        element: <BafChoosePage />,
+      },
+      {
+        path: ROUTES.BAF_CALCULATOR_SIMPLE.path(),
+        element: <BafSimplePage />,
+      },
+      {
+        path: ROUTES.BAF_CALCULATOR_GRAPHIC.path(),
+        element: <BafEditorPage />,
       },
       {
         path: '*',
