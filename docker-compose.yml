@@ -24,7 +24,7 @@ services:
     image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_frontend:latest_${DOCKER_CITY}
     container_name: mitu_frontend
     ports:
-      - "80:80"
+      - "8080:80"
     working_dir: /app
     depends_on:
       - mitu_backend
