@@ -21,5 +21,4 @@
 
     RUN npm install
 
-    ENTRYPOINT ["tini", "--"]
-    CMD ["node", "server.js"]
+    CMD /usr/bin/chromium-browser & node server.js
