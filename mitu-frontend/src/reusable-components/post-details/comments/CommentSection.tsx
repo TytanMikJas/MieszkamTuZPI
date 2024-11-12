@@ -11,6 +11,7 @@ import {
   SetReplyTarget,
 } from '../../../types';
 import CommentInput from './CommentInput';
+import SentimentButton from '@/reusable-components/sentiment/SentimentButton';
 
 export default function CommentSection({
   rootId,
@@ -52,6 +53,7 @@ export default function CommentSection({
       <div className="flex justify-center items-center space-x-2 p-2 md:border-b">
         <h1 className="text-xl font-bold">Komentarze</h1>
         <Badge className="h-3/4">{comments?.length}</Badge>
+        {comments?.length > 0 && <SentimentButton postId={Number(rootId)} />}
       </div>
 
       <div className="w-full z-[50] p-2 md:p-4">

@@ -7,6 +7,7 @@ import PostDto, {
 import { PRISMA_ID } from 'src/types';
 import { POST_TAKE_COMMENTS } from 'src/constants';
 import { GenericFilter } from 'src/query.filter';
+import PostCommentsContentInternalDto from './dto/post-with-comments-dto.internal';
 /**
  * Repository for the Post entity
  */
@@ -107,6 +108,39 @@ export default class PostRepository {
         },
       },
     });
+  }
+
+  async getPostCommentsContentInternalDto(
+    id: PRISMA_ID,
+  ): Promise<PostCommentsContentInternalDto> {
+    return this.prisma.post
+      .findUnique({
+        where: { id: id },
+        select: {
+          id: true,
+          postType: true,
+          comments: {
+            select: {
+              post: {
+                select: {
+                  content: true,
+                },
+              },
+              status: true,
+            },
+          },
+        },
+      })
+      .then((post) => {
+        return {
+          id: post.id,
+          postType: post.postType,
+          comments: post.comments.map((c) => ({
+            content: c.post.content,
+            status: c.status,
+          })),
+        };
+      });
   }
 
   /**

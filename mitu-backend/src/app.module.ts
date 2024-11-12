@@ -23,6 +23,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { RatingModule } from './modules/rating/rating.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { RedisCacheManager } from './configuration';
+import { SentimentModule } from './modules/sentiment/sentiment.module';
 
 /**
  * Main module of the application.
@@ -60,6 +61,7 @@ import { RedisCacheManager } from './configuration';
     PoiModule,
     AdminModule,
     RatingModule,
+    SentimentModule,
   ],
   providers: [
     Reflector,

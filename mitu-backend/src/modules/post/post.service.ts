@@ -12,6 +12,7 @@ import { $Enums } from '@prisma/client';
 import { RatingType } from '../rating/dto/rating-dto';
 import RatingService from '../rating/rating.service';
 import UserInternalDto from '../user/dto/user.internal';
+import PostCommentsContentInternalDto from './dto/post-with-comments-dto.internal';
 
 /**
  * Service for the Post entity
@@ -50,6 +51,12 @@ export class PostService {
     }
 
     return _p;
+  }
+
+  async getPostCommentsContentInternalDto(
+    id: PRISMA_ID,
+  ): Promise<PostCommentsContentInternalDto> {
+    return await this.postRepository.getPostCommentsContentInternalDto(id);
   }
 
   /**

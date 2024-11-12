@@ -38,6 +38,7 @@ import { useCommentStore } from '@/core/stores/comment-store';
 import { LatLng } from 'leaflet';
 import Rating from '../rating/Rating';
 import ShareButtons from '@/reusable-components/share-buttons/ShareButtons';
+import SentimentButton from '@/reusable-components/sentiment/SentimentButton';
 
 export default function InvestmentDetails() {
   const {
@@ -143,6 +144,7 @@ export default function InvestmentDetails() {
         <div className="flex flex-col gap-2">
           <div className="flex  justify-between items-center">
             <h2 className="text-xl font-bold">{investment.title}</h2>
+
             <Rating
               postId={`${investment.id}`}
               upvoteCount={investment.upvoteCount}

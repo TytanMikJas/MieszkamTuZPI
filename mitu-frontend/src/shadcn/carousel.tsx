@@ -8,7 +8,7 @@ import {
 import useEmblaCarousel from 'embla-carousel-react';
 
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { Button } from 'react-day-picker';
+import { Button } from '@/shadcn/button';
 import { cn } from '@/lib/utils';
 
 type CarouselProps = {
