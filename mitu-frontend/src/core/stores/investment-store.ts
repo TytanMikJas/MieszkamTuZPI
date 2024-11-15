@@ -33,6 +33,7 @@ import {
   RatingTypeToAttribute,
 } from '../api/common/rating/RatingUtils';
 import { RatingType, RatingDto } from '../api/common/rating/RatingDto';
+import PatchCommonDto from '../api/common/patch/PatchCommonDto';
 
 interface ListSection {
   investmentsList: InvestmentDto[];
@@ -292,9 +293,12 @@ export const useInvestmentStore = create<
         formData.append('files', file);
       });
       axiosInstance
-        .patch<SuccessResponse<string>>(`/investment/one/${id}`, formData)
+        .patch<SuccessResponse<PatchCommonDto>>(
+          `/investment/one/${id}`,
+          formData,
+        )
         .then((response) => {
-          onSuccess(response.data.data);
+          onSuccess(response.data.data.slug);
         })
         .catch((error) => {
           console.error(error);

@@ -5,6 +5,12 @@ import RatingDto, { RatingType } from './dto/rating-dto';
 import { PRISMA_ID } from 'src/types';
 import PostVoteCountInternalDto from './dto/post-vote-count-dto.internal';
 import { PostService } from '../post/post.service';
+import {
+  deleteCacheKeyOnDemand,
+  generatePostCacheKeys,
+} from 'src/utils/cache-utils';
+import { PoiService } from '../poi/poi.service';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 /**
  * Rating service
@@ -29,6 +35,8 @@ export default class RatingService {
     private readonly ratingRepository: RatingRepository,
     @Inject(forwardRef(() => PostService))
     private readonly postService: PostService,
+    private readonly poiService: PoiService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   /**
@@ -119,6 +127,15 @@ export default class RatingService {
     postId: PRISMA_ID,
   ): Promise<RatingDto> {
     const rating: RatingDto = await this.findByUserIdAndPostId(userId, postId);
+    const relatedPoi = await this.poiService.getOneById(postId);
+    const relatedPost = await this.postService.getOne(postId);
+
+    if (relatedPoi && relatedPost) {
+      await deleteCacheKeyOnDemand(
+        generatePostCacheKeys(postId, relatedPoi.slug, relatedPost.postType),
+        this.cacheManager,
+      );
+    }
 
     if (rating.type === desiredVote) {
       await this.deleteByUserIdAndPostId(userId, postId);

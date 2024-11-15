@@ -18,6 +18,7 @@ import { LISTING_SORTING_OPTION_NEWEST_LABEL } from '@/strings';
 
 import ListingInputDto from '../api/listing/dto/listing.input';
 import ListingInputPatchDto from '../api/listing/dto/listing-patch.input';
+import PatchCommonDto from '../api/common/patch/PatchCommonDto';
 
 interface ListSection {
   listingsList: ListingDto[];
@@ -238,9 +239,9 @@ export const useListingStore = create<
       });
 
       axiosInstance
-        .patch<SuccessResponse<string>>(`/listing/one/${id}`, formData)
+        .patch<SuccessResponse<PatchCommonDto>>(`/listing/one/${id}`, formData)
         .then((response) => {
-          onSuccess(response.data.data);
+          onSuccess(response.data.data.slug);
         })
         .catch((error) => {
           console.error(error);

@@ -32,6 +32,11 @@ import { JWTAuthGuard } from '../auth/strategies/jwt.strategy';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/strategies/roles.guard';
 import { IdentifyAuthGuard } from '../auth/strategies/identify.strategy';
+import { ClearCacheInterceptor } from 'src/interceptors/redis-caching/clear-cache-interceptor';
+import { ClearCache } from 'src/interceptors/redis-caching/clear-cache.decorator';
+import { ConditionalCacheInterceptor } from 'src/interceptors/redis-caching/conditional-cache-interceptor';
+import { CacheInterceptor } from '@nestjs/cache-manager';
+import { PatchCommonDTO } from 'src/dto/patch-common-dto';
 
 /**
  * Controller for Listing
@@ -60,6 +65,7 @@ export class ListingController {
   @Post()
   @Roles($Enums.UserRole.OFFICIAL)
   @UseGuards(JWTAuthGuard, RolesGuard)
+  @UseInterceptors(ClearCacheInterceptor)
   @UseInterceptors(PostAttributesInterceptor)
   @UseInterceptors(AnyFilesInterceptor())
   @SuccessMessage(SUCCESS_POST_LISTING)
@@ -79,6 +85,8 @@ export class ListingController {
   @Get()
   @UseGuards(IdentifyAuthGuard)
   @UseInterceptors(PostListAttributesInterceptor)
+  @ClearCache(['location=N'])
+  @UseInterceptors(ConditionalCacheInterceptor)
   async getAll(@Query() filter: GenericFilter): Promise<ListingDto[]> {
     return await this.listingService.getAll(filter);
   }
@@ -90,6 +98,7 @@ export class ListingController {
    */
   @Get('/one/:id')
   @UseInterceptors(PostAttributesInterceptor)
+  @UseInterceptors(CacheInterceptor)
   async getOne(@Param('id', ParsePrismaID) id: PRISMA_ID): Promise<ListingDto> {
     return this.listingService.getOne(id);
   }
@@ -101,6 +110,7 @@ export class ListingController {
    */
   @Get('/slug/:slug')
   @UseInterceptors(PostAttributesInterceptor)
+  @UseInterceptors(CacheInterceptor)
   async getOneBySlug(@Param('slug') slug: string): Promise<ListingDto> {
     return this.listingService.getOneBySlug(slug);
   }
@@ -115,13 +125,15 @@ export class ListingController {
   @Patch('/one/:id')
   @Roles($Enums.UserRole.OFFICIAL)
   @UseGuards(JWTAuthGuard, RolesGuard)
+  @ClearCache(['/api/listing', '/api/listing/slug'])
+  @UseInterceptors(ClearCacheInterceptor)
   @UseInterceptors(AnyFilesInterceptor())
   @SuccessMessage(SUCCESS_PATCH_LISTING)
   async update(
     @UploadedPostFiles($Enums.PostType.LISTING) files: PostFilesGrouped,
     @Param('id', ParsePrismaID) id: PRISMA_ID,
     @Body() body: UpdateListingInputDto,
-  ): Promise<string> {
+  ): Promise<PatchCommonDTO> {
     return this.listingService.update(id, body, files);
   }
 
@@ -133,6 +145,8 @@ export class ListingController {
   @Delete('/one/:id')
   @Roles($Enums.UserRole.OFFICIAL)
   @UseGuards(JWTAuthGuard, RolesGuard)
+  @ClearCache(['/api/listing', '/api/listing/slug'])
+  @UseInterceptors(ClearCacheInterceptor)
   async delete(
     @Param('id', ParsePrismaID) id: PRISMA_ID,
   ): Promise<{ prevSlug: string }> {

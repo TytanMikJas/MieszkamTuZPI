@@ -4,6 +4,8 @@ import RatingService from './rating.service';
 import { PostVote, PostVoteType } from '@prisma/client';
 import RatingDto, { RatingType } from './dto/rating-dto';
 import { PostService } from '../post/post.service';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { PoiService } from '../poi/poi.service';
 
 describe('RatingService', () => {
   let ratingService: RatingService;
@@ -38,13 +40,29 @@ describe('RatingService', () => {
       incrementUpvoteCount: jest.fn(),
     };
 
+    const PoiServiceMock = {
+      provide: PoiService,
+      useValue: {
+        getOneById: jest.fn(),
+      },
+    };
+
     const PostServiceMock = {
       provide: PostService,
       useValue: mockPostService,
     };
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [RatingService, RatingRepositoryMock, PostServiceMock],
+      providers: [
+        RatingService,
+        RatingRepositoryMock,
+        PostServiceMock,
+        PoiServiceMock,
+        {
+          provide: CACHE_MANAGER,
+          useValue: {},
+        },
+      ],
     }).compile();
 
     ratingService = module.get<RatingService>(RatingService);

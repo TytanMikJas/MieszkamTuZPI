@@ -36,6 +36,12 @@ import { RolesGuard } from 'src/modules/auth/strategies/roles.guard';
 import CategoryDto from 'src/modules/announcement/dto/category-dto';
 import { PostAttributesInterceptor } from 'src/modules/post/interceptors/postAttributes.interceptor';
 import { IdentifyAuthGuard } from '../auth/strategies/identify.strategy';
+import { ClearCacheInterceptor } from 'src/interceptors/redis-caching/clear-cache-interceptor';
+import { ClearCache } from 'src/interceptors/redis-caching/clear-cache.decorator';
+import { ConditionalCacheInterceptor } from 'src/interceptors/redis-caching/conditional-cache-interceptor';
+import { CacheInterceptor } from '@nestjs/cache-manager';
+import { ConstantCache } from 'src/decorators/cache/const-cache.decorator';
+import { PatchCommonDTO } from 'src/dto/patch-common-dto';
 
 /**
  * Controller for Announcement
@@ -65,6 +71,7 @@ export class AnnouncementController {
   @Post()
   @Roles($Enums.UserRole.OFFICIAL)
   @UseGuards(JWTAuthGuard, RolesGuard)
+  @UseInterceptors(ClearCacheInterceptor)
   @UseInterceptors(AnyFilesInterceptor())
   @UseInterceptors(PostAttributesInterceptor)
   @SuccessMessage(SUCCESS_POST_ANNOUNCEMENT)
@@ -84,6 +91,8 @@ export class AnnouncementController {
   @Get()
   @UseGuards(IdentifyAuthGuard)
   @UseInterceptors(PostListAttributesInterceptor)
+  @ClearCache(['location=N'])
+  @UseInterceptors(ConditionalCacheInterceptor)
   async getAll(@Query() filter: GenericFilter): Promise<AnnouncementDto[]> {
     return await this.announcementService.getAll(filter);
   }
@@ -96,6 +105,7 @@ export class AnnouncementController {
   @Get('/one/:id')
   @UseInterceptors(PostAttributesInterceptor)
   @UseGuards(IdentifyAuthGuard)
+  @UseInterceptors(CacheInterceptor)
   async getOne(
     @Param('id', ParsePrismaID) id: PRISMA_ID,
   ): Promise<AnnouncementDto> {
@@ -110,6 +120,7 @@ export class AnnouncementController {
   @Get('/slug/:slug')
   @UseInterceptors(PostAttributesInterceptor)
   @UseGuards(IdentifyAuthGuard)
+  @UseInterceptors(CacheInterceptor)
   async getOneBySlug(@Param('slug') slug: string): Promise<AnnouncementDto> {
     return this.announcementService.getOneBySlug(slug);
   }
@@ -124,13 +135,15 @@ export class AnnouncementController {
   @Patch('/one/:id')
   @Roles($Enums.UserRole.OFFICIAL)
   @UseGuards(JWTAuthGuard, RolesGuard)
+  @ClearCache(['/api/announcement', '/api/announcement/slug'])
+  @UseInterceptors(ClearCacheInterceptor)
   @UseInterceptors(AnyFilesInterceptor())
   @SuccessMessage(SUCCESS_PATCH_ANNOUNCEMENT)
   async update(
     @UploadedPostFiles($Enums.PostType.ANNOUNCEMENT) files: PostFilesGrouped,
     @Param('id', ParsePrismaID) id: PRISMA_ID,
     @Body() body: UpdateAnnouncementInputDto,
-  ): Promise<string> {
+  ): Promise<PatchCommonDTO> {
     return this.announcementService.update(id, body, files);
   }
 
@@ -142,6 +155,8 @@ export class AnnouncementController {
   @Delete('/one/:id')
   @Roles($Enums.UserRole.OFFICIAL)
   @UseGuards(JWTAuthGuard, RolesGuard)
+  @ClearCache(['/api/announcement', '/api/announcement/slug'])
+  @UseInterceptors(ClearCacheInterceptor)
   async delete(
     @Param('id', ParsePrismaID) id: PRISMA_ID,
   ): Promise<{ prevSlug: string }> {
@@ -153,6 +168,7 @@ export class AnnouncementController {
    * @returns {Promise<CategoryDto[]>}
    **/
   @Get('categories')
+  @UseInterceptors(ConstantCache)
   getCategories(): Promise<CategoryDto[]> {
     return this.announcementService.getCategories();
   }

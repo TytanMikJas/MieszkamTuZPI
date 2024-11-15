@@ -50,5 +50,15 @@ services:
     ports:
       - "4000:80"
       - "25:25"
+  mitu_redis:
+    container_name: mitu_redis
+    image: redis:latest
+    volumes:
+      - mitu_redis:/data
+    ports:
+      - "6379:6379"
+    env_file:
+      - .env.prod
 volumes:
   mitu_postgres:
+  mitu_redis:

@@ -521,7 +521,7 @@ describe('AnnouncementService', () => {
         post.id,
         thumbnailFile.originalname,
       );
-      expect(result).toEqual(announcement.slug);
+      expect(result.slug).toEqual(announcement.slug);
     });
   });
 

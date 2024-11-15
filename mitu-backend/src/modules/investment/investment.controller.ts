@@ -35,6 +35,11 @@ import { Roles } from 'src/modules/auth/decorators/roles.decorator';
 import { User } from 'src/modules/auth/decorators/user.decorator';
 import UserInternalDto from 'src/modules/user/dto/user.internal';
 import { RolesGuard } from 'src/modules/auth/strategies/roles.guard';
+import { ClearCacheInterceptor } from 'src/interceptors/redis-caching/clear-cache-interceptor';
+import { ConditionalCacheInterceptor } from 'src/interceptors/redis-caching/conditional-cache-interceptor';
+import { CacheInterceptor } from '@nestjs/cache-manager';
+import { ClearCache } from '../../interceptors/redis-caching/clear-cache.decorator';
+import { PatchCommonDTO } from 'src/dto/patch-common-dto';
 
 /**
  * Controller for Investment
@@ -68,6 +73,7 @@ export class InvestmentController {
   @UseGuards(JWTAuthGuard, RolesGuard)
   @UseInterceptors(AnyFilesInterceptor())
   @UseInterceptors(PostAttributesInterceptor)
+  @UseInterceptors(ClearCacheInterceptor)
   @SuccessMessage(SUCCESS_POST_INVESTMENT)
   async create(
     @UploadedPostFiles($Enums.PostType.INVESTMENT) files: PostFilesGrouped,
@@ -86,6 +92,8 @@ export class InvestmentController {
   @Get()
   @UseGuards(IdentifyAuthGuard)
   @UseInterceptors(PostListAttributesInterceptor)
+  @ClearCache(['location=N'])
+  @UseInterceptors(ConditionalCacheInterceptor)
   async getAll(
     @Query() genericFilter: GenericFilter,
     @Query() investmentFilter: FilterInvestmentDto,
@@ -103,6 +111,7 @@ export class InvestmentController {
    */
   @Get('/one/:id')
   @UseInterceptors(PostAttributesInterceptor)
+  @UseInterceptors(CacheInterceptor)
   async getOne(
     @Param('id', ParsePrismaID) id: PRISMA_ID,
   ): Promise<InvestmentDto> {
@@ -116,6 +125,7 @@ export class InvestmentController {
    */
   @Get('/slug/:slug')
   @UseInterceptors(PostAttributesInterceptor)
+  @UseInterceptors(CacheInterceptor)
   async getOneBySlug(@Param('slug') slug: string): Promise<InvestmentDto> {
     return this.investmentsService.getOneBySlug(slug);
   }
@@ -130,13 +140,15 @@ export class InvestmentController {
   @Patch('/one/:id')
   @Roles($Enums.UserRole.OFFICIAL)
   @UseGuards(JWTAuthGuard, RolesGuard)
+  @ClearCache(['/api/investment', '/api/investment/slug'])
+  @UseInterceptors(ClearCacheInterceptor)
   @UseInterceptors(AnyFilesInterceptor())
   @SuccessMessage(SUCCESS_PATCH_INVESTMENT)
   async update(
     @UploadedPostFiles($Enums.PostType.INVESTMENT) files: PostFilesGrouped,
     @Param('id', ParsePrismaID) id: PRISMA_ID,
     @Body() body: UpdateInvestmentInputDto,
-  ): Promise<string> {
+  ): Promise<PatchCommonDTO> {
     return await this.investmentsService.update(id, body, files);
   }
 
@@ -148,6 +160,8 @@ export class InvestmentController {
   @Delete('/one/:id')
   @Roles($Enums.UserRole.OFFICIAL)
   @UseGuards(JWTAuthGuard, RolesGuard)
+  @ClearCache(['/api/investment', '/api/investment/slug'])
+  @UseInterceptors(ClearCacheInterceptor)
   async delete(
     @Param('id', ParsePrismaID) id: PRISMA_ID,
   ): Promise<{ prevSlug: string }> {

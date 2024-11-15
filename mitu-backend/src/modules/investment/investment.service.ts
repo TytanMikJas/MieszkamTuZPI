@@ -21,6 +21,7 @@ import { CategoryDto } from 'src/modules/investment/dto/category-dto';
 import BadgeDto from 'src/modules/investment/dto/badge-dto';
 import { PoiService } from 'src/modules/poi/poi.service';
 import InvestmentExcludePoiDto from 'src/modules/investment/dto/create-investment-dto.internal';
+import { PatchCommonDTO } from 'src/dto/patch-common-dto';
 
 /**
  * Investment service.
@@ -214,7 +215,7 @@ export class InvestmentService {
     id: PRISMA_ID,
     body: UpdateInvestmentInputDto,
     files: PostFilesGrouped,
-  ): Promise<string> {
+  ): Promise<PatchCommonDTO> {
     const { exclude, thumbnail, content } = body;
 
     const _p = await this.postService.getOne(id);
@@ -255,7 +256,7 @@ export class InvestmentService {
     ) {
       await this.postService.setThumbnail(id, thumbnail);
     }
-    return poi.slug;
+    return { slug: poi.slug, prevSlug: _l.slug };
   }
 
   /**

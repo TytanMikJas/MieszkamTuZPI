@@ -27,6 +27,7 @@ import {
   ratingsToRatingCountIncrements,
   RatingTypeToAttribute,
 } from '../api/common/rating/RatingUtils';
+import PatchCommonDto from '../api/common/patch/PatchCommonDto';
 
 interface ListSection {
   announcementsList: AnnouncementDto[];
@@ -298,9 +299,12 @@ export const useAnnouncementStore = create<
     });
 
     axiosInstance
-      .patch<SuccessResponse<string>>(`/announcement/one/${id}`, formData)
+      .patch<SuccessResponse<PatchCommonDto>>(
+        `/announcement/one/${id}`,
+        formData,
+      )
       .then((response) => {
-        onSuccess(response.data.data);
+        onSuccess(response.data.data.slug);
       })
       .catch((error) => {
         console.error(error);

@@ -21,6 +21,8 @@ import { ListingModule } from './modules/listing/listing.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { RatingModule } from './modules/rating/rating.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { RedisCacheManager } from './configuration';
 
 /**
  * Main module of the application.
@@ -37,6 +39,12 @@ import { RatingModule } from './modules/rating/rating.module';
     ServeStaticModule.forRoot({
       rootPath: STATIC_ROOT_PATH,
       renderPath: '/uploads',
+    }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async () => ({
+        store: await RedisCacheManager,
+      }),
     }),
     CartographyModule,
     FilehandlerModule,

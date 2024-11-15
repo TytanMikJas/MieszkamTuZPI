@@ -19,6 +19,7 @@ import AnnouncementRepository from 'src/modules/announcement/announcement.reposi
 import CategoryDto from 'src/modules/announcement/dto/category-dto';
 import { PoiService } from '../poi/poi.service';
 import AnnouncementExcludePoiDto from './dto/create-announcement-dto.internal';
+import { PatchCommonDTO } from 'src/dto/patch-common-dto';
 
 /**
  * Service for Announcement
@@ -215,7 +216,7 @@ export class AnnouncementService {
     id: PRISMA_ID,
     body: UpdateAnnouncementInputDto,
     files: PostFilesGrouped,
-  ): Promise<string> {
+  ): Promise<PatchCommonDTO> {
     const { exclude, thumbnail, content } = body;
     const _p = await this.postService.getOne(id);
     const _l = await this.announcementRepository.getOne(id);
@@ -256,7 +257,7 @@ export class AnnouncementService {
       await this.postService.setThumbnail(id, thumbnail);
     }
 
-    return poi.slug;
+    return { slug: poi.slug, prevSlug: _l.slug };
   }
 
   /**

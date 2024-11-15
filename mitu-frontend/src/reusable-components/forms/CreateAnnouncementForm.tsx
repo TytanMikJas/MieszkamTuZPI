@@ -248,16 +248,13 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
     }
 
     const location = getParsedLocation();
-    const area = getParsedArea(false);
-
-    if (!area || area.length <= 2) {
-      emitError('Nieprawidłowy obszar');
-      return;
-    }
 
     if (!location) {
+      emitError('Lokalizacja jest wymagana');
       return;
     }
+
+    const area = getParsedArea(false);
 
     const dto: AnnouncementInputDto = {
       title: data.title,
@@ -271,7 +268,6 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
         data.isCommentable === FORM_IS_COMMENTABLE_TRUE ? true : false,
       locationX: location[0],
       locationY: location[1],
-      area: area,
       thumbnail: data.thumbnail[0].name,
     };
 
@@ -299,15 +295,6 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
     const location = getParsedLocation();
     const area = getParsedArea(false);
 
-    if (!area || area.length <= 2) {
-      emitError('Nieprawidłowy obszar');
-      return;
-    }
-
-    if (!location) {
-      return;
-    }
-
     const dto: AnnouncementInputPatchDto = {
       title: data.title,
       content: data.description,
@@ -317,11 +304,18 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
       apartmentNr: data.apartmentNr,
       isCommentable:
         data.isCommentable === FORM_IS_COMMENTABLE_TRUE ? true : false,
-      locationX: location[0],
-      locationY: location[1],
-      area: area,
+
       responsible: data.responsible,
     };
+
+    if (area) {
+      dto.area = area;
+    }
+
+    if (location) {
+      dto.locationX = location[0];
+      dto.locationY = location[1];
+    }
 
     if (!initialSingleAnnouncement) return;
 

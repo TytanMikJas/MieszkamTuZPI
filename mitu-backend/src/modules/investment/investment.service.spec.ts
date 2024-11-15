@@ -12,6 +12,7 @@ import { UpdateInvestmentInputDto } from './dto/update-investment-dto.input';
 import { POIDTO } from '../poi/dto/poi-dto.internal';
 import { GenericFilter } from 'src/query.filter';
 import { FilterInvestmentDto } from './dto/filter-investment.dto';
+import { CacheModule } from '@nestjs/cache-manager';
 
 describe('InvestmentService', () => {
   let postService: PostService;
@@ -121,6 +122,7 @@ describe('InvestmentService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [CacheModule.register()],
       providers: [
         InvestmentService,
         {
@@ -298,7 +300,7 @@ describe('InvestmentService', () => {
         post.id,
         thumbnailFile.originalname,
       );
-      expect(result).toEqual(investment.slug);
+      expect(result.slug).toEqual(investment.slug);
     });
 
     it('should throw an error if the investment does not exist', async () => {

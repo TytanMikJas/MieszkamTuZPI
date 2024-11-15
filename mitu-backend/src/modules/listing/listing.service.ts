@@ -18,6 +18,7 @@ import { SimpleBadRequest } from '../../exceptions/simple-bad-request.exception'
 import { UpdateListingInputDto } from './dto/update-listing-dto';
 import { PoiService } from 'src/modules/poi/poi.service';
 import ListingExcludePoiDto from 'src/modules/listing/dto/create-listing-dto.internal';
+import { PatchCommonDTO } from 'src/dto/patch-common-dto';
 
 /**
  * Listing service
@@ -201,7 +202,7 @@ export class ListingService {
     id: PRISMA_ID,
     body: UpdateListingInputDto,
     files: PostFilesGrouped,
-  ): Promise<string> {
+  ): Promise<PatchCommonDTO> {
     const { exclude, thumbnail, content } = body;
 
     const _p = await this.postService.getOne(id);
@@ -240,7 +241,7 @@ export class ListingService {
       await this.postService.setThumbnail(id, thumbnail);
     }
 
-    return poi.slug;
+    return { slug: poi.slug, prevSlug: _l.slug };
   }
 
   /**

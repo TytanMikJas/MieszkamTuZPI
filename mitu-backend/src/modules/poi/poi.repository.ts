@@ -55,6 +55,10 @@ export default class PoiRepository {
     return await this.prisma.pOI.findUnique({ where: { slug } });
   }
 
+  async getOneById(id: PRISMA_ID): Promise<POIDTO> {
+    return await this.prisma.pOI.findUnique({ where: { id } });
+  }
+
   /**
    * Get all POIs
    * @returns {Promise<POIDTO[]>}

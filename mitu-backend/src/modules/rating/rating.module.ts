@@ -3,6 +3,7 @@ import RatingController from './rating.controller';
 import RatingService from './rating.service';
 import RatingRepository from './rating.repository';
 import { PostModule } from '../post/post.module';
+import { PoiModule } from '../poi/poi.module';
 
 /**
  * Rating module
@@ -10,7 +11,7 @@ import { PostModule } from '../post/post.module';
  * @class RatingModule
  */
 @Module({
-  imports: [forwardRef(() => PostModule)],
+  imports: [forwardRef(() => PostModule), PoiModule],
   controllers: [RatingController],
   providers: [RatingService, RatingRepository],
   exports: [RatingService],

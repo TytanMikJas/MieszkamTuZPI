@@ -38,10 +38,18 @@ export class PoiService {
 
   /**
    * Get all POIs
-   * @returns {Promise<POIDTO[]>}
+   * @returns {Promise<POIDTO>}
    */
   async getOneBySlug(slug: string): Promise<POIDTO> {
     return await this.poiRepository.getOneBySlug(slug);
+  }
+
+  /**
+   * Get all POIs
+   * @returns {Promise<POIDTO>}
+   */
+  async getOneById(id: number): Promise<POIDTO> {
+    return await this.poiRepository.getOneById(id);
   }
 
   /**
