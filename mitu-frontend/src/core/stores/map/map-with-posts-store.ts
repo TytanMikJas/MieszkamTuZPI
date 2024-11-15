@@ -6,11 +6,11 @@ import { SuccessResponse } from '../../api/response';
 import MarkerablePostDto from '../../api/post/dto/markerable-post';
 import { MAP_POST_FETCHING_THRESHOLD } from '../../../constants';
 import { INVESTMENT_NAME } from '@/strings';
+import AirQualityResult from '@/core/api/cartography/AirQualityResultDto';
 
 export interface MapWithPostsStore {
   postType: PostType;
   setPostType: (postType: PostType) => void;
-
   north: number;
   east: number;
   south: number;
@@ -28,6 +28,11 @@ export interface MapWithPostsStore {
   specificPostForceFlag: boolean;
   setSpecificPostWithForce: (post: MarkerablePostDto | null) => void;
   clearSpecificPostForceFlag: () => void;
+
+  airQualityData: any;
+  getAirQualityData: () => void;
+  airQualityVisible: boolean;
+  toggleAirQualityVisibility: () => void;
 }
 
 const initialValues: MapWithPostsStore = {
@@ -51,6 +56,10 @@ const initialValues: MapWithPostsStore = {
   specificPostForceFlag: false,
   setSpecificPostWithForce: () => {},
   clearSpecificPostForceFlag: () => {},
+  airQualityData: [],
+  getAirQualityData: () => {},
+  airQualityVisible: true,
+  toggleAirQualityVisibility: () => {},
 };
 export const useMapWithPostsStore = create<
   MapWithPostsStore,
@@ -105,5 +114,18 @@ export const useMapWithPostsStore = create<
       set({ specificPost, specificPostForceFlag: true });
     },
     clearSpecificPostForceFlag: () => set({ specificPostForceFlag: false }),
+    getAirQualityData: () => {
+      axiosInstance
+        .get<SuccessResponse<AirQualityResult[]>>('/cartography/airQuality')
+        .then((response) => {
+          set({ airQualityData: response.data.data });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    toggleAirQualityVisibility: () => {
+      set({ airQualityVisible: !get().airQualityVisible });
+    },
   })),
 );

@@ -7,6 +7,7 @@ import { GetParcelShapeOutputDto } from './dto/get-parcel-shape.output';
 import { GetCoordsByAddressInputDto } from './dto/get-coords-by-address.input';
 import { GetCoordsByAddressOutputDto } from './dto/get-coords-by-address.output';
 import { ApiTags } from '@nestjs/swagger';
+import { AirQualityResult } from './dto/get-air-quality.output';
 
 /**
  * Controller for cartography module, contains endpoints for cartography related operations
@@ -56,5 +57,36 @@ export class CartographyController {
     return this.cartographyService.getCoordinatesByAddress(
       getCoordsByAddressInput,
     );
+  }
+
+  @Get('airQuality')
+  async getAirQuality(): Promise<AirQualityResult[]> {
+    return await fetch(
+      `https://api.openaq.org/v2/latest?coordinates=${process.env.VITE_CITY_X},${process.env.VITE_CITY_Y}&radius=25000`,
+      {
+        method: 'GET',
+        headers: {
+          'X-API-Key': process.env.VITE_TEMP_API_KEY,
+        },
+      },
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        return data.results.map((result) => {
+          return {
+            location: result.location,
+            latitude: result.coordinates.latitude,
+            longitude: result.coordinates.longitude,
+            measurements: result.measurements.map((measurement) => {
+              return {
+                parameter: measurement.parameter,
+                value: measurement.value,
+                lastUpdated: measurement.lastUpdated,
+                unit: measurement.unit,
+              };
+            }),
+          };
+        });
+      });
   }
 }

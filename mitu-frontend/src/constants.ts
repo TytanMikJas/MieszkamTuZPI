@@ -8,6 +8,8 @@ export const SCREEN_LG = 1024;
 export const SCREEN_XL = 1280;
 export const SCREEN_2XL = 1536;
 
+export const ECO_GREEN_COLOR = '#65c918';
+
 // MAP
 export const MAP_WROCLAW_CENTER = new LatLng(51.110383, 17.033536);
 export const MAP_INIT_ZOOM = 15;

@@ -21,6 +21,13 @@ import ReactDOMServer from 'react-dom/server';
 import AnnouncementPopup from './AnnouncementPopup';
 import InvestmentPopup from './InvestmentPopup';
 import ListingPopup from './ListingPopup';
+import AirQualityResult from '@/core/api/cartography/AirQualityResultDto';
+import { AirQualityIcon } from '../AirQualityIcon/AirQualityIcon';
+import {
+  calculateAverageSeverity,
+  calculateParameterSeverity,
+  getColorFromPercentage,
+} from '@/utils/air-quality-utils';
 
 function Markers({
   postList,
@@ -109,6 +116,74 @@ function Markers({
   });
 }
 
+function AirQualityMarker({
+  data,
+  mapEvents,
+}: {
+  data: AirQualityResult[];
+  mapEvents: Map;
+}) {
+  return data.map((record: AirQualityResult) => {
+    const avgSeverity = calculateAverageSeverity(record.measurements);
+    const color = getColorFromPercentage(avgSeverity);
+
+    const aqi = divIcon({
+      className: '',
+      html: ReactDOMServer.renderToString(
+        <AirQualityIcon
+          key={record.location}
+          id={`${record.location}`}
+          color={color}
+        />,
+      ),
+    });
+
+    return (
+      <Marker
+        icon={aqi}
+        title={record.location}
+        key={record.location}
+        position={[record.latitude, record.longitude]}
+      >
+        <Popup>
+          <div className="text-sm mb-2 w-full text-center font-bold leading-tight pt-1 text-wrap">
+            {record.location.split(',')[1]}
+          </div>
+          <div className="flex w-48 flex-col gap-1">
+            {record.measurements.map((measurement) => {
+              const severity = calculateParameterSeverity(
+                measurement.parameter,
+                measurement.value,
+              );
+              const color = getColorFromPercentage(severity);
+              return (
+                <div
+                  className="flex items-center justify-between"
+                  key={measurement.parameter}
+                >
+                  <div className="flex gap-2 items-center">
+                    <div
+                      className="h-6 w-6 border-solid border-2 rounded-full border-black"
+                      style={{ backgroundColor: color }}
+                    >
+                      {' '}
+                    </div>
+                    <span className="font-bold">{measurement.parameter}</span>
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    <span className="font-bold">{measurement.value}</span>
+                    <span>{measurement.unit}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Popup>
+      </Marker>
+    );
+  });
+}
+
 function Area() {
   const { specificPost } = useMapWithPostsStore();
   if (specificPost === null || !specificPost.area) return <></>;
@@ -159,16 +234,28 @@ function MapMain() {
     <>
       <CitifiedTileLayer />
       <Markers postList={mapStore.postsList} mapEvents={mapEvents} />
+      {mapStore.airQualityVisible && (
+        <AirQualityMarker
+          data={mapStore.airQualityData}
+          mapEvents={mapEvents}
+        />
+      )}
       <Area />
     </>
   );
 }
 
 function MapWithPosts({}) {
-  const { fetchPosts, postType } = useMapWithPostsStore();
+  const { fetchPosts, postType, getAirQualityData } = useMapWithPostsStore();
+
   useEffect(() => {
     fetchPosts();
+    getAirQualityData();
   }, [postType]);
+
+  useEffect(() => {
+    getAirQualityData();
+  }, []);
 
   return (
     <MapContainerWrapper>
