@@ -269,6 +269,10 @@ export const useCommentStore = create<
                       cc.personalRating = returnedType;
                       return {
                         ...cc,
+                        upvoteCount:
+                          cc.upvoteCount + increments.upvoteCountIncrement,
+                        downvoteCount:
+                          cc.downvoteCount + increments.downvoteCountIncrement,
                         loadingRating: false,
                       };
                     }
