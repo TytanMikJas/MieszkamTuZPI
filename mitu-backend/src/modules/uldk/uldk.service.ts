@@ -156,6 +156,7 @@ export class ULDKService {
   async getCoordinatesByAddress(
     address: string,
   ): Promise<ParcelCoordinatesInternalOutputDto> {
-    return await getCoordsByAddresss(`Polska, Wrocław, ${address}`);
+    const cityName = process.env.VITE_CITY_NAME || 'Wrocław';
+    return await getCoordsByAddresss(`Polska, ${cityName}, ${address}`);
   }
 }
