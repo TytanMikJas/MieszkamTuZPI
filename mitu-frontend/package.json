@@ -57,6 +57,8 @@
     "@types/lodash": "4.17.0",
     "@types/react-filepond": "^7.1.0",
     "@use-gesture/react": "10.3.1",
+    "aframe": "^1.6.0",
+    "ar.js": "^2.2.2",
     "axios": "^1.7.7",
     "boring-avatars": "1.10.1",
     "chart.js": "^4.4.6",
