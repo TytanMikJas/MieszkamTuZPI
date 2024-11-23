@@ -1,0 +1,202 @@
+stages:
+  - documentation
+  - lint
+  - test
+  - build
+  - deploy
+
+lint-check-frontend:
+  stage: lint
+  image: node:20.1-alpine
+  script:
+    - echo "Lint check frontend"
+    - cd mitu-frontend
+    - npm install
+    - npm run lint
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+
+unit-test-front:
+  stage: test
+  image: node:20.1-alpine
+  script:
+    - echo "Unit test front"
+    - cd mitu-frontend
+    - npm install
+    - npm run test
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+
+lint-check-backend:
+  stage: lint
+  image: node:20
+  script:
+    - echo "Lint check backend"
+    - cd mitu-backend
+    - npm install
+    - npm run lint
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+
+typescript-check-backend:
+  stage: lint
+  image: node:20
+  script:
+    - echo "Checking, if Kacper Grobelny wrote compilable code"
+    - cd mitu-backend
+    - npm install
+    - npm run tsc:check
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+
+unit-test-backend:
+  stage: test
+  image: node:20
+  script:
+    - echo "Unit backend"
+    - cd mitu-backend
+    - npm install
+    - npm run test
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+
+lint-check-cron:
+  stage: lint
+  image: maven:3.8.3-amazoncorretto-17
+  script:
+    - echo "Lint check backend"
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+
+unit-test-cron:
+  stage: test
+  image: maven:3.8.3-amazoncorretto-17
+  script:
+    - echo "Unit cron"
+    - cd mitu-cron
+    - mvn clean install
+  rules:
+    - if: '$CI_MERGE_REQUEST_ID'
+
+build-frontend:
+  stage: build
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  before_script:
+    - docker login $CI_REGISTRY -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD
+  script:
+    - echo "Building frontend Docker Image"
+    - mv $DOTENV_PROD_WROCLAW .env.prod 
+    - docker build -t registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_frontend:latest_wroclaw -f frontend.Dockerfile .
+    - docker push registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_frontend:latest_wroclaw
+
+    - mv $DOTENV_PROD_WARSZAWA .env.prod 
+    - docker build -t registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_frontend:latest_warszawa -f frontend.Dockerfile .
+    - docker push registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_frontend:latest_warszawa
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
+  
+build-backend:
+  stage: build
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  before_script:
+    - docker login $CI_REGISTRY -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD
+  script:
+    - echo "Building backend Docker Image"
+    - mv $DOTENV_PROD_WROCLAW .env.prod 
+    - docker build -t registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_backend:latest_wroclaw -f backend.Dockerfile .
+    - docker push registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_backend:latest_wroclaw
+    - mv $DOTENV_PROD_WARSZAWA .env.prod 
+    - docker build -t registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_backend:latest_warszawa -f backend.Dockerfile .
+    - docker push registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_backend:latest_warszawa
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
+
+build-cron:
+  stage: build
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  before_script:
+    - docker login $CI_REGISTRY -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD
+  script:
+    - echo "Building cron Docker Image"
+    - docker build -t registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_cron:latest_wroclaw -f cron.Dockerfile .
+    - docker push registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_cron:latest_wroclaw
+    - docker build -t registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_cron:latest_warszawa -f cron.Dockerfile .
+    - docker push registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_cron:latest_warszawa
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
+
+build-prerender:
+  stage: build
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  before_script:
+    - docker login $CI_REGISTRY -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD
+  script:
+    - echo "Building prerender Docker Image"
+    - docker build -t registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_prerender:latest_wroclaw -f prerender.Dockerfile .
+    - docker push registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_prerender:latest_wroclaw 
+    - docker build -t registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_prerender:latest_warszawa -f prerender.Dockerfile .
+    - docker push registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_prerender:latest_warszawa
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
+
+pages:
+  stage: documentation
+  image: node:20.1-alpine
+  before_script:
+    - cd mitu-backend
+    - npm install
+  script:
+    - npx @compodoc/compodoc -p tsconfig.json
+    - cd ..
+    - mkdir .public
+    - cp -r mitu-backend/documentation/* .public
+    - mv .public public
+  artifacts:
+    paths:
+    - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
+
+deploy-wroclaw:
+  stage: deploy
+  tags:
+    - vm-wroclaw
+  before_script:
+    - docker login $CI_REGISTRY -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD
+  script:
+    - echo "Deploy Wroclaw"
+    - mv $DOTENV_PROD_WROCLAW .env.prod
+    - docker compose down
+    - DOCKER_CITY=wroclaw docker compose up -d --pull always
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+deploy-warszawa:
+  stage: deploy
+  tags:
+    - vm-warszawa
+  before_script:
+    - docker login $CI_REGISTRY -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD
+  script:
+    - echo "Desploy Warszawa"
+    - mv $DOTENV_PROD_WARSZAWA .env.prod
+    - docker compose down
+    - DOCKER_CITY=warszawa docker compose up -d --pull always
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'

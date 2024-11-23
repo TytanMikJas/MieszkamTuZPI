@@ -1,0 +1,224 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum InvestmentStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  APPROVED
+  REJECTED
+}
+
+enum UserStatus {
+  ACTIVE
+  EMAIL_NOT_CONFIRMED
+  SHADOW_BANNED
+  BANNED
+  DELETED
+}
+
+enum PostVoteType {
+  UPVOTE
+  DOWNVOTE
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  OFFICIAL
+}
+
+enum FileType {
+  TD
+  IMAGE
+  DOC
+}
+
+enum PostType {
+  INVESTMENT
+  LISTING
+  ANNOUNCEMENT
+  COMMENT
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  HIDDEN
+  BANNED
+}
+
+model Post {
+  id            Int          @id @default(autoincrement())
+  createdAt     DateTime     @default(now())
+  postType      PostType
+  content       String
+  createdById   Int
+  upvoteCount   Int          @default(0)
+  downvoteCount Int          @default(0)
+  thumbnail     String       @default("")
+  attachments   Attachment[]
+  commentCount  Int          @default(0)
+
+  comments     Comment[]     @relation(name: "PostComments")
+  comment      Comment?      @relation(name: "PostComment")
+  listing      Listing?      @relation(name: "ListingPost")
+  investment   Investment?   @relation(name: "InvestmentPost")
+  announcement Announcement? @relation(name: "AnnouncementPost")
+  createdBy    User          @relation(fields: [createdById], references: [id], onDelete: Cascade)
+}
+
+model POI {
+  id           Int            @id
+  title        String
+  slug         String         @unique
+  locationX    Float
+  locationY    Float
+  responsible  String
+  street       String?
+  buildingNr   String?
+  apartmentNr  String?
+  Investment   Investment[]   @relation(name: "InvestmentPOI")
+  Announcement Announcement[] @relation(name: "AnnouncementPOI")
+  Listing      Listing[]      @relation(name: "ListingPOI")
+}
+
+model Investment {
+  id                   Int                @id
+  updatedAt            DateTime           @updatedAt
+  area                 String
+  isCommentable        Boolean            @default(true)
+  status               InvestmentStatus
+  badges               Badge[]
+  investmentCategoryId String
+  category             InvestmentCategory @relation(fields: [investmentCategoryId], references: [name])
+  post                 Post               @relation(name: "InvestmentPost", fields: [id], references: [id], onDelete: Cascade)
+  poi                  POI                @relation(name: "InvestmentPOI", fields: [id], references: [id], onDelete: Cascade, map: "InvestmentPOI_id_fkey")
+}
+
+model Announcement {
+  id            Int                  @id
+  updatedAt     DateTime             @updatedAt
+  area          String?
+  categoryId    String
+  isCommentable Boolean              @default(true)
+  category      AnnouncementCategory @relation(fields: [categoryId], references: [name])
+  post          Post                 @relation(name: "AnnouncementPost", fields: [id], references: [id], onDelete: Cascade)
+  poi           POI                  @relation(name: "AnnouncementPOI", fields: [id], references: [id], onDelete: Cascade, map: "AnnouncementPOI_id_fkey")
+}
+
+model Listing {
+  id        Int      @id
+  updatedAt DateTime @updatedAt
+  sell      Boolean  @default(false)
+  price     Float
+  surface   Float
+  post      Post     @relation(name: "ListingPost", fields: [id], references: [id], onDelete: Cascade)
+  poi       POI      @relation(name: "ListingPOI", fields: [id], references: [id], onDelete: Cascade, map: "ListingPOI_id_fkey")
+}
+
+model Badge {
+  name       String       @id
+  icon       String
+  primary    String
+  secondary  String
+  Investment Investment[]
+}
+
+model InvestmentCategory {
+  name       String       @id
+  icon       String
+  Investment Investment[]
+}
+
+model AnnouncementCategory {
+  name         String         @id
+  icon         String
+  Announcement Announcement[]
+}
+
+model Comment {
+  id           Int           @id
+  parentNodeId Int
+  status       CommentStatus
+  post         Post          @relation(name: "PostComment", fields: [id], references: [id], onDelete: Cascade)
+  parentNode   Post          @relation(name: "PostComments", fields: [parentNodeId], references: [id], onDelete: Cascade)
+}
+
+model PostVote {
+  userId    Int
+  postId    Int
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  type      PostVoteType
+
+  @@id([userId, postId])
+  @@index([createdAt])
+}
+
+model Attachment {
+  id       Int      @id @default(autoincrement())
+  postId   Int
+  fileName String
+  fileType FileType
+  postType PostType
+  post     Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id                          Int                          @id @default(autoincrement())
+  createdAt                   DateTime                     @default(now())
+  updatedAt                   DateTime                     @updatedAt
+  avatar                      String                       @default(uuid())
+  firstName                   String
+  lastName                    String
+  password                    String
+  email                       String                       @unique
+  newsletter_agreement        Boolean                      @default(false)
+  forceChangePassword         Boolean                      @default(false)
+  User_EmailVerificationToken User_EmailVerificationToken?
+  User_ChangePasswordToken    User_ChangePasswordToken?
+  status                      UserStatus                   @default(EMAIL_NOT_CONFIRMED)
+  role                        UserRole                     @default(USER)
+  Post                        Post[]
+}
+
+model User_RefreshToken {
+  userId    Int      @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  token     String
+}
+
+model User_EmailVerificationToken {
+  userId    Int      @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model User_ChangePasswordToken {
+  userId    Int      @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Newsletter {
+  id             Int     @id @default(autoincrement())
+  name           String
+  subject        String
+  htmlNewsletter String?
+  edjsNewsletter String?
+}
