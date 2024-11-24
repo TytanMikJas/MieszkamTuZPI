@@ -30,6 +30,10 @@ export class ResponseTransformInterceptor implements NestInterceptor {
    * @memberof ResponseTransformInterceptor
    */
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    //if ulr contains file-handler, return the response as it is
+    if (context.switchToHttp().getRequest().url.includes('/api/filehandler')) {
+      return next.handle();
+    }
     let successMessage = this.reflector.get(
       'success-message',
       context.getHandler(),

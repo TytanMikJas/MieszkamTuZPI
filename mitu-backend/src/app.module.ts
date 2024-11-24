@@ -25,6 +25,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { RedisCacheManager } from './configuration';
 import { SentimentModule } from './modules/sentiment/sentiment.module';
 import { ModerationModule } from './modules/moderation/moderation.module';
+import NewsletterModule from './modules/newsletter/newsletter.module';
 
 /**
  * Main module of the application.
@@ -64,6 +65,7 @@ import { ModerationModule } from './modules/moderation/moderation.module';
     AdminModule,
     RatingModule,
     SentimentModule,
+    NewsletterModule,
   ],
   providers: [
     Reflector,

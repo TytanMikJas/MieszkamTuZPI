@@ -2,7 +2,7 @@ version: "3.8"
 services:
   mitu_postgres:
     container_name: mitu_postgres
-    image: postgres:10.3
+    image: postgres:latest
     restart: always
     volumes:
       - mitu_postgres:/var/lib/postgresql/data

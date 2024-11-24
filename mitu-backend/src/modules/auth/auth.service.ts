@@ -25,6 +25,7 @@ import ConfirmRegistrationUserNotFound from './exceptions/confirm-registration-u
 import ConfirmRegistrationUserAlreadyVerified from './exceptions/confirm-registration-user-already-verified';
 import ChangeForgottenPasswordInputDto from './dto/change-forgotten-password-dto.input';
 import { SimpleForbidden } from 'src/exceptions/simple-forbidden.exception';
+import { MailService } from '../mail/mail-sender.service';
 export const saltRounds = 10;
 
 /**
@@ -66,6 +67,7 @@ export class AuthService {
     private readonly authRepository: AuthRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly mailService: MailService,
   ) {
     this.logger = new Logger(AuthService.name);
     this.apiPublicUrl = configService.get<string>('API_PUBLIC_URL');
@@ -273,7 +275,7 @@ export class AuthService {
     const token = randomUUID();
     const confirmationLink = this.createConfirmationLink(token);
     this.authRepository.upsertRegistrationConfirmation(user.id, token);
-    //TODO send email with confirmation link
+    this.mailService.sendRegisterConfirmation(user, confirmationLink);
     return confirmationLink;
   }
 
@@ -303,7 +305,8 @@ export class AuthService {
   async createChangePasswordToken(user: UserInternalDto): Promise<string> {
     const token = randomUUID();
     this.authRepository.upsertChangePasswordToken(user.id, token);
-    //TODO send email with change password link
+    const changePasswordLink = this.createChangePasswordLink(token);
+    this.mailService.sendChangePasswordLink(user, changePasswordLink);
     return token;
   }
 

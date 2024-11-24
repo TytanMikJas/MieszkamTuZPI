@@ -29,6 +29,7 @@ import { AttachmentService } from '../attachment/attachment.service';
 
 import { $Enums } from '@prisma/client';
 import { FiledetailsStrategyFactory } from './factories/filedetailsStrategy.factory';
+import NewsletterImageSavedDto from './dto/newsletter-image-saved.dto';
 
 /**
  * Filehandler service
@@ -42,6 +43,29 @@ import { FiledetailsStrategyFactory } from './factories/filedetailsStrategy.fact
 @Injectable()
 export class FilehandlerService {
   constructor(private readonly attachmentService: AttachmentService) {}
+
+  /**
+   * Save newsletter image to disk
+   */
+  async saveNewsletterImage(
+    file: Express.Multer.File,
+  ): Promise<NewsletterImageSavedDto> {
+    const path = `./uploads/newsletter`;
+    if (!(await this.fileExists(path))) await this.createDirectory(path);
+    const slug = Math.random().toString(36).substring(7);
+    const savedName = file.originalname.replace(
+      FileExtensionRegExp,
+      `-${slug}${DesiredImageFormat}`,
+    );
+    await writeFile(`${path}/${savedName}`, file.buffer);
+    return {
+      success: 1,
+      file: {
+        url: `${process.env.UPLOADS_PUBLIC_URL}/newsletter/${savedName}`,
+        //url: 'https://imgs.search.brave.com/PHIRDEbjFhntV_Kbf_KdomVNifU36_T_Mkq7sMKBmWA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvNjI2/NDY0MTU4L3Bob3Rv/L2NhdC13aXRoLW9w/ZW4tbW91dGguanBn/P3M9NjEyeDYxMiZ3/PTAmaz0yMCZjPVFy/OURDVmt3S21fZHpm/amtlTjVmb0NCcDdj/M0VmQkZfaTJBMGV0/WWlKT0E9'
+      },
+    };
+  }
 
   /**
    * Check if file exists
