@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { $Enums, Post, PrismaClient } from '@prisma/client';
+import {
+  $Enums,
+  CommentStatus,
+  Post,
+  PostType,
+  PrismaClient,
+} from '@prisma/client';
 import { CreatePostDto } from 'src/modules/post/dto/create-post-dto.internal';
 import PostDto, {
   PostDtoWithUser,
@@ -276,6 +282,24 @@ export default class PostRepository {
    */
   async getAll(): Promise<Post[]> {
     return await this.prisma.post.findMany();
+  }
+
+  /**
+   * Get all pending comments
+   * @returns {Promise<Post[]>}
+   */
+  async getAllPendingComments(): Promise<Post[]> {
+    return await this.prisma.post.findMany({
+      where: {
+        postType: PostType.COMMENT,
+        comment: {
+          status: CommentStatus.PENDING,
+        },
+      },
+      include: {
+        comment: true,
+      },
+    });
   }
 
   /**

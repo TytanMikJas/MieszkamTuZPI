@@ -260,7 +260,7 @@ async function seedUsers() {
         password: hashedPassword,
         role: UserRole.USER,
         status: UserStatus.ACTIVE,
-        newsletter_agreement: true,
+        newsletter_agreement: false,
       },
       {
         id: 4 + ID_OFFSET,
@@ -270,7 +270,7 @@ async function seedUsers() {
         password: hashedPassword,
         role: UserRole.USER,
         status: UserStatus.ACTIVE,
-        newsletter_agreement: true,
+        newsletter_agreement: false,
       },
       {
         id: 5 + ID_OFFSET,
@@ -280,7 +280,7 @@ async function seedUsers() {
         password: hashedPassword,
         role: UserRole.USER,
         status: UserStatus.BANNED,
-        newsletter_agreement: true,
+        newsletter_agreement: false,
       },
       {
         id: 6 + ID_OFFSET,
@@ -290,7 +290,7 @@ async function seedUsers() {
         password: hashedPassword,
         role: UserRole.USER,
         status: UserStatus.DELETED,
-        newsletter_agreement: true,
+        newsletter_agreement: false,
       },
       {
         id: 7 + ID_OFFSET,
@@ -300,7 +300,7 @@ async function seedUsers() {
         password: hashedPassword,
         role: UserRole.USER,
         status: UserStatus.EMAIL_NOT_CONFIRMED,
-        newsletter_agreement: true,
+        newsletter_agreement: false,
       },
       {
         id: 8 + ID_OFFSET,

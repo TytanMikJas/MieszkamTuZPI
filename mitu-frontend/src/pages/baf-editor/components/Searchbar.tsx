@@ -84,9 +84,7 @@ function Searchbar() {
             style={{ width: '20rem' }}
             value={searchbarValue}
             placeholder={
-              selectedType == 0
-                ? 'np. Bieruń Stary, 469/322'
-                : 'np. Granitowa 1'
+              selectedType == 0 ? 'np. Klecina, 51' : 'np. Brochowska 1'
             }
           />
           <SearchIcon onClick={handleSearch} />

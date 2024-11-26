@@ -142,8 +142,14 @@ export const ERROR_USER_PASSWORD_ADMIN =
 export const ERROR_INVALID_ID = 'Niepoprawny numer identyfikacyjny';
 export const ERROR_INVALID_LOCATION_TUPLE = 'Niepoprawna lokalizacja';
 
+//CACHE
 export const ROLES_KEY = 'roles';
 export const CLEAR_CACHE_KEY = 'clear-cache';
+
+//COMMENTS MODERATION
+export const URL_PREFIX = '/uploads/COMMENT/';
+export const URL_POSTFIX = '/IMAGE/';
+export const AZURE_BLOCKLIST_NAME = 'mitu_blocklist';
 
 export const RESEND_CONFIRMATION_EMAIL_USER_NOT_FOUND_MESSAGE =
   'Nastąpił nieoczekiwany błąd. Spróbuj zarejestrować się ponownie';

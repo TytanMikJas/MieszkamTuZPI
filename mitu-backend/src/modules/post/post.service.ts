@@ -13,6 +13,7 @@ import { RatingType } from '../rating/dto/rating-dto';
 import RatingService from '../rating/rating.service';
 import UserInternalDto from '../user/dto/user.internal';
 import PostCommentsContentInternalDto from './dto/post-with-comments-dto.internal';
+import PostModerateDto from './dto/post-moderate-dto.internal';
 
 /**
  * Service for the Post entity
@@ -212,6 +213,20 @@ export class PostService {
     });
 
     return attributes;
+  }
+
+  /**
+   * Get all pending comments and transform into PostModerateDto objects
+   * @returns {Promise<PostModerateDto[]>}
+   */
+  async getAllPendingComments(): Promise<PostModerateDto[]> {
+    const posts = await this.postRepository.getAllPendingComments();
+
+    return posts.map((post) => ({
+      id: post.id,
+      content: post.content,
+      thumbnail: post.thumbnail,
+    }));
   }
 
   /**

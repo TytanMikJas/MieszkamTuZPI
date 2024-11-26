@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { FilehandlerService } from './filehandler.service';
 import { AttachmentModule } from '../attachment/attachment.module';
+import FilehandlerController from './filehandler.controller';
 
 /**
  * Filehandler module
@@ -15,5 +16,6 @@ import { AttachmentModule } from '../attachment/attachment.module';
   imports: [AttachmentModule],
   providers: [FilehandlerService],
   exports: [FilehandlerService],
+  controllers: [FilehandlerController],
 })
 export class FilehandlerModule {}

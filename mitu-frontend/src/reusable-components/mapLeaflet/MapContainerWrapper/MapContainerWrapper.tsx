@@ -2,7 +2,6 @@ import { MAP_MIN_ZOOM } from '../../../constants';
 import React from 'react';
 import { MapContainer } from 'react-leaflet';
 import { useMapSettingsStore } from '../../../core/stores/map/map-settings-store';
-import AirQualityToggle from '../mapWithPosts/AirQualityToggle';
 
 export default function MapContainerWrapper({
   children,
@@ -22,7 +21,6 @@ export default function MapContainerWrapper({
       zoomSnap={0.4}
       scrollWheelZoom={true}
     >
-      <AirQualityToggle />
       {children}
     </MapContainer>
   );

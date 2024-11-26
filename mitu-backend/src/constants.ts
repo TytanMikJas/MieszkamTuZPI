@@ -31,5 +31,6 @@ export const DOC_COMMENT_QUANTITY_LIMIT = 0;
 
 export const POST_TAKE_COMMENTS = 3;
 
+export const TEN_MINUTES_MODERATION_INTERVAL = 1_000 * 60 * 10; // 10m
 export const DEFAULT_CACHE_TTL_SECONDS = 1_000 * 60 * 60; // 1h
 export const CONSTANT_CACHE_TTL_SECONDS = 1_000 * 60 * 60 * 24; // 24h
