@@ -111,6 +111,7 @@ export class InvestmentController {
    */
   @Get('/one/:id')
   @UseInterceptors(PostAttributesInterceptor)
+  @UseGuards(IdentifyAuthGuard)
   @UseInterceptors(CacheInterceptor)
   async getOne(
     @Param('id', ParsePrismaID) id: PRISMA_ID,
@@ -125,6 +126,7 @@ export class InvestmentController {
    */
   @Get('/slug/:slug')
   @UseInterceptors(PostAttributesInterceptor)
+  @UseGuards(IdentifyAuthGuard)
   @UseInterceptors(CacheInterceptor)
   async getOneBySlug(@Param('slug') slug: string): Promise<InvestmentDto> {
     return this.investmentsService.getOneBySlug(slug);

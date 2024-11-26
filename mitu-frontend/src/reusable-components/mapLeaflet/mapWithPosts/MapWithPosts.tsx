@@ -28,6 +28,7 @@ import {
   calculateParameterSeverity,
   getColorFromPercentage,
 } from '@/utils/air-quality-utils';
+import AirQualityToggle from './AirQualityToggle';
 
 function Markers({
   postList,
@@ -233,6 +234,7 @@ function MapMain() {
   return (
     <>
       <CitifiedTileLayer />
+      <AirQualityToggle />
       <Markers postList={mapStore.postsList} mapEvents={mapEvents} />
       {mapStore.airQualityVisible && (
         <AirQualityMarker

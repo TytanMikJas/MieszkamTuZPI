@@ -13,6 +13,7 @@ import JwtException from './exceptions/jwt-token.exception';
 import ForceChangePasswordInputDto from './dto/force-change-password.input';
 import { SimpleBadRequest } from 'src/exceptions/simple-bad-request.exception';
 import ConfirmRegistrationUserAlreadyVerified from './exceptions/confirm-registration-user-already-verified';
+import { MailService } from '../mail/mail-sender.service';
 describe('authService', () => {
   let authService: AuthService;
   let userService: UserService;
@@ -70,6 +71,15 @@ describe('authService', () => {
       ),
     };
 
+    const mockMailServiceProvider: Provider<Partial<MailService>> = {
+      provide: MailService,
+      useValue: Object.fromEntries(
+        Object.getOwnPropertyNames(MailService.prototype)
+          .filter((method) => method !== 'constructor') // Exclude the constructor
+          .map((method) => [method, jest.fn()]), // Map each method to a jest.fn() mock
+      ),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
@@ -77,6 +87,7 @@ describe('authService', () => {
         mockJwtServiceProvider,
         mockConfigServiceProvider,
         mockAuthRepositoryProvider,
+        mockMailServiceProvider,
       ],
     }).compile();
 

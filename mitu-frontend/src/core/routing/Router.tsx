@@ -37,6 +37,7 @@ import AdminPage from '@/pages/admin/AdminPage';
 import BafSimplePage from '@/pages/baf-simple/BafSimplePage';
 import BafChoosePage from '@/pages/baf-choose/BafChoosePage';
 import BafEditorPage from '@/pages/baf-editor/BAFEditorPage';
+import NewsletterPage from '@/pages/official/newsletter/NewsletterPage';
 
 export const MAP = 'mapa';
 export const LANDING_PAGE = 'start';
@@ -477,7 +478,7 @@ export const router = createBrowserRouter([
             children: [
               {
                 path: ROUTES.OFFICIAL.NEWSLETTER.path(),
-                element: <div>Here there be a newsletter editor</div>,
+                element: <NewsletterPage />,
               },
             ],
           },

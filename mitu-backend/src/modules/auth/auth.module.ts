@@ -10,6 +10,7 @@ import { SECRET_KEY } from 'src/strings';
 import RefreshTokenStrategy, {
   RefreshTokenAuthGuard,
 } from './strategies/refresh-token.strategy';
+import { MailModule } from '../mail/mail.module';
 
 /**
  * Auth module
@@ -35,6 +36,7 @@ import RefreshTokenStrategy, {
       secret: SECRET_KEY,
       global: true,
     }),
+    MailModule,
   ],
 })
 export class AuthModule {}

@@ -71,6 +71,13 @@ export class MailService {
       context: {
         newPassword,
       },
+      attachments: [
+        {
+          filename: 'mitu-logo.png',
+          path: `${process.cwd()}/mail-templates/mitu-logo.png`,
+          cid: 'mitu-logo',
+        },
+      ],
     });
     this.logger.log(`Password reset email sent for ${email}`);
   }
@@ -89,6 +96,13 @@ export class MailService {
         email,
         password,
       },
+      attachments: [
+        {
+          filename: 'mitu-logo.png',
+          path: `${process.cwd()}/mail-templates/mitu-logo.png`,
+          cid: 'mitu-logo',
+        },
+      ],
     });
     this.logger.log(`Admin created account email sent for ${email}`);
   }
@@ -108,6 +122,13 @@ export class MailService {
         firstName: user.firstName,
         lastName: user.lastName,
       },
+      attachments: [
+        {
+          filename: 'mitu-logo.png',
+          path: `${process.cwd()}/mail-templates/mitu-logo.png`,
+          cid: 'mitu-logo',
+        },
+      ],
     });
     this.logger.log(`Change password link email sent for ${user.email}`);
   }
