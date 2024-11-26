@@ -8,6 +8,7 @@ import { GetCoordsByAddressInputDto } from './dto/get-coords-by-address.input';
 import { GetCoordsByAddressOutputDto } from './dto/get-coords-by-address.output';
 import { ApiTags } from '@nestjs/swagger';
 import { AirQualityResult } from './dto/get-air-quality.output';
+import { getQuantizedFloat } from 'src/utils/num-utils';
 
 /**
  * Controller for cartography module, contains endpoints for cartography related operations
@@ -61,8 +62,10 @@ export class CartographyController {
 
   @Get('airQuality')
   async getAirQuality(): Promise<AirQualityResult[]> {
+    const x = getQuantizedFloat(process.env.VITE_CITY_X);
+    const y = getQuantizedFloat(process.env.VITE_CITY_Y);
     return await fetch(
-      `https://api.openaq.org/v2/latest?coordinates=${process.env.VITE_CITY_X},${process.env.VITE_CITY_Y}&radius=25000`,
+      `https://api.openaq.org/v2/latest?coordinates=${x},${y}&radius=25000`,
       {
         method: 'GET',
         headers: {
@@ -72,7 +75,7 @@ export class CartographyController {
     )
       .then((response) => response.json())
       .then((data) => {
-        return data.results.map((result) => {
+        return data.results?.map((result) => {
           return {
             location: result.location,
             latitude: result.coordinates.latitude,

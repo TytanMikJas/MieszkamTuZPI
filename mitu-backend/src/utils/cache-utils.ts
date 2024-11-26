@@ -5,7 +5,12 @@ export async function deleteCacheKeyOnDemand(
   redisCache: any,
 ): Promise<void> {
   for (const key of cacheKeys) {
-    await redisCache.del(key);
+    const k = await redisCache.get(key);
+    if (k) {
+      await redisCache.del(key);
+    } else {
+      await redisCache.reset();
+    }
   }
 }
 
@@ -17,5 +22,6 @@ export function generatePostCacheKeys(
   return [
     `/api/${postType}/slug/${slug}`.toLocaleLowerCase(),
     `/api/${postType}/one/${postId}`.toLocaleLowerCase(),
+    `/api/${postType}`.toLocaleLowerCase(),
   ];
 }

@@ -38,7 +38,7 @@ export function getColorFromPercentage(percentage: number): string {
       g: yellow.g + (red.g - yellow.g) * ratio,
       b: yellow.b + (red.b - yellow.b) * ratio,
     };
-  } else if (percentage >= 50) {
+  } else if (percentage >= 25) {
     const ratio = (percentage - 50) / 25;
     color = {
       r: green.r + (yellow.r - green.r) * ratio,

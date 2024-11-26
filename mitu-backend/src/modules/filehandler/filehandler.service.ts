@@ -357,13 +357,21 @@ export class FilehandlerService {
     const _ca = {
       images: attachments[FILE_PATHS_IMAGE].map(
         (file) => file.split('/').slice(-1)[0],
-      ).filter((file) => !exclude[FILE_PATHS_IMAGE].includes(file)),
+      ).filter(
+        (file) =>
+          !exclude[FILE_PATHS_IMAGE].includes(file) && file !== '.gitkeep',
+      ),
       tds: attachments[FILE_PATHS_TD].map(
         (file) => file.split('/').slice(-1)[0],
-      ).filter((file) => !exclude[FILE_PATHS_TD].includes(file)),
+      ).filter(
+        (file) => !exclude[FILE_PATHS_TD].includes(file) && file !== '.gitkeep',
+      ),
       docs: attachments[FILE_PATHS_DOC].map(
         (file) => file.split('/').slice(-1)[0],
-      ).filter((file) => !exclude[FILE_PATHS_DOC].includes(file)),
+      ).filter(
+        (file) =>
+          !exclude[FILE_PATHS_DOC].includes(file) && file !== '.gitkeep',
+      ),
     };
 
     const _fd = FiledetailsStrategyFactory(postType);
