@@ -118,6 +118,7 @@ export default class PostRepository {
 
   async getPostCommentsContentInternalDto(
     id: PRISMA_ID,
+    status: CommentStatus,
   ): Promise<PostCommentsContentInternalDto> {
     return this.prisma.post
       .findUnique({
@@ -126,6 +127,7 @@ export default class PostRepository {
           id: true,
           postType: true,
           comments: {
+            where: { status: status },
             select: {
               post: {
                 select: {

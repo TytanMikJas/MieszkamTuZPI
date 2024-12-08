@@ -5,3 +5,6 @@
 .idea/*
 mitu-cron/target/*
 dev.docker-compose.yml
+.env.prod.warszawa
+.env.prod.wroclaw
+struct/.structurizr

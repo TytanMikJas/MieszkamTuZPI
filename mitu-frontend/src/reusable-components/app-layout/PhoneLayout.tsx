@@ -42,6 +42,7 @@ function PhoneLayout({
   const [isInitialSnap, setIsInitialSnap] = useState(true);
   const buttonsVisible =
     showButtons && uiStore.currentBottomSheetSnap !== PhoneLayoutSnap.BOTTOM;
+  const [pb, setPb] = useState(0);
   useEffect(() => {
     const html = document.querySelector('html');
     const body = document.querySelector('body');
@@ -73,10 +74,24 @@ function PhoneLayout({
         setIsInitialSnap(false);
         return;
       }
+      calculatePb(snap);
       uiStore.setCurrentBottomSheetSnap(snap as PhoneLayoutSnap);
     },
     [isInitialSnap],
   );
+
+  const calculatePb = (snap: PhoneLayoutSnap) => {
+    const screenHeight = screen.height;
+    if (snap == PhoneLayoutSnap.BOTTOM) {
+      setPb(screenHeight * 0.8);
+    }
+    if (snap == PhoneLayoutSnap.MIDDLE) {
+      setPb(screenHeight * 0.4);
+    }
+    if (snap == PhoneLayoutSnap.TOP) {
+      setPb(screenHeight * 0.06);
+    }
+  };
 
   const onLeftButtonClick = useCallback(() => {
     if (leftButtonAction) {
@@ -134,7 +149,9 @@ function PhoneLayout({
 
           <Sheet.Content>
             {page == PhoneLayoutPage.LEFT ? (
-              <Sheet.Scroller id="left">{leftScreenComponent}</Sheet.Scroller>
+              <Sheet.Scroller id="left">
+                <div style={{ paddingBottom: pb }}>{leftScreenComponent}</div>
+              </Sheet.Scroller>
             ) : (
               <Sheet.Scroller id="right">{rightScreenComponent}</Sheet.Scroller>
             )}

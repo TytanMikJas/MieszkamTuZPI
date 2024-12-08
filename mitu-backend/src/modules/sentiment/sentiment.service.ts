@@ -75,21 +75,21 @@ export default class SentimentService {
     const alpha = 1.1;
     let sentimentDescription: SentimentDescription;
     if (
-      countPositive * alpha > countNegative &&
-      countPositive * alpha > countNeutral &&
-      countPositive * alpha > countMixed
+      countPositive > countNegative * alpha &&
+      countPositive > countNeutral * alpha &&
+      countPositive > countMixed * alpha
     ) {
       sentimentDescription = SentimentDescription.POSITIVE;
     } else if (
-      countNegative * alpha > countPositive &&
-      countNegative * alpha > countNeutral &&
-      countNegative * alpha > countMixed
+      countNegative > countPositive * alpha &&
+      countNegative > countNeutral * alpha &&
+      countNegative > countMixed * alpha
     ) {
       sentimentDescription = SentimentDescription.NEGATIVE;
     } else if (
-      countNeutral * alpha > countPositive &&
-      countNeutral * alpha > countNegative &&
-      countNeutral * alpha > countMixed
+      countNeutral > countPositive * alpha &&
+      countNeutral > countNegative * alpha &&
+      countNeutral > countMixed * alpha
     ) {
       sentimentDescription = SentimentDescription.NEUTRAL;
     } else {
