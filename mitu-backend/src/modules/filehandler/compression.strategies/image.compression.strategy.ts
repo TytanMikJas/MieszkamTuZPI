@@ -12,8 +12,7 @@ export class ImageCompressionStrategy implements ICompressionStrategy {
    * @returns {Promise<Express.Multer.File>}
    */
   async compress(file: Express.Multer.File): Promise<Express.Multer.File> {
-    const compressedFile = sharp(file.buffer).png({ quality: 50 });
-    file.buffer = await compressedFile.toBuffer();
+    file.buffer = await sharp(file.buffer).png({ quality: 50 }).toBuffer();
 
     file.originalname = file.originalname.replace(
       FileExtensionRegExp,

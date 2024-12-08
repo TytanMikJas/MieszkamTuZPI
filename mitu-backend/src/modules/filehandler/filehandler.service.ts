@@ -212,15 +212,17 @@ export class FilehandlerService {
     postType: $Enums.PostType,
     postId: PRISMA_ID,
   ): Promise<void> {
-    return files.forEach(async (file) => {
-      await this.saveFile(
-        file,
-        `${dir}/${fileType}`,
-        fileType,
-        postType,
-        postId,
-      );
-    });
+    await Promise.all(
+      files.map(async (file) => {
+        await this.saveFile(
+          file,
+          `${dir}/${fileType}`,
+          fileType,
+          postType,
+          postId,
+        );
+      }),
+    );
   }
 
   /**

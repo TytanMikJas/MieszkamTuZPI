@@ -38,17 +38,22 @@ export default function CommentInput({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const handlePostComment = () => {
-    if (inputRef.current?.value) {
+    if (inputRef.current) {
       const val = inputRef.current.value;
 
-      if (val.length > MAX_LENGTH_COMMENT_CONTENT) {
+      if (!val) {
+        emitError('Komentarz musi mieć treść');
+        return;
+      }
+
+      if (val.trim().length > MAX_LENGTH_COMMENT_CONTENT) {
         emitError(
           `Maksymalna długość komentarza to ${MAX_LENGTH_COMMENT_CONTENT} znaków`,
         );
         return;
       }
 
-      if (val.length < MIN_LENGTH_COMMENT_CONTENT) {
+      if (val.trim().length < MIN_LENGTH_COMMENT_CONTENT) {
         emitError(
           `Minimalna długość komentarza to ${MIN_LENGTH_COMMENT_CONTENT} znaków`,
         );

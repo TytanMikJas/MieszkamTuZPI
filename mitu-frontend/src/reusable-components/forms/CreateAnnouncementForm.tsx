@@ -63,6 +63,7 @@ import AttachmentBadge from './AttachmentBadge';
 import { AnnouncementFormData, announcementFormSchema } from './form-schemas';
 import { useMapEditStore } from '@/core/stores/map/map-edit-store';
 import { LatLng } from 'leaflet';
+import { FullScreenLoader } from '../loaders/FullScreenLoader';
 
 export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
   const {
@@ -75,6 +76,7 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
     categories,
     fetchAvailableCategories,
     setResetList,
+    formAnnouncementLoading,
   } = useAnnouncementStore();
   const {
     getParsedLocation,
@@ -443,6 +445,9 @@ export default function CreateAnnouncementForm({ edit }: { edit?: boolean }) {
           <PanelLoader />
         </div>
       )}
+
+      {formAnnouncementLoading && <FullScreenLoader />}
+
       <Form {...form}>
         <form
           onSubmit={

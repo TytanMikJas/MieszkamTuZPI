@@ -9,6 +9,12 @@ import { GetCoordsByAddressOutputDto } from './dto/get-coords-by-address.output'
 import { ApiTags } from '@nestjs/swagger';
 import { AirQualityResult } from './dto/get-air-quality.output';
 import { getQuantizedFloat } from 'src/utils/num-utils';
+import {
+  calculateParameterSeverity,
+  isValidParameter,
+  roundToDecimal,
+  trimLocationName,
+} from 'src/utils/air-quality-utils';
 
 /**
  * Controller for cartography module, contains endpoints for cartography related operations
@@ -75,21 +81,31 @@ export class CartographyController {
     )
       .then((response) => response.json())
       .then((data) => {
-        return data.results?.map((result) => {
-          return {
-            location: result.location,
-            latitude: result.coordinates.latitude,
-            longitude: result.coordinates.longitude,
-            measurements: result.measurements.map((measurement) => {
-              return {
-                parameter: measurement.parameter,
-                value: measurement.value,
-                lastUpdated: measurement.lastUpdated,
-                unit: measurement.unit,
-              };
-            }),
-          };
-        });
+        return data.results
+          ?.filter((r) => r.location && r.measurements.length > 1)
+          .map((result) => {
+            return {
+              location: trimLocationName(result.location),
+              latitude: result.coordinates.latitude,
+              longitude: result.coordinates.longitude,
+              measurements: result.measurements
+                .filter((measurement) =>
+                  isValidParameter(measurement.parameter),
+                )
+                .map((measurement) => {
+                  return {
+                    parameter: measurement.parameter,
+                    value: roundToDecimal(measurement.value),
+                    lastUpdated: measurement.lastUpdated,
+                    unit: measurement.unit,
+                    severity: calculateParameterSeverity(
+                      measurement.parameter,
+                      measurement.value,
+                    ),
+                  };
+                }),
+            };
+          });
       });
   }
 }

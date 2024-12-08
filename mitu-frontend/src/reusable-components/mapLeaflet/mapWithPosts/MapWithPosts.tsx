@@ -25,7 +25,6 @@ import AirQualityResult from '@/core/api/cartography/AirQualityResultDto';
 import { AirQualityIcon } from '../AirQualityIcon/AirQualityIcon';
 import {
   calculateAverageSeverity,
-  calculateParameterSeverity,
   getColorFromPercentage,
 } from '@/utils/air-quality-utils';
 import AirQualityToggle from './AirQualityToggle';
@@ -148,15 +147,11 @@ function AirQualityMarker({
       >
         <Popup>
           <div className="text-sm mb-2 w-full text-center font-bold leading-tight pt-1 text-wrap">
-            {record.location.split(',')[1]}
+            {record.location}
           </div>
           <div className="flex w-48 flex-col gap-1">
             {record.measurements.map((measurement) => {
-              const severity = calculateParameterSeverity(
-                measurement.parameter,
-                measurement.value,
-              );
-              const color = getColorFromPercentage(severity);
+              const color = getColorFromPercentage(measurement.severity ?? 0);
               return (
                 <div
                   className="flex items-center justify-between"

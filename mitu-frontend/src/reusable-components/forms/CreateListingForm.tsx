@@ -65,6 +65,7 @@ import ListingInputPatchDto from '@/core/api/listing/dto/listing-patch.input';
 import { ListingFormData, listingFormSchema } from './form-schemas';
 import { useMapEditStore } from '@/core/stores/map/map-edit-store';
 import PanelLoader from '../loaders/PanelLoader';
+import { FullScreenLoader } from '../loaders/FullScreenLoader';
 
 export default function CreateListingForm({ edit }: { edit?: boolean }) {
   const {
@@ -75,6 +76,7 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
     clearSingleListing,
     patchListing,
     setResetList,
+    formListingLoading,
   } = useListingStore();
   const { setRightbarStage } = useUiStore();
   const { getParsedLocation, setLocation, resetEditStoreState } =
@@ -408,6 +410,9 @@ export default function CreateListingForm({ edit }: { edit?: boolean }) {
           <PanelLoader />
         </div>
       )}
+
+      {formListingLoading && <FullScreenLoader />}
+
       <Form {...form}>
         <form
           onSubmit={

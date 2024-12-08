@@ -53,6 +53,7 @@ interface CreatorSection {
   statuses: InvestmentStatus[];
   badges: BadgeDto[];
   categories: CategoryDto[];
+  formInvestmentLoading: boolean;
 }
 
 export interface InvestmentStore
@@ -117,6 +118,7 @@ const initialCreatorSection: CreatorSection = {
   ],
   badges: [],
   categories: [],
+  formInvestmentLoading: false,
 };
 
 export const useInvestmentStore = create<
@@ -251,12 +253,18 @@ export const useInvestmentStore = create<
       files.forEach((file) => {
         formData.append('files', file);
       });
+
+      set({ formInvestmentLoading: true });
+
       axiosInstance
         .post<SuccessResponse<InvestmentDto>>('/investment', formData)
         .then((response) => {
           onSuccess();
         })
-        .catch((error) => {});
+        .catch((error) => {})
+        .finally(() => {
+          set({ formInvestmentLoading: false });
+        });
     },
     patchInvestment: (
       id: string,
@@ -292,6 +300,9 @@ export const useInvestmentStore = create<
       files.forEach((file) => {
         formData.append('files', file);
       });
+
+      set({ formInvestmentLoading: true });
+
       axiosInstance
         .patch<SuccessResponse<PatchCommonDto>>(
           `/investment/one/${id}`,
@@ -302,6 +313,9 @@ export const useInvestmentStore = create<
         })
         .catch((error) => {
           console.error(error);
+        })
+        .finally(() => {
+          set({ formInvestmentLoading: false });
         });
     },
     deleteInvestment: (id: string, onSuccess: () => void) => {

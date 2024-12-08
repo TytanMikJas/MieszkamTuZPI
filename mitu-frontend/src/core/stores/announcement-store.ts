@@ -51,6 +51,7 @@ interface DetailsSection {
 
 interface CreatorSection {
   categories: CategoryDto[];
+  formAnnouncementLoading: boolean;
 }
 
 export interface AnnouncementStore
@@ -124,6 +125,7 @@ const initialDetailsSection: DetailsSection = {
 
 const initialCreatorSection: CreatorSection = {
   categories: [],
+  formAnnouncementLoading: false,
 };
 
 export const useAnnouncementStore = create<
@@ -248,12 +250,17 @@ export const useAnnouncementStore = create<
       formData.append('files', file);
     });
 
+    set({ formAnnouncementLoading: true });
+
     axiosInstance
       .post<SuccessResponse<AnnouncementDto>>('/announcement', formData)
       .then((response) => {
         onSuccess();
       })
-      .catch((error) => {});
+      .catch((error) => {})
+      .finally(() => {
+        set({ formAnnouncementLoading: false });
+      });
   },
 
   fetchAnnouncementComments: () => {},
@@ -298,6 +305,8 @@ export const useAnnouncementStore = create<
       formData.append('files', file);
     });
 
+    set({ formAnnouncementLoading: true });
+
     axiosInstance
       .patch<SuccessResponse<PatchCommonDto>>(
         `/announcement/one/${id}`,
@@ -308,6 +317,9 @@ export const useAnnouncementStore = create<
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        set({ formAnnouncementLoading: false });
       });
   },
   deleteComment: () => {},
