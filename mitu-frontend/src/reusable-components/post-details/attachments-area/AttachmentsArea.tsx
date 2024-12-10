@@ -14,7 +14,7 @@ export default function AttachmentsArea({
   return (
     attachments.length > 0 && (
       <BorderLabel label={ATTACHMENTS_LABEL}>
-        <div className="flex flex-wrap gap-2 justify-between">
+        <div className="flex flex-wrap gap-2 justify-between items-center">
           {attachments.map((attachment, index) => (
             <AttachmentCard
               filePaths={filePaths}

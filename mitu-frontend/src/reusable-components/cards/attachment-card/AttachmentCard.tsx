@@ -36,13 +36,21 @@ export default function AttachmentCard({
       onClick={handleOpen}
       className="flex w-min items-center flex-col cursor-pointer hover:bg-gray-100 p-1 rounded-lg"
     >
-      <MaterialSymbol
-        icon={attachmentIcon(attachment.fileType)}
-        size={36}
-        fill
-        grade={-25}
-        color="textdark"
-      />
+      {attachment.fileType === 'IMAGE' ? (
+        <img
+          src={filePath}
+          alt={attachment.fileName}
+          className="w-12 h-12 object-cover rounded"
+        />
+      ) : (
+        <MaterialSymbol
+          icon={attachmentIcon(attachment.fileType)}
+          size={36}
+          fill
+          grade={-25}
+          color="textdark"
+        />
+      )}
       <div className="text-xs text-black max-w-48 min-w-20 text-center">
         <Truncate
           truncateLogic={attachmentNameTruncateLogic}

@@ -28,6 +28,7 @@ import {
   ADMIN_NONE_STAGE,
   COMMENT_STATUS_REJECTED,
   FILE_PATHS_OTHER,
+  ALL_POSTS_NAME,
 } from './strings';
 
 export type SortingParams = {
@@ -114,7 +115,8 @@ export type InvestmentStatus =
 export type PostType =
   | typeof INVESTMENT_NAME
   | typeof ANNOUNCEMENT_NAME
-  | typeof LISTING_NAME;
+  | typeof LISTING_NAME
+  | typeof ALL_POSTS_NAME;
 
 export type FileType =
   | typeof FILE_IMAGE_NAME

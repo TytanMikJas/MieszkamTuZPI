@@ -24,13 +24,13 @@ export default function Badge({
       >
         <MaterialSymbol
           icon={iconName}
-          size={30}
+          size={20}
           fill
           grade={-25}
           color={backgroundColor}
         />
       </div>
-      <div className="px-2 text-sm font-medium" style={{ color: textColor }}>
+      <div className="px-2 text-sm" style={{ color: textColor }}>
         {text}
       </div>
     </div>

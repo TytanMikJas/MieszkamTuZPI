@@ -15,7 +15,12 @@ import RegisterPage from '@/pages/map/map-with-sidepanels/register/RegisterPage'
 import InvestmentsPage from '@/pages/map/map-with-sidepanels/investments/InvestmentsPage';
 import OfficialLayout from '@/pages/official/OfficialLayout';
 import PostTypeEffect from '@/reusable-components/effects/PostTypeEffect';
-import { ANNOUNCEMENT_NAME, INVESTMENT_NAME, LISTING_NAME } from '@/strings';
+import {
+  ALL_POSTS_NAME,
+  ANNOUNCEMENT_NAME,
+  INVESTMENT_NAME,
+  LISTING_NAME,
+} from '@/strings';
 import { OpenOnlyLeftPanel } from '@/reusable-components/effects/LeftPanelStateEffect';
 import ListingsPage from '@/pages/map/map-with-sidepanels/listings/ListingsPage';
 import ListingDetails from '@/reusable-components/post-details/listing-details/ListingDetails';
@@ -217,6 +222,7 @@ export const router = createBrowserRouter([
                     outlets={[{ name: 'left', content: <LandingPage /> }]}
                     effect={
                       <>
+                        <PostTypeEffect postType={ALL_POSTS_NAME} />
                         <MoveBottomSheetMiddle />
                         <OpenOnlyLeftPanel />
                       </>

@@ -160,15 +160,22 @@ export default function InvestmentDetails() {
         <div className="flex flex-col gap-2">
           <IconLabel
             verified={false}
+            size={30}
             text={investment.responsible}
             icon="person"
           />
-          <IconLabel text={investment.category?.name} icon="category" />
+          <IconLabel
+            text={investment.category?.name}
+            size={30}
+            icon="category"
+          />
           <IconLabel
             text={investmentStatusParser[investment.status]}
+            size={30}
             icon="manufacturing"
           />
           <IconLabel
+            size={30}
             text={buildAddress(
               investment.street,
               investment.buildingNr,
