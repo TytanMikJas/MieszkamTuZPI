@@ -1,29 +1,5 @@
 import AirQualityMeasurement from '@/core/api/cartography/AirQualityMeasurementDto';
 
-export const parameterThresholds: Record<string, { min: number; max: number }> =
-  {
-    bc: { min: 0, max: 5 },
-    o3: { min: 0, max: 100 },
-    so2: { min: 0, max: 75 },
-    pm10: { min: 0, max: 50 },
-    pm25: { min: 0, max: 25 },
-    co: { min: 0, max: 1000 },
-    no2: { min: 0, max: 40 },
-  };
-
-export function calculateParameterSeverity(
-  parameter: string,
-  value: number,
-): number {
-  const thresholds = parameterThresholds[parameter];
-  if (!thresholds) {
-    return 0;
-  }
-  const { min, max } = thresholds;
-  const percentage = ((value - min) / (max - min)) * 100;
-  return Math.min(100, Math.max(0, percentage));
-}
-
 export function getColorFromPercentage(percentage: number): string {
   const red = { r: 255, g: 0, b: 0 };
   const yellow = { r: 255, g: 255, b: 0 };
@@ -60,10 +36,7 @@ export function getColorFromPercentage(percentage: number): string {
 export function calculateAverageSeverity(
   measurements: AirQualityMeasurement[],
 ): number {
-  const severities = measurements.map(({ parameter, value }) =>
-    calculateParameterSeverity(parameter, value),
-  );
-
+  const severities = measurements.map((m) => m.severity ?? 0);
   if (severities.length === 0) {
     return 0;
   }

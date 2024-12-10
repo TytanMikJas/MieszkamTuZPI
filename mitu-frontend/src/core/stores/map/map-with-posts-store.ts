@@ -5,7 +5,12 @@ import { axiosInstance } from '../../api/axios-instance';
 import { SuccessResponse } from '../../api/response';
 import MarkerablePostDto from '../../api/post/dto/markerable-post';
 import { MAP_POST_FETCHING_THRESHOLD } from '../../../constants';
-import { INVESTMENT_NAME } from '@/strings';
+import {
+  ALL_POSTS_NAME,
+  ANNOUNCEMENT_NAME,
+  INVESTMENT_NAME,
+  LISTING_NAME,
+} from '@/strings';
 import AirQualityResult from '@/core/api/cartography/AirQualityResultDto';
 
 export interface MapWithPostsStore {
@@ -83,29 +88,52 @@ export const useMapWithPostsStore = create<
         get().fetchPosts();
       }
     },
-
     fetchPosts: () => {
-      const { postType, north, east, south, west } = get();
+      const { postType, north, east, south, west, specificPost } = get();
       const mg = MAP_POST_FETCHING_THRESHOLD;
-      const specificPost = get().specificPost;
-      axiosInstance
-        .get<SuccessResponse<MarkerablePostDto[]>>(`/${postType}`, {
-          params: {
-            pageSize: 100, // all posts should be fetched
-            location: `N=${north + mg},E=${east + mg},S=${south - mg},W=${
-              west - mg
-            }`,
-          },
-        })
-        .then((response) => {
-          set({
-            postsList: [...response.data.data],
-            specificPost: specificPost,
-          });
-        })
-        .catch((error) => {
-          console.error(error);
+
+      const baseParams = {
+        pageSize: 100,
+        location: `N=${north + mg},E=${east + mg},S=${south - mg},W=${west - mg}`,
+      };
+
+      const fetchPostsForType = (type: PostType) =>
+        axiosInstance.get<SuccessResponse<MarkerablePostDto[]>>(`/${type}`, {
+          params: baseParams,
         });
+
+      if (postType === ALL_POSTS_NAME) {
+        const postTypes: PostType[] = [
+          INVESTMENT_NAME,
+          ANNOUNCEMENT_NAME,
+          LISTING_NAME,
+        ];
+
+        Promise.all(postTypes.map((type) => fetchPostsForType(type)))
+          .then((responses) => {
+            const allPosts = responses.flatMap(
+              (response) => response.data.data,
+            );
+            set({
+              postsList: allPosts,
+              specificPost: specificPost,
+            });
+          })
+          .catch((error) => {
+            console.error('Error fetching all posts:', error);
+          });
+      } else {
+        fetchPostsForType(postType)
+          .then((response) => {
+            set({
+              postsList: [...response.data.data],
+              specificPost: specificPost,
+            });
+          })
+          .catch((error) => {
+            console.error('Error fetching posts:', error);
+          });
+      }
     },
     setSpecificPost: (specificPost: MarkerablePostDto | null) => {
       set({ specificPost });

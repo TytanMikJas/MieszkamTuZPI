@@ -1,0 +1,694 @@
+{
+  "configuration" : { },
+  "description" : "Description",
+  "documentation" : { },
+  "id" : 1,
+  "lastModifiedDate" : "2024-12-04T09:29:22Z",
+  "model" : {
+    "people" : [ {
+      "id" : "1",
+      "location" : "Unspecified",
+      "name" : "Użytkownik",
+      "properties" : {
+        "structurizr.dsl.identifier" : "u"
+      },
+      "relationships" : [ {
+        "description" : "Używa aplikacji na przeglądarce",
+        "destinationId" : "4",
+        "id" : "45",
+        "sourceId" : "1",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Używa aplikacji na przeglądarce",
+        "destinationId" : "3",
+        "id" : "46",
+        "linkedRelationshipId" : "45",
+        "sourceId" : "1"
+      } ],
+      "tags" : "Element,Person"
+    }, {
+      "id" : "2",
+      "location" : "Unspecified",
+      "name" : "Webcrawler",
+      "properties" : {
+        "structurizr.dsl.identifier" : "webcrawler"
+      },
+      "relationships" : [ {
+        "description" : "Wysyła żądania HTTP",
+        "destinationId" : "4",
+        "id" : "47",
+        "sourceId" : "2",
+        "tags" : "Relationship"
+      }, {
+        "description" : "Wysyła żądania HTTP",
+        "destinationId" : "3",
+        "id" : "48",
+        "linkedRelationshipId" : "47",
+        "sourceId" : "2"
+      } ],
+      "tags" : "Element,Person"
+    } ],
+    "softwareSystems" : [ {
+      "containers" : [ {
+        "documentation" : { },
+        "id" : "4",
+        "name" : "mitu-frontend",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ss.mitu-frontend"
+        },
+        "relationships" : [ {
+          "description" : "Przekazuje dalej zapytania HTTP",
+          "destinationId" : "5",
+          "id" : "49",
+          "sourceId" : "4",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,dockercontainer"
+      }, {
+        "components" : [ {
+          "documentation" : { },
+          "id" : "6",
+          "name" : "FilehandlerModule",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.filehandler-module"
+          },
+          "relationships" : [ {
+            "description" : "Definiuje",
+            "destinationId" : "7",
+            "id" : "9",
+            "sourceId" : "6",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Definiuje",
+            "destinationId" : "8",
+            "id" : "10",
+            "sourceId" : "6",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Eksportuje",
+            "destinationId" : "8",
+            "id" : "11",
+            "sourceId" : "6",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,module,color1"
+        }, {
+          "documentation" : { },
+          "id" : "7",
+          "name" : "FilehandlerController",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.filehandler-controller"
+          },
+          "tags" : "Element,Component,color1"
+        }, {
+          "documentation" : { },
+          "id" : "8",
+          "name" : "FilehandlerService",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.filehandler-service"
+          },
+          "tags" : "Element,Component,color1"
+        }, {
+          "documentation" : { },
+          "id" : "12",
+          "name" : "PostModule",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.post-module"
+          },
+          "relationships" : [ {
+            "description" : "Definiuje",
+            "destinationId" : "13",
+            "id" : "15",
+            "sourceId" : "12",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Definiuje",
+            "destinationId" : "14",
+            "id" : "16",
+            "sourceId" : "12",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Eksportuje",
+            "destinationId" : "13",
+            "id" : "17",
+            "sourceId" : "12",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,module,color2"
+        }, {
+          "documentation" : { },
+          "id" : "13",
+          "name" : "PostService",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.post-service"
+          },
+          "tags" : "Element,Component,color2"
+        }, {
+          "documentation" : { },
+          "id" : "14",
+          "name" : "PostRepository",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.post-repository"
+          },
+          "tags" : "Element,Component,color2"
+        }, {
+          "documentation" : { },
+          "id" : "18",
+          "name" : "InvestmentModule",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.investment-module"
+          },
+          "relationships" : [ {
+            "description" : "Definiuje",
+            "destinationId" : "19",
+            "id" : "22",
+            "sourceId" : "18",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Definiuje",
+            "destinationId" : "20",
+            "id" : "23",
+            "sourceId" : "18",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Definiuje",
+            "destinationId" : "21",
+            "id" : "24",
+            "sourceId" : "18",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Eksportuje",
+            "destinationId" : "20",
+            "id" : "25",
+            "sourceId" : "18",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Importuje",
+            "destinationId" : "6",
+            "id" : "26",
+            "sourceId" : "18",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Importuje",
+            "destinationId" : "12",
+            "id" : "27",
+            "sourceId" : "18",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,module,color3"
+        }, {
+          "documentation" : { },
+          "id" : "19",
+          "name" : "InvestmentController",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.investment-controller"
+          },
+          "tags" : "Element,Component,color3"
+        }, {
+          "documentation" : { },
+          "id" : "20",
+          "name" : "InvestmentService",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.investment-service"
+          },
+          "tags" : "Element,Component,color3"
+        }, {
+          "documentation" : { },
+          "id" : "21",
+          "name" : "InvestmentRepository",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.investment-repository"
+          },
+          "tags" : "Element,Component,color3"
+        }, {
+          "documentation" : { },
+          "id" : "28",
+          "name" : "SentimentModule",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.sentiment-module"
+          },
+          "relationships" : [ {
+            "description" : "Definiuje",
+            "destinationId" : "29",
+            "id" : "31",
+            "sourceId" : "28",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Definiuje",
+            "destinationId" : "30",
+            "id" : "32",
+            "sourceId" : "28",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Eksportuje",
+            "destinationId" : "29",
+            "id" : "33",
+            "sourceId" : "28",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Importuje",
+            "destinationId" : "12",
+            "id" : "34",
+            "sourceId" : "28",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,module,color4"
+        }, {
+          "documentation" : { },
+          "id" : "29",
+          "name" : "SentimentService",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.sentiment-service"
+          },
+          "tags" : "Element,Component,color4"
+        }, {
+          "documentation" : { },
+          "id" : "30",
+          "name" : "SentimentController",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ss.mitu-backend.sentiment-controller"
+          },
+          "tags" : "Element,Component,color4"
+        } ],
+        "documentation" : { },
+        "id" : "5",
+        "name" : "mitu-backend",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ss.mitu-backend"
+        },
+        "relationships" : [ {
+          "description" : "Zapisuje i odczytuje dane",
+          "destinationId" : "35",
+          "id" : "50",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Zapisuje odpowiedzi HTTP w pamięci podręcznej",
+          "destinationId" : "36",
+          "id" : "51",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Wysyła maile (tylko w trybie deweloperskim)",
+          "destinationId" : "38",
+          "id" : "53",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Wysyła maile (tylko w trybie produkcyjnym)",
+          "destinationId" : "40",
+          "id" : "54",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Wysyła zapytania o analizę sentymentu tekstu",
+          "destinationId" : "41",
+          "id" : "56",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Wysyła zapytania o analizę bezpieczeństwa treści",
+          "destinationId" : "42",
+          "id" : "58",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Pobiera dane o lokalizacji",
+          "destinationId" : "43",
+          "id" : "60",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Pobiera dane o jakości powietrza",
+          "destinationId" : "44",
+          "id" : "62",
+          "sourceId" : "5",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,backendserver"
+      }, {
+        "documentation" : { },
+        "id" : "35",
+        "name" : "mitu-postgres",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ss.mitu-postgres"
+        },
+        "tags" : "Element,Container,database"
+      }, {
+        "documentation" : { },
+        "id" : "36",
+        "name" : "mitu-redis",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ss.mitu-redis"
+        },
+        "tags" : "Element,Container,database"
+      }, {
+        "documentation" : { },
+        "id" : "37",
+        "name" : "mitu-cron",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ss.mitu-cron"
+        },
+        "relationships" : [ {
+          "description" : "Zapisuje i odczytuje dane",
+          "destinationId" : "35",
+          "id" : "52",
+          "sourceId" : "37",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,backendserver"
+      }, {
+        "documentation" : { },
+        "id" : "38",
+        "name" : "mitu-smtp4dev",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ss.mitu-smtp4dev"
+        },
+        "tags" : "Element,Container"
+      }, {
+        "documentation" : { },
+        "id" : "39",
+        "name" : "mitu-prerender",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ss.mitu-prerender"
+        },
+        "tags" : "Element,Container"
+      } ],
+      "documentation" : { },
+      "id" : "3",
+      "location" : "Unspecified",
+      "name" : "MieszkamTU",
+      "properties" : {
+        "structurizr.dsl.identifier" : "ss"
+      },
+      "relationships" : [ {
+        "description" : "Wysyła maile (tylko w trybie produkcyjnym)",
+        "destinationId" : "40",
+        "id" : "55",
+        "linkedRelationshipId" : "54",
+        "sourceId" : "3"
+      }, {
+        "description" : "Wysyła zapytania o analizę sentymentu tekstu",
+        "destinationId" : "41",
+        "id" : "57",
+        "linkedRelationshipId" : "56",
+        "sourceId" : "3"
+      }, {
+        "description" : "Wysyła zapytania o analizę bezpieczeństwa treści",
+        "destinationId" : "42",
+        "id" : "59",
+        "linkedRelationshipId" : "58",
+        "sourceId" : "3"
+      }, {
+        "description" : "Pobiera dane o lokalizacji",
+        "destinationId" : "43",
+        "id" : "61",
+        "linkedRelationshipId" : "60",
+        "sourceId" : "3"
+      }, {
+        "description" : "Pobiera dane o jakości powietrza",
+        "destinationId" : "44",
+        "id" : "63",
+        "linkedRelationshipId" : "62",
+        "sourceId" : "3"
+      } ],
+      "tags" : "Element,Software System,MieszkamTu"
+    }, {
+      "documentation" : { },
+      "id" : "40",
+      "location" : "Unspecified",
+      "name" : "Serwer SMTP",
+      "properties" : {
+        "structurizr.dsl.identifier" : "smtp"
+      },
+      "tags" : "Element,Software System"
+    }, {
+      "documentation" : { },
+      "id" : "41",
+      "location" : "Unspecified",
+      "name" : "Azure AI Language",
+      "properties" : {
+        "structurizr.dsl.identifier" : "azure_language"
+      },
+      "tags" : "Element,Software System"
+    }, {
+      "documentation" : { },
+      "id" : "42",
+      "location" : "Unspecified",
+      "name" : "Azure AI Content Safety",
+      "properties" : {
+        "structurizr.dsl.identifier" : "azure_content_safety"
+      },
+      "tags" : "Element,Software System"
+    }, {
+      "documentation" : { },
+      "id" : "43",
+      "location" : "Unspecified",
+      "name" : "Geoportal",
+      "properties" : {
+        "structurizr.dsl.identifier" : "geoportal"
+      },
+      "tags" : "Element,Software System"
+    }, {
+      "documentation" : { },
+      "id" : "44",
+      "location" : "Unspecified",
+      "name" : "OpenAQ",
+      "properties" : {
+        "structurizr.dsl.identifier" : "openaq"
+      },
+      "tags" : "Element,Software System"
+    } ]
+  },
+  "name" : "Name",
+  "properties" : {
+    "structurizr.dsl" : "d29ya3NwYWNlICJOYW1lIiAiRGVzY3JpcHRpb24iIHsKCiAgICAhaWRlbnRpZmllcnMgaGllcmFyY2hpY2FsCgogICAgbW9kZWwgewogICAgICAgIHUgPSBwZXJzb24gIlXFvHl0a293bmlrIgogICAgICAgIHdlYmNyYXdsZXIgPSBwZXJzb24gIldlYmNyYXdsZXIiCgogICAgICAgIHNzID0gc29mdHdhcmVTeXN0ZW0gIk1pZXN6a2FtVFUiIHsKICAgICAgICAgICAgdGFncyAiTWllc3prYW1UdSIKICAgICAgICAgICAgbWl0dS1mcm9udGVuZCA9IGNvbnRhaW5lciAibWl0dS1mcm9udGVuZCIgewogICAgICAgICAgICAgICAgdGFncyAiZG9ja2VyY29udGFpbmVyIgogICAgICAgICAgICB9CiAgICAgICAgICAgIG1pdHUtYmFja2VuZCA9IGNvbnRhaW5lciAibWl0dS1iYWNrZW5kIiB7CiAgICAgICAgICAgICAgICB0YWdzICJiYWNrZW5kc2VydmVyIgoKICAgICAgICAgICAgICAgIGZpbGVoYW5kbGVyLW1vZHVsZSA9IGNvbXBvbmVudCAiRmlsZWhhbmRsZXJNb2R1bGUiIHsKICAgICAgICAgICAgICAgICAgICB0YWdzICJtb2R1bGUiICJjb2xvcjEiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBmaWxlaGFuZGxlci1jb250cm9sbGVyID0gY29tcG9uZW50ICJGaWxlaGFuZGxlckNvbnRyb2xsZXIiIHsKICAgICAgICAgICAgICAgICAgICB0YWdzICJjb2xvcjEiCiAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIGZpbGVoYW5kbGVyLXNlcnZpY2UgPSBjb21wb25lbnQgIkZpbGVoYW5kbGVyU2VydmljZSJ7CiAgICAgICAgICAgICAgICAgICAgdGFncyAiY29sb3IxIgogICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBmaWxlaGFuZGxlci1tb2R1bGUgLT4gZmlsZWhhbmRsZXItY29udHJvbGxlciAiRGVmaW5pdWplIgogICAgICAgICAgICAgICAgZmlsZWhhbmRsZXItbW9kdWxlIC0+IGZpbGVoYW5kbGVyLXNlcnZpY2UgIkRlZmluaXVqZSIKICAgICAgICAgICAgICAgIGZpbGVoYW5kbGVyLW1vZHVsZSAtPiBmaWxlaGFuZGxlci1zZXJ2aWNlICJFa3Nwb3J0dWplIgoKICAgICAgICAgICAgICAgIHBvc3QtbW9kdWxlID0gY29tcG9uZW50ICJQb3N0TW9kdWxlIiB7CiAgICAgICAgICAgICAgICAgICAgdGFncyAibW9kdWxlIiAiY29sb3IyIgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgcG9zdC1zZXJ2aWNlID0gY29tcG9uZW50ICJQb3N0U2VydmljZSIgewogICAgICAgICAgICAgICAgICAgIHRhZ3MgImNvbG9yMiIKICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgcG9zdC1yZXBvc2l0b3J5ID0gY29tcG9uZW50ICJQb3N0UmVwb3NpdG9yeSIgewogICAgICAgICAgICAgICAgICAgIHRhZ3MgImNvbG9yMiIKICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgcG9zdC1tb2R1bGUgLT4gcG9zdC1zZXJ2aWNlICJEZWZpbml1amUiCiAgICAgICAgICAgICAgICBwb3N0LW1vZHVsZSAtPiBwb3N0LXJlcG9zaXRvcnkgIkRlZmluaXVqZSIKICAgICAgICAgICAgICAgIHBvc3QtbW9kdWxlIC0+IHBvc3Qtc2VydmljZSAiRWtzcG9ydHVqZSIKCiAgICAgICAgICAgICAgICBpbnZlc3RtZW50LW1vZHVsZSA9IGNvbXBvbmVudCAiSW52ZXN0bWVudE1vZHVsZSIgewogICAgICAgICAgICAgICAgICAgIHRhZ3MgIm1vZHVsZSIgImNvbG9yMyIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIGludmVzdG1lbnQtY29udHJvbGxlciA9IGNvbXBvbmVudCAiSW52ZXN0bWVudENvbnRyb2xsZXIiIHsKICAgICAgICAgICAgICAgICAgICB0YWdzICJjb2xvcjMiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBpbnZlc3RtZW50LXNlcnZpY2UgPSBjb21wb25lbnQgIkludmVzdG1lbnRTZXJ2aWNlIiB7CiAgICAgICAgICAgICAgICAgICAgdGFncyAiY29sb3IzIgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgaW52ZXN0bWVudC1yZXBvc2l0b3J5ID0gY29tcG9uZW50ICJJbnZlc3RtZW50UmVwb3NpdG9yeSIgewogICAgICAgICAgICAgICAgICAgIHRhZ3MgImNvbG9yMyIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIGludmVzdG1lbnQtbW9kdWxlIC0+IGludmVzdG1lbnQtY29udHJvbGxlciAiRGVmaW5pdWplIgogICAgICAgICAgICAgICAgaW52ZXN0bWVudC1tb2R1bGUgLT4gaW52ZXN0bWVudC1zZXJ2aWNlICJEZWZpbml1amUiCiAgICAgICAgICAgICAgICBpbnZlc3RtZW50LW1vZHVsZSAtPiBpbnZlc3RtZW50LXJlcG9zaXRvcnkgIkRlZmluaXVqZSIKICAgICAgICAgICAgICAgIGludmVzdG1lbnQtbW9kdWxlIC0+IGludmVzdG1lbnQtc2VydmljZSAiRWtzcG9ydHVqZSIKICAgICAgICAgICAgICAgIGludmVzdG1lbnQtbW9kdWxlIC0+IGZpbGVoYW5kbGVyLW1vZHVsZSAiSW1wb3J0dWplIgogICAgICAgICAgICAgICAgaW52ZXN0bWVudC1tb2R1bGUgLT4gcG9zdC1tb2R1bGUgIkltcG9ydHVqZSIKCgogICAgICAgICAgICAgICAgc2VudGltZW50LW1vZHVsZSA9IGNvbXBvbmVudCAiU2VudGltZW50TW9kdWxlIiB7CiAgICAgICAgICAgICAgICAgICAgdGFncyAibW9kdWxlIiAiY29sb3I0IgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgc2VudGltZW50LXNlcnZpY2UgPSBjb21wb25lbnQgIlNlbnRpbWVudFNlcnZpY2UiIHsKICAgICAgICAgICAgICAgICAgICB0YWdzICJjb2xvcjQiCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICBzZW50aW1lbnQtY29udHJvbGxlciA9IGNvbXBvbmVudCAiU2VudGltZW50Q29udHJvbGxlciIgewogICAgICAgICAgICAgICAgICAgIHRhZ3MgImNvbG9yNCIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIHNlbnRpbWVudC1tb2R1bGUgLT4gc2VudGltZW50LXNlcnZpY2UgIkRlZmluaXVqZSIKICAgICAgICAgICAgICAgIHNlbnRpbWVudC1tb2R1bGUgLT4gc2VudGltZW50LWNvbnRyb2xsZXIgIkRlZmluaXVqZSIKICAgICAgICAgICAgICAgIHNlbnRpbWVudC1tb2R1bGUgLT4gc2VudGltZW50LXNlcnZpY2UgIkVrc3BvcnR1amUiCiAgICAgICAgICAgICAgICBzZW50aW1lbnQtbW9kdWxlIC0+IHBvc3QtbW9kdWxlICJJbXBvcnR1amUiCiAgICAgICAgICAgICAgICAKICAgICAgICAgICAgfQogICAgICAgICAgICBtaXR1LXBvc3RncmVzID0gY29udGFpbmVyICJtaXR1LXBvc3RncmVzIiB7CiAgICAgICAgICAgICAgICB0YWdzICJkYXRhYmFzZSIKICAgICAgICAgICAgfQogICAgICAgICAgICBtaXR1LXJlZGlzID0gY29udGFpbmVyICJtaXR1LXJlZGlzIiB7CiAgICAgICAgICAgICAgICB0YWdzICJkYXRhYmFzZSIKICAgICAgICAgICAgfQogICAgICAgICAgICBtaXR1LWNyb24gPSBjb250YWluZXIgIm1pdHUtY3JvbiIgewogICAgICAgICAgICAgICAgdGFncyAiYmFja2VuZHNlcnZlciIKICAgICAgICAgICAgfQogICAgICAgICAgICBtaXR1LXNtdHA0ZGV2ID0gY29udGFpbmVyICJtaXR1LXNtdHA0ZGV2IgogICAgICAgICAgICBtaXR1LXByZXJlbmRlciA9IGNvbnRhaW5lciAibWl0dS1wcmVyZW5kZXIiCiAgICAgICAgfQogICAgICAgIHNtdHAgPSBzb2Z0d2FyZVN5c3RlbSAiU2Vyd2VyIFNNVFAiIHsKCiAgICAgICAgfQoKICAgICAgICBhenVyZV9sYW5ndWFnZSA9IHNvZnR3YXJlU3lzdGVtICJBenVyZSBBSSBMYW5ndWFnZSIKICAgICAgICBhenVyZV9jb250ZW50X3NhZmV0eSA9IHNvZnR3YXJlU3lzdGVtICJBenVyZSBBSSBDb250ZW50IFNhZmV0eSIKICAgICAgICBnZW9wb3J0YWwgPSBzb2Z0d2FyZVN5c3RlbSAiR2VvcG9ydGFsIgogICAgICAgIG9wZW5hcSA9IHNvZnR3YXJlU3lzdGVtICJPcGVuQVEiCgogICAgICAgIHUgLT4gc3MubWl0dS1mcm9udGVuZCAiVcW8eXdhIGFwbGlrYWNqaSBuYSBwcnplZ2zEhWRhcmNlIgogICAgICAgIHdlYmNyYXdsZXIgLT4gc3MubWl0dS1mcm9udGVuZCAiV3lzecWCYSDFvMSFZGFuaWEgSFRUUCIKICAgICAgICAKCiAgICAgICAgc3MubWl0dS1mcm9udGVuZCAtPiBzcy5taXR1LWJhY2tlbmQgIlByemVrYXp1amUgZGFsZWogemFweXRhbmlhIEhUVFAiCiAgICAgICAgc3MubWl0dS1iYWNrZW5kIC0+IHNzLm1pdHUtcG9zdGdyZXMgIlphcGlzdWplIGkgb2Rjenl0dWplIGRhbmUiCiAgICAgICAgc3MubWl0dS1iYWNrZW5kIC0+IHNzLm1pdHUtcmVkaXMgIlphcGlzdWplIG9kcG93aWVkemkgSFRUUCB3IHBhbWnEmWNpIHBvZHLEmWN6bmVqIgogICAgICAgIHNzLm1pdHUtY3JvbiAtPiBzcy5taXR1LXBvc3RncmVzICJaYXBpc3VqZSBpIG9kY3p5dHVqZSBkYW5lIgogICAgICAgIHNzLm1pdHUtYmFja2VuZCAtPiBzcy5taXR1LXNtdHA0ZGV2ICJXeXN5xYJhIG1haWxlICh0eWxrbyB3IHRyeWJpZSBkZXdlbG9wZXJza2ltKSIKICAgICAgICBzcy5taXR1LWJhY2tlbmQgLT4gc210cCAiV3lzecWCYSBtYWlsZSAodHlsa28gdyB0cnliaWUgcHJvZHVrY3lqbnltKSIKICAgICAgICBzcy5taXR1LWJhY2tlbmQgLT4gYXp1cmVfbGFuZ3VhZ2UgIld5c3nFgmEgemFweXRhbmlhIG8gYW5hbGl6xJkgc2VudHltZW50dSB0ZWtzdHUiCiAgICAgICAgc3MubWl0dS1iYWNrZW5kIC0+IGF6dXJlX2NvbnRlbnRfc2FmZXR5ICJXeXN5xYJhIHphcHl0YW5pYSBvIGFuYWxpesSZIGJlenBpZWN6ZcWEc3R3YSB0cmXFm2NpIgogICAgICAgIHNzLm1pdHUtYmFja2VuZCAtPiBnZW9wb3J0YWwgIlBvYmllcmEgZGFuZSBvIGxva2FsaXphY2ppIgogICAgICAgIHNzLm1pdHUtYmFja2VuZCAtPiBvcGVuYXEgIlBvYmllcmEgZGFuZSBvIGpha2/Fm2NpIHBvd2lldHJ6YSIKCgogICAgfQoKICAgIHZpZXdzIHsKICAgICAgICBzdHlsZXMgewogICAgICAgICAgICBlbGVtZW50ICJkYXRhYmFzZSIgewogICAgICAgICAgICAgICAgc2hhcGUgImN5bGluZGVyIgogICAgICAgICAgICB9CgogICAgICAgICAgICBlbGVtZW50ICJiYWNrZW5kc2VydmVyIiB7CiAgICAgICAgICAgICAgICBzaGFwZSAiaGV4YWdvbiIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgZWxlbWVudCAgIk1pZXN6a2FtVHUiIHsKICAgICAgICAgICAgICAgIHNoYXBlICJoZXhhZ29uIgogICAgICAgICAgICAgICAgY29sb3IgIiNmMGYwZjAiCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIGVsZW1lbnQgIm1vZHVsZSIgewogICAgICAgICAgICAgICAgc2hhcGUgImZvbGRlciIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgZWxlbWVudCAiY29sb3IxIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICIjNENBRjUwIgogICAgICAgICAgICB9CgogICAgICAgICAgICBlbGVtZW50ICJjb2xvcjIiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIiMyMTk2RjMiCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIGVsZW1lbnQgImNvbG9yMyIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAiI0ZGOTgwMCIKICAgICAgICAgICAgfQoKICAgICAgICAgICAgZWxlbWVudCAiY29sb3I0IiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICIjRjQ0MzM2IgogICAgICAgICAgICB9CgogICAgICAgIH0KCiAgICAgICAgc3lzdGVtQ29udGV4dCBzcyAiTWllc3prYW1UVSIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICB9CgoKICAgICAgICBjb21wb25lbnQgc3MubWl0dS1iYWNrZW5kICJtaXR1LWJhY2tlbmQiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgfQogICAgICAgCXRoZW1lIGRlZmF1bHQKICAgIH0KCiAgICAgICAgCgp9"
+  },
+  "views" : {
+    "componentViews" : [ {
+      "containerId" : "5",
+      "dimensions" : {
+        "height" : 1458,
+        "width" : 4308
+      },
+      "elements" : [ {
+        "id" : "6",
+        "x" : 1929,
+        "y" : 579
+      }, {
+        "id" : "7",
+        "x" : 1929,
+        "y" : 1029
+      }, {
+        "id" : "8",
+        "x" : 2529,
+        "y" : 1029
+      }, {
+        "id" : "12",
+        "x" : 1329,
+        "y" : 579
+      }, {
+        "id" : "13",
+        "x" : 729,
+        "y" : 1029
+      }, {
+        "id" : "14",
+        "x" : 1329,
+        "y" : 1029
+      }, {
+        "id" : "18",
+        "x" : 2829,
+        "y" : 129
+      }, {
+        "id" : "19",
+        "x" : 2529,
+        "y" : 579
+      }, {
+        "id" : "20",
+        "x" : 3129,
+        "y" : 579
+      }, {
+        "id" : "21",
+        "x" : 3729,
+        "y" : 579
+      }, {
+        "id" : "28",
+        "x" : 429,
+        "y" : 129
+      }, {
+        "id" : "29",
+        "x" : 129,
+        "y" : 579
+      }, {
+        "id" : "30",
+        "x" : 729,
+        "y" : 579
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "key" : "mitu-backend",
+      "order" : 2,
+      "paperSize" : "A3_Landscape",
+      "relationships" : [ {
+        "id" : "10",
+        "vertices" : [ {
+          "x" : 2364,
+          "y" : 1074
+        } ]
+      }, {
+        "id" : "11",
+        "vertices" : [ {
+          "x" : 2544,
+          "y" : 834
+        } ]
+      }, {
+        "id" : "15",
+        "vertices" : [ {
+          "x" : 1164,
+          "y" : 834
+        } ]
+      }, {
+        "id" : "16"
+      }, {
+        "id" : "17",
+        "vertices" : [ {
+          "x" : 1344,
+          "y" : 1074
+        } ]
+      }, {
+        "id" : "22"
+      }, {
+        "id" : "23",
+        "vertices" : [ {
+          "x" : 3079,
+          "y" : 587
+        } ]
+      }, {
+        "id" : "24"
+      }, {
+        "id" : "25",
+        "vertices" : [ {
+          "x" : 3328,
+          "y" : 420
+        } ]
+      }, {
+        "id" : "26"
+      }, {
+        "id" : "27",
+        "vertices" : [ {
+          "x" : 1854,
+          "y" : 579
+        } ]
+      }, {
+        "id" : "31",
+        "vertices" : [ {
+          "x" : 379,
+          "y" : 420
+        } ]
+      }, {
+        "id" : "32"
+      }, {
+        "id" : "33",
+        "vertices" : [ {
+          "x" : 628,
+          "y" : 587
+        } ]
+      }, {
+        "id" : "34"
+      }, {
+        "id" : "9"
+      } ]
+    } ],
+    "configuration" : {
+      "branding" : { },
+      "lastSavedView" : "mitu-backend",
+      "styles" : {
+        "elements" : [ {
+          "shape" : "Cylinder",
+          "tag" : "database"
+        }, {
+          "shape" : "Hexagon",
+          "tag" : "backendserver"
+        }, {
+          "color" : "#f0f0f0",
+          "shape" : "Hexagon",
+          "tag" : "MieszkamTu"
+        }, {
+          "shape" : "Folder",
+          "tag" : "module"
+        }, {
+          "background" : "#4caf50",
+          "tag" : "color1"
+        }, {
+          "background" : "#2196f3",
+          "tag" : "color2"
+        }, {
+          "background" : "#ff9800",
+          "tag" : "color3"
+        }, {
+          "background" : "#f44336",
+          "tag" : "color4"
+        } ]
+      },
+      "terminology" : { },
+      "themes" : [ "https://static.structurizr.com/themes/default/theme.json" ]
+    },
+    "systemContextViews" : [ {
+      "dimensions" : {
+        "height" : 1900,
+        "width" : 2350
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 240,
+        "y" : 780
+      }, {
+        "id" : "2",
+        "x" : 230,
+        "y" : 270
+      }, {
+        "id" : "3",
+        "x" : 950,
+        "y" : 800
+      }, {
+        "id" : "40",
+        "x" : 1700,
+        "y" : 1370
+      }, {
+        "id" : "41",
+        "x" : 1690,
+        "y" : 320
+      }, {
+        "id" : "42",
+        "x" : 1690,
+        "y" : 825
+      }, {
+        "id" : "43",
+        "x" : 940,
+        "y" : 1375
+      }, {
+        "id" : "44",
+        "x" : 945,
+        "y" : 305
+      } ],
+      "enterpriseBoundaryVisible" : true,
+      "key" : "MieszkamTU",
+      "order" : 1,
+      "relationships" : [ {
+        "id" : "46"
+      }, {
+        "id" : "48"
+      }, {
+        "id" : "55"
+      }, {
+        "id" : "57"
+      }, {
+        "id" : "59"
+      }, {
+        "id" : "61"
+      }, {
+        "id" : "63"
+      } ],
+      "softwareSystemId" : "3"
+    } ]
+  }
+}

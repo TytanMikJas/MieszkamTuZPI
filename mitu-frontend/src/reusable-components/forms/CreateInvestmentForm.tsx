@@ -74,6 +74,7 @@ import PanelLoader from '../loaders/PanelLoader';
 import { InvestmentFormData, investmentFormSchema } from './form-schemas';
 import { useMapEditStore } from '@/core/stores/map/map-edit-store';
 import { LatLng } from 'leaflet';
+import { FullScreenLoader } from '../loaders/FullScreenLoader';
 
 export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
   const {
@@ -89,6 +90,7 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
     statuses,
     fetchAvailableBadges,
     fetchAvailableCategories,
+    formInvestmentLoading,
   } = useInvestmentStore();
   const { setRightbarStage } = useUiStore();
   const {
@@ -531,6 +533,9 @@ export default function CreateInvestmentForm({ edit }: { edit?: boolean }) {
           <PanelLoader />
         </div>
       )}
+
+      {formInvestmentLoading && <FullScreenLoader />}
+
       <Form {...form}>
         <form
           onSubmit={

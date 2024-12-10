@@ -130,6 +130,7 @@ export const ANNOUNCEMENT_NAME = 'announcement';
 export const ANNOUNCEMENT_NAME_UPPERCASE = 'ANNOUNCEMENT';
 export const LISTING_NAME = 'listing';
 export const LISTING_NAME_UPPERCASE = 'LISTING';
+export const ALL_POSTS_NAME = 'ALL';
 
 export const FILE_IMAGE_NAME = 'IMAGE';
 export const FILE_DOC_NAME = 'DOC';

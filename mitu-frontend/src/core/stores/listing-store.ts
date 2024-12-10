@@ -26,6 +26,7 @@ interface ListSection {
   currentPageList: number;
   isMoreList: boolean;
   loadingListIds: string[];
+  formListingLoading: boolean;
 }
 interface DetailsSection {
   singleListing: ListingDto | null;
@@ -63,6 +64,7 @@ export interface ListingStore extends ListSection, DetailsSection {
 
   resetList: boolean;
   setResetList: (reset: boolean) => void;
+  formListingLoading: boolean;
 }
 
 const initialListSection: ListSection = {
@@ -71,6 +73,7 @@ const initialListSection: ListSection = {
   currentPageList: 0,
   isMoreList: true,
   loadingListIds: [],
+  formListingLoading: false,
 };
 
 const initialDetailsSection: DetailsSection = {
@@ -198,13 +201,18 @@ export const useListingStore = create<
         formData.append('files', file);
       });
 
+      set({ formListingLoading: true });
+
       // DO TEJ PORY JEST GIT
       axiosInstance
         .post<SuccessResponse<ListingDto>>('/listing', formData)
         .then((response) => {
           onSuccess();
         })
-        .catch((error) => {});
+        .catch((error) => {})
+        .finally(() => {
+          set({ formListingLoading: false });
+        });
     },
     patchListing: (
       id: string,
@@ -238,6 +246,8 @@ export const useListingStore = create<
         formData.append('files', file);
       });
 
+      set({ formListingLoading: true });
+
       axiosInstance
         .patch<SuccessResponse<PatchCommonDto>>(`/listing/one/${id}`, formData)
         .then((response) => {
@@ -245,6 +255,9 @@ export const useListingStore = create<
         })
         .catch((error) => {
           console.error(error);
+        })
+        .finally(() => {
+          set({ formListingLoading: false });
         });
     },
     deleteListing: (id: string, onSuccess: () => void) => {

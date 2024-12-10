@@ -10,16 +10,14 @@ export default function PlusIcon({
   className?: string;
 }) {
   return (
-    <div data-testid="plus-icon">
-      <MaterialSymbol
-        onClick={onClick}
-        icon="add"
-        size={30}
-        fill
-        color="red"
-        grade={25}
-        className={`text-primary ${selected ? 'bg-red-200 rounded-full' : ''} ${className}`}
-      />
-    </div>
+    <MaterialSymbol
+      onClick={onClick}
+      icon="add"
+      size={30}
+      fill
+      color="red"
+      grade={25}
+      className={`text-primary ${selected ? 'bg-red-200 rounded-full' : ''} ${className}`}
+    />
   );
 }

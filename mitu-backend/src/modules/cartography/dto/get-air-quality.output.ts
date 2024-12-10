@@ -10,4 +10,5 @@ export class AirQualityMeasurement {
   value: number;
   lastUpdated: string;
   unit: string;
+  severity: number;
 }

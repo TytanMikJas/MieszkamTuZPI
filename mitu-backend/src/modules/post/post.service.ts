@@ -8,7 +8,7 @@ import { SimpleNotFound } from 'src/exceptions/simple-not-found.exception';
 import { ERROR_POST_NOT_FOUND } from 'src/strings';
 import { FilehandlerService } from 'src/modules/filehandler/filehandler.service';
 import { GenericFilter } from 'src/query.filter';
-import { $Enums } from '@prisma/client';
+import { $Enums, CommentStatus } from '@prisma/client';
 import { RatingType } from '../rating/dto/rating-dto';
 import RatingService from '../rating/rating.service';
 import UserInternalDto from '../user/dto/user.internal';
@@ -24,6 +24,7 @@ export class PostService {
    * Creates an instance of PostService.
    * @param {PostRepository} postRepository - The post repository
    * @param {FilehandlerService} filehandlerService - The filehandler service
+   * @param {RatingService} ratingService - The rating service
    */
   constructor(
     private readonly postRepository: PostRepository,
@@ -57,7 +58,10 @@ export class PostService {
   async getPostCommentsContentInternalDto(
     id: PRISMA_ID,
   ): Promise<PostCommentsContentInternalDto> {
-    return await this.postRepository.getPostCommentsContentInternalDto(id);
+    return await this.postRepository.getPostCommentsContentInternalDto(
+      id,
+      CommentStatus.APPROVED,
+    );
   }
 
   /**

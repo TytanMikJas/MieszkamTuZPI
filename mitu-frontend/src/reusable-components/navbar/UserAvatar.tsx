@@ -9,6 +9,8 @@ import {
 import { useAuthStore } from '@/core/stores/auth-store';
 import EditProfile from '../edit-profile/EditProfile';
 import Avatar from '../misc/avatar/Avatar';
+import { ROUTES } from '@/core/routing/Router';
+import { Link } from 'react-router-dom';
 
 type Props = {
   avatar: string;
@@ -39,13 +41,15 @@ export function UserAvatar({ avatar, name, surname, email }: Props) {
 
         <DropdownMenuSeparator />
         <EditProfile />
-        <DropdownMenuItem
-          onClick={() => logOut()}
-          className="text-red-700 cursor-pointer"
-        >
-          Wyloguj
+        <DropdownMenuItem>
+          <Link
+            to={ROUTES.MAP.LANDING_PAGE.path()}
+            onClick={logOut}
+            className="text-red-700 cursor-pointer flex items-center w-full"
+          >
+            Wyloguj
+          </Link>
         </DropdownMenuItem>
-
         <DropdownMenuSeparator />
       </DropdownMenuContent>
     </DropdownMenu>
