@@ -15,7 +15,7 @@ services:
     image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_backend:latest_${DOCKER_CITY}
     container_name: mitu_backend
     volumes:
-      - mitu_backend_uploads:/uploads
+      - mitu_backend_uploads:/app/uploads
     ports:
       - "3000:3000"
     working_dir: /app
