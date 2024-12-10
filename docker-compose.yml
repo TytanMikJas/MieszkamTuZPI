@@ -14,6 +14,8 @@ services:
   mitu_backend:
     image: registry.gitlab.com/mieszamtu/mieszkamtuzpi/mitu_backend:latest_${DOCKER_CITY}
     container_name: mitu_backend
+    volumes:
+      - mitu_backend_uploads:/uploads
     ports:
       - "3000:3000"
     working_dir: /app
@@ -64,3 +66,4 @@ volumes:
   mitu_postgres:
   mitu_redis:
   mitu_postgres_logs:
+  mitu_backend_uploads:
