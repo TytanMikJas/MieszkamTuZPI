@@ -70,10 +70,18 @@ export default function ForceResetPassword() {
             }}
           >
             <Label htmlFor="old_pass">Wygenerowane hasło</Label>
-            <PasswordInput id="old_pass" className="select-none" {...register('oldPassword')} />
+            <PasswordInput
+              id="old_pass"
+              className="select-none"
+              {...register('oldPassword')}
+            />
             {renderError('oldPassword')}
             <Label htmlFor="new_password">Nowe hasło</Label>
-            <PasswordInput id="new_password" className="select-none" {...register('password')} />
+            <PasswordInput
+              id="new_password"
+              className="select-none"
+              {...register('password')}
+            />
             {renderError('password')}
             <Label htmlFor="new_password2">Powtórz nowe hasło</Label>
             <PasswordInput
