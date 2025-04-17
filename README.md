@@ -1,5 +1,7 @@
 # MieszkamTu - ZPI
 
+![Plakat](ZPI.jpg)
+
 ## Opis
 Projekt MieszkamTu ma za zadanie zrewolucjonować interakcję między mieszkańcami, a władzami miasta. Naszym celem jest umożliwienie każdemu obywatelowi wyrażania opinii i uczestnictwa w decyzjach dotyczących ich bezpośredniego otoczenia. Chcemy, aby władze miasta mogły szybko i transparentnie informować mieszkańców oraz lepiej rozumieć ich potrzeby.
 
